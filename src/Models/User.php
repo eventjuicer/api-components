@@ -1,10 +1,9 @@
 <?php
 
-namespace Models;
+namespace Eventjuicer\Models;
 
 use App\User as BaseUser;
 
-use Services\AbleTrait;
 //use Zizaco\Entrust\Traits\EntrustUserTrait;
 
 use Laravel\Passport\HasApiTokens;

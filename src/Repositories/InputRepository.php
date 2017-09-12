@@ -1,8 +1,8 @@
 <?php
 
-namespace Repositories;
+namespace Eventjuicer\Repositories;
 
-use Models\Field;
+use Eventjuicer\Models\Field;
 
 // use Carbon\Carbon;
 // use Cache;
@@ -11,11 +11,11 @@ use Services\Repository;
 //use Bosnadev\Repositories\Eloquent\Repository;
 use Illuminate\Support\Collection;
 
-use Repositories\Criteria\ColumnMatches;
-use Repositories\Criteria\BelongsToEvent;
-use Repositories\Criteria\BelongsToGroup;
-use Repositories\Criteria\BelongsToOrganizer;
-use Repositories\Criteria\WhereIn;
+use Eventjuicer\Repositories\Criteria\ColumnMatches;
+use Eventjuicer\Repositories\Criteria\BelongsToEvent;
+use Eventjuicer\Repositories\Criteria\BelongsToGroup;
+use Eventjuicer\Repositories\Criteria\BelongsToOrganizer;
+use Eventjuicer\Repositories\Criteria\WhereIn;
 
 class InputRepository extends Repository
 {

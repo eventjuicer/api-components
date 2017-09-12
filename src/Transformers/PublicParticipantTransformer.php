@@ -1,24 +1,17 @@
 <?php
 
-namespace Transformers;
+namespace Eventjuicer\Transformers;
 
 use League\Fractal\TransformerAbstract;
 
-use Models\Participant;
+use Eventjuicer\Models\Participant;
 
-use ValueObjects\EmailAddress;
+use Eventjuicer\ValueObjects\EmailAddress;
 
 
 class PublicParticipantTransformer extends TransformerAbstract
 {
 
-/*
-
-
-
-
-
-*/
 
     protected $availableIncludes = [
         'profileX'

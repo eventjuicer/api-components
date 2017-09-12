@@ -1,8 +1,8 @@
 <?php
 
-namespace Repositories;
+namespace Eventjuicer\Repositories;
 
-use Models\Event;
+use Eventjuicer\Models\Event;
 
 use Carbon\Carbon;
 

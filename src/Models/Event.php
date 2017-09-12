@@ -1,10 +1,10 @@
 <?php
 
-namespace Models;
+namespace Eventjuicer\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-use Services\AbleTrait;
+use Eventjuicer\AbleTrait;
 
 class Event extends Model
 {

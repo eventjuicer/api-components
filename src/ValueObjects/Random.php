@@ -1,6 +1,6 @@
 <?php 
 
-namespace ValueObjects;
+namespace Eventjuicer\ValueObjects;
 
 class Random {
 

@@ -1,14 +1,10 @@
 <?php
 
-namespace Transformers;
+namespace Eventjuicer\Transformers;
 
 use League\Fractal\TransformerAbstract;
-
-use Models\Participant;
-
-
-
-use ValueObjects\EmailAddress;
+use Eventjuicer\Models\Participant;
+use Eventjuicer\ValueObjects\EmailAddress;
 
 class PublicVisitorTransformer extends TransformerAbstract
 {

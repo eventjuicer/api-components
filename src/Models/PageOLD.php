@@ -1,14 +1,12 @@
 <?php
 
-namespace Models;
+namespace Eventjuicer\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-use Services\Presenter\PresentableInterface;
-
 use Presenters\GroupPage;
 
-class PageOLD extends Model implements PresentableInterface
+class PageOLD extends Model
 {
       protected $table = "bob_widgets";
 

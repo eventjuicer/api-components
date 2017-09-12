@@ -1,16 +1,11 @@
 <?php 
 
 
-namespace Models;
+namespace Eventjuicer\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-use Services\AbleTrait;
-
-use Services\Presenter\PresentableInterface;
-
-
-
+use Eventjuicer\AbleTrait;
 
 use Services\Syncs\SyncTagsTrait;
 use Services\Syncs\SyncCommentsTrait;
@@ -22,13 +17,10 @@ use Services\Syncs\SyncCommentsTrait;
 //http://www.diffbot.com/our-apis/article/ - token 16262ea347d0cead33c443e682685ae9
 //http://viewtext.org/
 
-use Presenters\Admin\Cost AS AdminPresenter;
 
-use ValueObjects\Amount;
+use Eventjuicer\ValueObjects\Amount;
 
-
-
-use Sofa\Revisionable\Laravel\Revisionable;
+//use Sofa\Revisionable\Laravel\Revisionable;
 
 
 class Cost extends Model 
@@ -38,7 +30,7 @@ class Cost extends Model
 
 
 	use AbleTrait;
-    use Revisionable;
+   // use Revisionable;
     use SyncTagsTrait;
     use SyncCommentsTrait;
 
@@ -86,13 +78,6 @@ class Cost extends Model
          return $this->hasMany('Models\MigrateTagging', "object_id", "id");
     }
 
-
-
-
-    public function getPresenter()
-    {
-    	 return new AdminPresenter($this);
-    }
 
 
 

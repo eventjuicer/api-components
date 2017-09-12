@@ -1,9 +1,9 @@
 <?php
 
-namespace Models;
+namespace Eventjuicer\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Models\Scan;
+use Eventjuicer\Models\Scan;
 
 class ScanComment extends Model
 {

@@ -1,10 +1,10 @@
 <?php
 
-namespace Transformers;
+namespace Eventjuicer\Transformers;
 
 use League\Fractal\TransformerAbstract;
 
-use Models\Organizer;
+use Eventjuicer\Models\Organizer;
 
 class OrganizerTransformer extends TransformerAbstract
 {

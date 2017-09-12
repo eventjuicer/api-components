@@ -8,14 +8,18 @@
         {
             "name": "Adam Zygadlewicz",
             "email": "adam.zygadlewicz@gmail.com",
-            "homepage": "",
+            "homepage": "https://github.com/az",
             "role": "Developer"
         }
     ],
     "require": {
         "php": ">=7.0.0",
-        "laravel/framework": "5.5.*",
-        "bosnadev/repositories": "0.*"
+        "illuminate/database": "5.5.*",
+        "illuminate/contracts": "~5.5.0",
+        "bosnadev/repositories": "0.*",
+        "spatie/laravel-fractal": "5.*",
+        "firebase/php-jwt": "^4.0",
+        "laravel/passport" : "*"
     },
     "autoload": {
         "psr-0": {

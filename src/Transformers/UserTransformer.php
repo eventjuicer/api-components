@@ -1,10 +1,10 @@
 <?php
 
-namespace Transformers;
+namespace Eventjuicer\Transformers;
 
 use League\Fractal\TransformerAbstract;
 
-use Models\User;
+use Eventjuicer\Models\User;
 
 
 class UserTransformer extends TransformerAbstract

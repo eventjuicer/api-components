@@ -1,6 +1,6 @@
 <?php
 
-namespace Models;
+namespace Eventjuicer\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -8,18 +8,11 @@ use Contracts\Imageable;
 
 
 
-
-
-use Services\Presenter\PresentableInterface;
-
 //http://tomazkovacic.com/blog/56/list-of-resources-article-text-extraction-from-html-documents/
 //http://www.keyvan.net/2010/08/php-readability/
 //https://www.repustate.com/docs/#sample
 //http://www.diffbot.com/our-apis/article/ - token 16262ea347d0cead33c443e682685ae9
 //http://viewtext.org/
-
-use Presenters\PostMeta AS PublicPresenter;
-use Presenters\Admin\PostMeta AS AdminPresenter;
 
 
 class PostMeta extends Model implements PresentableInterface
@@ -41,16 +34,7 @@ class PostMeta extends Model implements PresentableInterface
 
 
 
-    public function getPresenter()
-    {
-    	if(\Context::app()->in_admin())
-    	{
-    		 return new AdminPresenter($this);
-    	}
-
-        return new PublicPresenter($this);
-    }
-
+   
 
 
 

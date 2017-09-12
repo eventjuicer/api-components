@@ -1,14 +1,14 @@
 <?php
 
 
-namespace Models;
+namespace Eventjuicer\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-use Models\Participant;
-use Models\Organizer;
-use Models\Group;
-use Models\Event;
+use Eventjuicer\Models\Participant;
+use Eventjuicer\Models\Organizer;
+use Eventjuicer\Models\Group;
+use Eventjuicer\Models\Event;
 
 
 class TicketDownload extends Model

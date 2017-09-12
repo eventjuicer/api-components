@@ -1,8 +1,10 @@
 <?php
 
-namespace Models;
+namespace Eventjuicer\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Eventjuicer\Models\Group;
+use Eventjuicer\Models\Organizer;
 
 class Host extends Model
 {
@@ -19,14 +21,14 @@ class Host extends Model
     public function group()
     {
     	//foreign key
-    	return $this->hasOne("Models\Group", "id", "group_id");
+    	return $this->hasOne(Group::class, "id", "group_id");
     }
 
 
     public function organizer()
     {
 
-    	return $this->hasOne("Models\Organizer", "id", "organizer_id");
+    	return $this->hasOne(Organizer::class, "id", "organizer_id");
     }
 
    

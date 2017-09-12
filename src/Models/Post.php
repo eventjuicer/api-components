@@ -1,6 +1,6 @@
 <?php 
 
-namespace Models;
+namespace Eventjuicer\Models;
 
 
 //http://tomazkovacic.com/blog/56/list-of-resources-article-text-extraction-from-html-documents/

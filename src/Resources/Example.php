@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources;
+namespace Eventjuicer\Resources;
 
 use Illuminate\Http\Resources\Json\Resource;
 

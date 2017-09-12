@@ -1,10 +1,10 @@
 <?php
 
-namespace Transformers;
+namespace Eventjuicer\Transformers;
 
 use League\Fractal\TransformerAbstract;
 
-use Models\Post;
+use Eventjuicer\Models\Post;
 
 class PostTransformer extends TransformerAbstract
 {

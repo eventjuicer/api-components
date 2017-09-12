@@ -1,24 +1,15 @@
 <?php
 
-namespace Models;
+namespace Eventjuicer\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+//use Sofa\Revisionable\Laravel\Revisionable;
 
-//custom
-use Services\Presenter\PresentableInterface;
-use Presenters\Page as PublicPresenter;
-use Presenters\Admin\Page as AdminPresenter;
-
-
-use Sofa\Revisionable\Laravel\Revisionable;
-
-
-
-class Page extends Model implements PresentableInterface
+class Page extends Model
 {
 
-	use Revisionable;
+	//use Revisionable;
 
 
     protected $table = "eventjuicer_pages";

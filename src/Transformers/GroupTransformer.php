@@ -1,10 +1,10 @@
 <?php
 
-namespace Transformers;
+namespace Eventjuicer\Transformers;
 
 use League\Fractal\TransformerAbstract;
 
-use Models\Group;
+use Eventjuicer\Models\Group;
 
 class GroupTransformer extends TransformerAbstract
 {   

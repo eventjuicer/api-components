@@ -1,6 +1,6 @@
 <?php 
 
-namespace Repositories\Criteria;
+namespace Eventjuicer\Repositories\Criteria;
 
 use Bosnadev\Repositories\Criteria\Criteria;
 use Bosnadev\Repositories\Contracts\RepositoryInterface as Repository;

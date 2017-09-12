@@ -1,11 +1,10 @@
 <?php
 
-namespace Models;
+namespace Eventjuicer\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-use Services\AbleTrait;
-use Models\Scan;
+use Eventjuicer\Models\Scan;
 
 
 class Participant extends Model
@@ -62,7 +61,7 @@ class Participant extends Model
     public function scannedParticipants()
     {
         
-        return $this->belongsToMany('Models\Participant', 'eventjuicer_barcode_scans', 'owner_id', 'scanned_id')->withPivot("scanned_at");
+        return $this->belongsToMany(Participant::class, 'eventjuicer_barcode_scans', 'owner_id', 'scanned_id')->withPivot("scanned_at");
 
     }
 
@@ -76,43 +75,43 @@ class Participant extends Model
     
     public function organizer()
     {
-        return $this->belongsTo("Models\Organizer");
+        return $this->belongsTo(Organizer::class);
     }
 
     public function group()
     {
-        return $this->belongsTo("Models\Group");
+        return $this->belongsTo(Group::class);
     }
 
     public function event()
     {
-        return $this->belongsTo("Models\Event");
+        return $this->belongsTo(Event::class);
     }
 
      public function paidTickets()
     {
         
-        return $this->belongsToMany('Models\Ticket', 'bob_participant_ticket', 'participant_id', 'ticket_id')->wherePivot("sold", 1);
+        return $this->belongsToMany(Ticket::class, 'bob_participant_ticket', 'participant_id', 'ticket_id')->wherePivot("sold", 1);
 
     }
 
     public function fields()
     {
         
-        return $this->belongsToMany('Models\Field', 'bob_participant_fields', 'participant_id', 'field_id')->withPivot("field_value","participant_id");//->withTimestamps();//->wherePivot("sold", 1);
+        return $this->belongsToMany(Field::class, 'bob_participant_fields', 'participant_id', 'field_id')->withPivot("field_value","participant_id");//->withTimestamps();//->wherePivot("sold", 1);
 
     }
 
         public function ssfields()
     {
-     return $this->hasMany("Models\ParticipantFields", "participant_id");
+     return $this->hasMany(ParticipantFields::class, "participant_id");
     }
 
 
 
     public function purchases()
     {
-    	return $this->hasMany("Models\Purchase", "participant_id");
+    	return $this->hasMany(Purchase::class, "participant_id");
     }
 
 

@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Repositories\Admin;
+namespace Eventjuicer\Repositories\Admin;
 
 use Eventjuicer\User;
 

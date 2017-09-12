@@ -1,18 +1,18 @@
 <?php
 
-namespace Repositories;
+namespace Eventjuicer\Repositories;
 
-use Models\Ticket;
+use Eventjuicer\Models\Ticket;
 // use Carbon\Carbon;
 // use Cache;
 
-use Services\Repository;
+use Eventjuicer\Repositories\Repository;
 //use Bosnadev\Repositories\Eloquent\Repository;
 
-use Repositories\Criteria\ColumnMatches;
-use Repositories\Criteria\BelongsToEvent;
-use Repositories\Criteria\BelongsToGroup;
-use Repositories\Criteria\BelongsToOrganizer;
+use Eventjuicer\Repositories\Criteria\ColumnMatches;
+use Eventjuicer\Repositories\Criteria\BelongsToEvent;
+use Eventjuicer\Repositories\Criteria\BelongsToGroup;
+use Eventjuicer\Repositories\Criteria\BelongsToOrganizer;
 
 class TicketRepository extends Repository
 {

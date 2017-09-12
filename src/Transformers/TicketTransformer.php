@@ -1,10 +1,10 @@
 <?php
 
-namespace Transformers;
+namespace Eventjuicer\Transformers;
 
 use League\Fractal\TransformerAbstract;
 
-use Models\Ticket;
+use Eventjuicer\Models\Ticket;
 
 
 class TicketTransformer extends TransformerAbstract

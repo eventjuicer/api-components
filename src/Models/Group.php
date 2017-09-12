@@ -1,10 +1,10 @@
 <?php
 
-namespace Models;
+namespace Eventjuicer\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-use Services\AbleTrait;
+
 
 
 class Group extends Model
@@ -19,20 +19,20 @@ class Group extends Model
     
     public function events()
     {
-        return $this->hasMany("Models\Event", "group_id")->orderBy("id", "DESC");;
+        return $this->hasMany(Event::class, "group_id")->orderBy("id", "DESC");;
     }
 
 
     public function latestEvents()
     {
-        return $this->hasMany("Models\Event", "group_id")->orderby("id", "DESC");
+        return $this->hasMany(Event::class, "group_id")->orderby("id", "DESC");
     }
 
 
 
     public function organizer()
     {
-    	return $this->belongsTo("Models\Organizer");
+    	return $this->belongsTo(Organizer::class);
     }
 
     public function is_portal()
@@ -42,7 +42,7 @@ class Group extends Model
 
     public function topics()
     {
-        return $this->hasMany("Models\Topic", "group_id");
+        return $this->hasMany(Topic::class, "group_id");
     }
 
 

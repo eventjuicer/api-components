@@ -34,11 +34,10 @@ publishedon
 editedby
 
 */  
-namespace Models;
+namespace Eventjuicer\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-use Services\AbleTrait;
 
 
 class Ticket extends Model
@@ -63,27 +62,27 @@ class Ticket extends Model
     public function purchasesNotCancelled()
     {
         
-        return $this->belongsToMany('Models\Purchase', 'bob_participant_ticket', 'ticket_id', 'purchase_id')->wherePivot("sold", 1);
+        return $this->belongsToMany(Purchase::class, 'bob_participant_ticket', 'ticket_id', 'purchase_id')->wherePivot("sold", 1);
 
     }
 
     public function participantsNotCancelled()
     {
         
-        return $this->belongsToMany('Models\Participant', 'bob_participant_ticket', 'ticket_id', 'participant_id')->wherePivot("sold", 1);
+        return $this->belongsToMany(Participant::class, 'bob_participant_ticket', 'ticket_id', 'participant_id')->wherePivot("sold", 1);
 
     }
 
   
     public function contexts()
     {
-        return $this->morphToMany('Models\Context', 'contextable');
+        return $this->morphToMany(Context::class, 'contextable');
     }
 
 
     public function event()
     {
-        return $this->belongsTo('Models\Event');
+        return $this->belongsTo(Event::class);
     }
 
   

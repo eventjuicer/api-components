@@ -1,8 +1,8 @@
 <?php
 
-namespace ValueObjects;
+namespace Eventjuicer\ValueObjects;
 
-use ValueObjects\Url;
+use Eventjuicer\ValueObjects\Url;
 
 use Closure;
 

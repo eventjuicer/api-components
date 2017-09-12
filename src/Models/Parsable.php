@@ -1,25 +1,15 @@
 <?php
 
-namespace Models;
-
+namespace Eventjuicer\Models;
 use Illuminate\Database\Eloquent\Model;
 
-use Services\Presenter\PresentableInterface;
-
-use Presenters\GroupWidget;
-
-class Parsable extends Model implements PresentableInterface
+class Parsable extends Model
 {
     
     protected $table = "eventjuicer_parsables";
 
     protected $casts = ["data" => "array"];
       
-
-   // public function getPresenter()
-    //{
-      //  return new GroupWidget($this);
-    //}
 
 
  	  public function organizer()

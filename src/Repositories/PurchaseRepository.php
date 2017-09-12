@@ -1,8 +1,8 @@
 <?php
 
-namespace Repositories;
+namespace Eventjuicer\Repositories;
 
-use Models\Purchase;
+use Eventjuicer\Models\Purchase;
 // use Carbon\Carbon;
 // use Cache;
 

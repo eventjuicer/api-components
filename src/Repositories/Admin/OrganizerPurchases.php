@@ -1,8 +1,8 @@
 <?php
 
-namespace Repositories\Admin;
+namespace Eventjuicer\Repositories\Admin;
 
-use Models\Purchase;
+use Eventjuicer\Models\Purchase;
 
 use Carbon;
 

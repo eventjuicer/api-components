@@ -1,6 +1,6 @@
 <?php 
 
-namespace ValueObjects;
+namespace Eventjuicer\ValueObjects;
 
 use Illuminate\Database\Eloquent\Model;
 

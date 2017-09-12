@@ -1,10 +1,10 @@
 <?php
 
-namespace Transformers;
+namespace Eventjuicer\Transformers;
 
 use League\Fractal\TransformerAbstract;
 
-use Models\Purchase;
+use Eventjuicer\Models\Purchase;
 
 class PurchaseTransformer extends TransformerAbstract
 {

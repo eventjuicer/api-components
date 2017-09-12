@@ -1,9 +1,9 @@
 <?php 
 
-namespace Repositories\Admin;
+namespace Eventjuicer\Repositories\Admin;
 //use Bosnadev\Repositories\Eloquent\Repository;
-use Services\Repository;
-use Eventjuicer\Topic;
+use Eventjuicer\Repository;
+use Eventjuicer\Models\Topic;
 
 class TopicRepository extends Repository
 {

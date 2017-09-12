@@ -1,6 +1,6 @@
 <?php
 
-namespace Repositories;
+namespace Eventjuicer\Repositories;
 
 use Eventjuicer\Tag;
 use Eventjuicer\Taggable;

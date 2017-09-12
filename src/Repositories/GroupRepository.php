@@ -1,8 +1,8 @@
 <?php
 
-namespace Repositories;
+namespace Eventjuicer\Repositories;
 
-use Models\Group;
+use Eventjuicer\Models\Group;
 // use Carbon\Carbon;
 // use Cache;
 

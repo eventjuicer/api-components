@@ -1,6 +1,6 @@
 <?php 
 
-namespace Repositories\Admin;
+namespace Eventjuicer\Repositories\Admin;
 
 //use Bosnadev\Repositories\Eloquent\Repository;
 

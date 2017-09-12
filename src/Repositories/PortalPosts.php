@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Repositories;
+namespace Eventjuicer\Repositories;
 
 
 use Bosnadev\Repositories\Contracts\RepositoryInterface;
@@ -17,7 +17,7 @@ use Context;
 
 use Carbon\Carbon;
 
-use Cache;
+use Illuminate\Contracts\Cache\Repository as Cache;
 
 use DB;
 
@@ -25,15 +25,15 @@ use DB;
 use Illuminate\Database\Eloquent\Collection;
 
 
-use Repositories\Criteria\BelongsToOrganizer;
-use Repositories\Criteria\BelongsToGroup;
-use Repositories\Criteria\SortByDesc;
-use Repositories\Criteria\FlagEquals;
-use Repositories\Criteria\TaggedWith;
-use Repositories\Criteria\Limit;
-use Repositories\Criteria\OlderThanDateTime;
-use Repositories\Criteria\YoungerThanDateTime;
-use Repositories\Criteria\RelTableHas;
+use Eventjuicer\Repositories\Criteria\BelongsToOrganizer;
+use Eventjuicer\Repositories\Criteria\BelongsToGroup;
+use Eventjuicer\Repositories\Criteria\SortByDesc;
+use Eventjuicer\Repositories\Criteria\FlagEquals;
+use Eventjuicer\Repositories\Criteria\TaggedWith;
+use Eventjuicer\Repositories\Criteria\Limit;
+use Eventjuicer\Repositories\Criteria\OlderThanDateTime;
+use Eventjuicer\Repositories\Criteria\YoungerThanDateTime;
+use Eventjuicer\Repositories\Criteria\RelTableHas;
 
 class PortalPosts extends Repository {
 
