@@ -41,8 +41,8 @@ class TicketRepository extends Repository
     public function getParticipantsWithTicketRole(string $role, string $scope, int $eventId, $cache= 1) : \Illuminate\Support\Collection
     {
 
-        return $this->cached($role . $scope . $eventId, (int) $cache, function() use ($role, $scope, $eventId)
-        {
+     //   return $this->cached($role . $scope . $eventId, (int) $cache, function() use ($role, $scope, $eventId)
+       // {
 
             $this->with(["participantsNotCancelled", "participantsNotCancelled.fields"]);
 
@@ -65,7 +65,7 @@ class TicketRepository extends Repository
 
             return $this->all()->pluck("participantsNotCancelled")->collapse();
 
-        });
+     ///   });
 
     }
 

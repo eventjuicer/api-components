@@ -28,6 +28,10 @@ use ValueObjects\UTCDateTime;
 
 use Carbon\Carbon;
 
+
+use Eventjuicer\Models\Traits\AbleTrait;
+
+
 class Post extends Model 
 {
 

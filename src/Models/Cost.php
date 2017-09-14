@@ -22,6 +22,7 @@ use Eventjuicer\ValueObjects\Amount;
 
 //use Sofa\Revisionable\Laravel\Revisionable;
 
+use Eventjuicer\Models\Traits\AbleTrait;
 
 class Cost extends Model 
 {

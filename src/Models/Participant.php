@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 use Eventjuicer\Models\Scan;
 
+use Eventjuicer\Models\Traits\AbleTrait;
+
 
 class Participant extends Model
 {

@@ -6,7 +6,7 @@ use Eventjuicer\Models\Participant;
 // use Carbon\Carbon;
 // use Cache;
 
-use Services\Repository;
+//use Services\Repository;
 //use Bosnadev\Repositories\Eloquent\Repository;
 
 use Carbon\Carbon;

@@ -4,7 +4,7 @@ namespace Eventjuicer\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-use Services\AbleTrait;
+use Eventjuicer\Models\Traits\AbleTrait;
 
 
 class SenderNewsletter extends Model

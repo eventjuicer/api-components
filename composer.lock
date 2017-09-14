@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "f0dda654aa1ce9651bf5b081cc6f92ac",
+    "content-hash": "1f7a8e7f6af0888a5d95be07d7f31f37",
     "packages": [
         {
             "name": "bosnadev/repositories",

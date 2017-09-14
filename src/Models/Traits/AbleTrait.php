@@ -1,6 +1,6 @@
 <?php
 
-namespace Eventjuicer\Models;
+namespace Eventjuicer\Models\Traits;
 
 //http://softonsofa.com/laravel-custom-pivot-model-in-eloquent/
 

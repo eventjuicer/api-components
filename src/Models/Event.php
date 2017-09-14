@@ -4,7 +4,7 @@ namespace Eventjuicer\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-use Eventjuicer\AbleTrait;
+use Eventjuicer\Models\Traits\AbleTrait;
 
 class Event extends Model
 {

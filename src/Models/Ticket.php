@@ -39,6 +39,8 @@ namespace Eventjuicer\Models;
 use Illuminate\Database\Eloquent\Model;
 
 
+use Eventjuicer\Models\Traits\AbleTrait;
+
 
 class Ticket extends Model
 {
