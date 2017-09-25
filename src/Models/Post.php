@@ -12,18 +12,18 @@ namespace Eventjuicer\Models;
 
 
 use Illuminate\Database\Eloquent\Model;
-use Services\AbleTrait;
+use Eventjuicer\Services\AbleTrait;
 
 
 use Contracts\Context;
 
 //sync Topics 
 
-use Services\Syncs\SyncTopicsTrait;
-use Services\Syncs\SyncTagsTrait;
-use Services\Syncs\SyncCommentsTrait;
+use Eventjuicer\Services\Syncs\SyncTopicsTrait;
+use Eventjuicer\Services\Syncs\SyncTagsTrait;
+use Eventjuicer\Services\Syncs\SyncCommentsTrait;
 
-use ValueObjects\UTCDateTime;
+use Eventjuicer\ValueObjects\UTCDateTime;
 
 
 use Carbon\Carbon;

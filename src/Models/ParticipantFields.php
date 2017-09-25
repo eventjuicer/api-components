@@ -4,6 +4,12 @@ namespace Eventjuicer\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+
+use Eventjuicer\Models\Participant;
+use Eventjuicer\Models\Input;
+use Eventjuicer\Models\Purchase;
+
+
 class ParticipantFields extends Model
 {
     protected $table = "bob_participant_fields";
@@ -15,17 +21,17 @@ class ParticipantFields extends Model
 
     public function participant()
     {
-    	return $this->belongsTo("Models\Participant");
+    	return $this->belongsTo(Participant::class);
     }
 
     public function purchase()
     {
-    	return $this->belongsTo("Models\Purchase");
+    	return $this->belongsTo(Purchase::class);
     }
 
     public function input()
     {
-    	return $this->belongsTo("Models\Input");
+    	return $this->belongsTo(Input::class);
     }
 
     public function field2()

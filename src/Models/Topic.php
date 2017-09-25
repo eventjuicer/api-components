@@ -5,7 +5,7 @@ namespace Eventjuicer\Models;
 use Illuminate\Database\Eloquent\Model;
 
 
-use Services\AbleTrait;
+use Eventjuicer\Services\AbleTrait;
 
 
 class Topic extends Model

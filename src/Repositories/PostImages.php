@@ -2,7 +2,7 @@
 
 namespace Eventjuicer\Repositories;
 
-use Services\Repository;
+use Eventjuicer\Services\Repository;
 
 
 use Eventjuicer\Post;

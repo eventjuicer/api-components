@@ -1,6 +1,6 @@
 <?php
 
-namespace Eventjuicer;
+namespace Eventjuicer\Services;
 
 use Firebase\JWT\JWT;
 

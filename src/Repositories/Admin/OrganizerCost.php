@@ -7,7 +7,7 @@ use Bosnadev\Repositories\Contracts\RepositoryInterface;
 
 //use Bosnadev\Repositories\Eloquent\Repository;
 
-use Services\Repository;
+use Eventjuicer\Services\Repository;
 
 use Eventjuicer\Cost;
 use Eventjuicer\Tag;

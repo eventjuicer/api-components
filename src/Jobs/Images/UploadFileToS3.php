@@ -11,7 +11,7 @@ use Storage;
 
 use Eventjuicer\Models\PostImage;
 
-use Services\ImageHandler\Storage AS LocalImageStorage;
+use Eventjuicer\Services\ImageHandler\Storage AS LocalImageStorage;
 
 //use Log;
 
@@ -22,7 +22,7 @@ use Config;
 
 use Intervention\Image\Exception\NotReadableException;
 
-use Services\ImageHandler\Exceptions\ImageNotFoundException;
+use Eventjuicer\Services\ImageHandler\Exceptions\ImageNotFoundException;
 
 //https://murze.be/2015/07/upload-large-files-to-s3-using-laravel-5/
 

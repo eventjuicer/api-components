@@ -7,7 +7,7 @@ namespace Eventjuicer\Repositories;
 use Bosnadev\Repositories\Contracts\RepositoryInterface;
 //use Bosnadev\Repositories\Eloquent\Repository;
 
-use Services\Repository;
+use Eventjuicer\Services\Repository;
 
 use Eventjuicer\Post;
 use Eventjuicer\PostMeta;

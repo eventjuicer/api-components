@@ -10,7 +10,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 
 
 
-use ValueObjects\MarkdownContent;
+use Eventjuicer\ValueObjects\MarkdownContent;
 use Contracts\View\Parser;
 use Illuminate\Database\Eloquent\Model;
 

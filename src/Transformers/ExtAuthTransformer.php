@@ -6,7 +6,7 @@ use League\Fractal\TransformerAbstract;
 
 use Eventjuicer\Models\Participant;
 
-use Services\Firebase;
+use Eventjuicer\Services\Firebase;
 
 class ExtAuthTransformer extends TransformerAbstract
 {

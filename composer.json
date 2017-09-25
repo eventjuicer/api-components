@@ -12,6 +12,7 @@
         }
     ],
     "require": {
+
         "php": ">=7.0.0",
         "illuminate/database": "5.5.*",
         "illuminate/contracts": "5.5.*",
@@ -20,7 +21,8 @@
         "illuminate/http" : "5.5.*",
         "illuminate/config" : "5.5.*",
         "illuminate/queue" : "5.5.*",
-        "bosnadev/repositories": "0.*"
+        "bosnadev/repositories": "0.*",
+        "elasticquent/elasticquent": "dev-master"
     },
     "autoload": {
         "psr-4": {
@@ -31,7 +33,8 @@
      "extra": {
         "laravel": {
             "providers": [
-                "Eventjuicer\\Providers\\ApiComponents"
+                "Eventjuicer\\Providers\\ApiComponents",
+                "Elasticquent\\ElasticquentServiceProvider"
             ]
         }
     }

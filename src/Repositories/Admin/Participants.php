@@ -2,13 +2,13 @@
 
 namespace Eventjuicer\Repositories\Admin;
 
-use Services\Repository;
+use Eventjuicer\Services\Repository;
 
 use Eventjuicer\Participant;
 
 
-use ValueObjects\Random;
-use ValueObjects\EmailAddress;
+use Eventjuicer\ValueObjects\Random;
+use Eventjuicer\ValueObjects\EmailAddress;
 
 
 

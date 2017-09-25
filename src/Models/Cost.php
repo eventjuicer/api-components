@@ -7,8 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 use Eventjuicer\AbleTrait;
 
-use Services\Syncs\SyncTagsTrait;
-use Services\Syncs\SyncCommentsTrait;
+use Eventjuicer\Services\Syncs\SyncTagsTrait;
+use Eventjuicer\Services\Syncs\SyncCommentsTrait;
 
 
 //http://tomazkovacic.com/blog/56/list-of-resources-article-text-extraction-from-html-documents/

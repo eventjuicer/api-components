@@ -7,7 +7,7 @@ use Eventjuicer\Models\Field;
 // use Carbon\Carbon;
 // use Cache;
 
-use Services\Repository;
+use Eventjuicer\Services\Repository;
 //use Bosnadev\Repositories\Eloquent\Repository;
 use Illuminate\Support\Collection;
 

@@ -6,7 +6,7 @@ use Eventjuicer\Models\Purchase;
 // use Carbon\Carbon;
 // use Cache;
 
-//use Services\Repository;
+//use Eventjuicer\Services\Repository;
 use Bosnadev\Repositories\Eloquent\Repository;
 
 class PurchaseRepository extends Repository
