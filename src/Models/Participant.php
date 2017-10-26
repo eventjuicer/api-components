@@ -4,20 +4,23 @@ namespace Eventjuicer\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-use Eventjuicer\Models\Scan;
-
 use Eventjuicer\Models\Traits\AbleTrait;
 
+use Eventjuicer\Models\Traits\Elasticsearch;
+
+use Eventjuicer\Repositories\ParticipantRepository;
 
 class Participant extends Model
 {
 
+
     use AbleTrait;
-    
+    use Elasticsearch;
+
 
     protected $table = "bob_participants";
 
- 	protected $hidden = ['token'];
+ 	protected $hidden = ["tickets"];
 
     protected $guarded = ["event_id", "group_id", "organizer_id"];
 
@@ -25,6 +28,13 @@ class Participant extends Model
     public $timestamps = false;
 
     
+    public function getRepository()
+    {
+        return ParticipantRepository::class;
+    }
+
+
+
 
     public function contexts()
     {
@@ -90,12 +100,28 @@ class Participant extends Model
         return $this->belongsTo(Event::class);
     }
 
-     public function paidTickets()
+    public function tickets()
+    {
+        
+        return $this->belongsToMany(Ticket::class, 'bob_participant_ticket', 'participant_id', 'ticket_id')->withPivot("purchase_id", "sold");
+
+    }
+
+
+    public function paidTickets()
     {
         
         return $this->belongsToMany(Ticket::class, 'bob_participant_ticket', 'participant_id', 'ticket_id')->wherePivot("sold", 1);
 
     }
+
+    public function unpaidTickets()
+    {
+        
+        return $this->belongsToMany(Ticket::class, 'bob_participant_ticket', 'participant_id', 'ticket_id')->wherePivot("sold", 0);
+
+    }
+
 
     public function fields()
     {

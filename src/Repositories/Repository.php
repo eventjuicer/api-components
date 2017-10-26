@@ -13,12 +13,16 @@ use Carbon\Carbon;
 use Illuminate\Contracts\Cache\Repository as Cache;
 
 
+
 class Repository extends BaseRepository
 {
     
     protected $cache;
     protected $request;
     protected static $postsAlreadyShown = [];
+
+
+
 
     final public function __construct(Cache $cache, Request $request, App $app, Collection $collection)
     {

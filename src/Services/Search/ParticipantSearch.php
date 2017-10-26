@@ -52,7 +52,7 @@ function __construct(Repository $repo, int $event_id, string $q)
                 $repo->pushCriteria(new BelongsToEvent($event_id));
                 $repo->pushCriteria(new ColumnMatches("email", "%" . $q . "%"));
                 
-                $rows2 = $repo->all();
+                $rows2 = $repo;//->all();
 
                 $rows = $rows1->merge($rows2);
             }

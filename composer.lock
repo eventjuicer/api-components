@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "eec565a7d18a4b4fb87e3a5b3cebcfc5",
+    "content-hash": "e54d5652a0a537330c2768bc8f510d4d",
     "packages": [
         {
             "name": "bosnadev/repositories",
@@ -245,87 +245,32 @@
             "time": "2017-01-30T22:07:36+00:00"
         },
         {
-            "name": "elasticquent/elasticquent",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/elasticquent/Elasticquent.git",
-                "reference": "46c838bc1de1f0a2e3e4d28254700171aa51df03"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/elasticquent/Elasticquent/zipball/46c838bc1de1f0a2e3e4d28254700171aa51df03",
-                "reference": "46c838bc1de1f0a2e3e4d28254700171aa51df03",
-                "shasum": ""
-            },
-            "require": {
-                "elasticsearch/elasticsearch": ">1.0 <2.2",
-                "illuminate/config": "~4.2|^5",
-                "illuminate/database": "~4.2|^5",
-                "nesbot/carbon": "~1.0",
-                "php": ">=5.4.0"
-            },
-            "require-dev": {
-                "mockery/mockery": "^0.9.4",
-                "phpunit/phpunit": "~4.2|~5.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Elasticquent\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Adam Fairholm",
-                    "email": "adam.fairholm@gmail.com",
-                    "homepage": "http://adamfairholm.com"
-                }
-            ],
-            "description": "Maps Laravel Eloquent models to Elasticsearch types.",
-            "homepage": "https://github.com/elasticquent/Elasticquent",
-            "keywords": [
-                "elasticsearch",
-                "eloquent",
-                "laravel"
-            ],
-            "time": "2017-09-06T03:22:37+00:00"
-        },
-        {
             "name": "elasticsearch/elasticsearch",
-            "version": "v2.1.5",
+            "version": "v5.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/elastic/elasticsearch-php.git",
-                "reference": "c1675245c0a6f789cbb80b3e0b333b9ef521a627"
+                "reference": "50e5b1c63db68839b8acc1f4766769570a27a448"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elastic/elasticsearch-php/zipball/c1675245c0a6f789cbb80b3e0b333b9ef521a627",
-                "reference": "c1675245c0a6f789cbb80b3e0b333b9ef521a627",
+                "url": "https://api.github.com/repos/elastic/elasticsearch-php/zipball/50e5b1c63db68839b8acc1f4766769570a27a448",
+                "reference": "50e5b1c63db68839b8acc1f4766769570a27a448",
                 "shasum": ""
             },
             "require": {
                 "guzzlehttp/ringphp": "~1.0",
-                "php": ">=5.4",
+                "php": "^5.6|^7.0",
                 "psr/log": "~1.0"
             },
             "require-dev": {
-                "athletic/athletic": "~0.1",
                 "cpliakas/git-wrapper": "~1.0",
+                "doctrine/inflector": "^1.1",
                 "mockery/mockery": "0.9.4",
-                "phpunit/phpunit": "~4.7",
-                "symfony/yaml": "2.4.3 as 2.4.2",
-                "twig/twig": "1.*"
+                "phpunit/phpunit": "^4.7|^5.4",
+                "sami/sami": "~3.2",
+                "symfony/finder": "^2.8",
+                "symfony/yaml": "^2.8"
             },
             "suggest": {
                 "ext-curl": "*",
@@ -339,7 +284,7 @@
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "Apache 2"
+                "Apache-2.0"
             ],
             "authors": [
                 {
@@ -352,7 +297,7 @@
                 "elasticsearch",
                 "search"
             ],
-            "time": "2016-03-18T16:31:37+00:00"
+            "time": "2017-07-19T18:44:30+00:00"
         },
         {
             "name": "erusev/parsedown",
@@ -2110,9 +2055,7 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "elasticquent/elasticquent": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

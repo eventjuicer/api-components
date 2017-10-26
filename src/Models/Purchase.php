@@ -3,6 +3,7 @@
 namespace Eventjuicer\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Eventjuicer\Models\Ticket;
 
 class Purchase extends Model
 {
@@ -50,7 +51,9 @@ class Purchase extends Model
 
     public function tickets()
     {
-        return $this->hasMany("Models\PurchaseTicket", "participant_id");
+        //return $this->hasMany(PurchaseTicket::class, "participant_id");
+
+        return $this->belongsToMany(Ticket::class, 'bob_participant_ticket', 'purchase_id', 'ticket_id')->withPivot("sold");
     }
 
 

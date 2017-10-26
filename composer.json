@@ -3,6 +3,7 @@
     "description": "set of eloquent models, repositories(+criteria), api resources",
     "keywords": ["eventjuicer"],
     "homepage": "https://github.com/eventjuicer/api-components",
+    "version" : "0.0.1",
     "authors": [
         {
             "name": "Adam Zygadlewicz",
@@ -22,7 +23,9 @@
         "illuminate/config" : "5.5.*",
         "illuminate/queue" : "5.5.*",
         "bosnadev/repositories": "0.*",
-        "elasticquent/elasticquent": "dev-master"
+        "elasticsearch/elasticsearch": "~5.0",
+        "webpatser/laravel-uuid": "^3.0",
+        "hashids/hashids": "^2.0"
     },
     "autoload": {
         "psr-4": {
@@ -34,7 +37,7 @@
         "laravel": {
             "providers": [
                 "Eventjuicer\\Providers\\ApiComponents",
-                "Elasticquent\\ElasticquentServiceProvider"
+                "Eventjuicer\\Providers\\Repositories"
             ]
         }
     }

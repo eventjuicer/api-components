@@ -6,15 +6,16 @@ use Eventjuicer\Models\Ticket;
 // use Carbon\Carbon;
 // use Cache;
 
-use Eventjuicer\Repositories\Repository;
-//use Bosnadev\Repositories\Eloquent\Repository;
 
 use Eventjuicer\Repositories\Criteria\ColumnMatches;
 use Eventjuicer\Repositories\Criteria\BelongsToEvent;
 use Eventjuicer\Repositories\Criteria\BelongsToGroup;
 use Eventjuicer\Repositories\Criteria\BelongsToOrganizer;
 
-class TicketRepository extends Repository
+use Illuminate\Support\Collection;
+
+
+class EloquentTicketRepository extends Repository implements TicketRepositoryInterface
 {
     
 
@@ -38,7 +39,7 @@ class TicketRepository extends Repository
     
 
 
-    public function getParticipantsWithTicketRole(string $role, string $scope, int $eventId, $cache= 1) : \Illuminate\Support\Collection
+    public function getParticipantsWithTicketRole(string $role, string $scope, int $eventId, $cache= 1) : Collection
     {
 
        return $this->cached($role . $scope . $eventId, (int) $cache, function() use ($role, $scope, $eventId)

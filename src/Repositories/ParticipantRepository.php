@@ -3,14 +3,13 @@
 namespace Eventjuicer\Repositories;
 
 use Eventjuicer\Models\Participant;
-// use Carbon\Carbon;
-// use Cache;
-
-//use Eventjuicer\Services\Repository;
-//use Bosnadev\Repositories\Eloquent\Repository;
+use Eventjuicer\Repositories\Repository;
 
 use Carbon\Carbon;
 use Uuid;
+
+use Eventjuicer\Resources\ParticipantResource;
+
 
 class ParticipantRepository extends Repository
 {
@@ -21,6 +20,23 @@ class ParticipantRepository extends Repository
     {
         return Participant::class;
     }
+
+    public function toSearchArray($id, $columns = [])
+    {
+        return (new ParticipantResource( $this->model->with("fields", "purchases.tickets.flags")->find($id)))->toArray($this->request );
+    }
+
+    public function profile($key = "", $replacement = "")
+    {
+
+        $profile = $this->fields->mapWithKeys(function($_item){
+                
+                return [$_item->name => $_item->pivot->field_value];
+        });
+        return !empty($key) ? $profile->get($key, $replacement) : $profile->all();    
+    }
+
+
 
     public function createOrUpdate($active_event_id = 0, $data = array())
     {
