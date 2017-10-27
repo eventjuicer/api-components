@@ -23,7 +23,15 @@ class ParticipantRepository extends Repository
 
     public function toSearchArray($id, $columns = [])
     {
-        return (new ParticipantResource( $this->model->with("fields", "purchases.tickets.flags")->find($id)))->toArray($this->request );
+
+        $data = $this->model->with("fields", "purchases.tickets.flags")->find($id);
+
+        if(is_null($data))
+        {
+            return [];
+        }
+
+        return (new ParticipantResource( $data ))->toArray($this->request );
     }
 
     public function profile($key = "", $replacement = "")
