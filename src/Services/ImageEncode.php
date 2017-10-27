@@ -1,6 +1,8 @@
 <?php namespace Eventjuicer\Services;
 
 use GuzzleHttp\Client as Guzzle;
+use Intervention\Image\ImageManager;
+
 
 class ImageEncode {
 	
@@ -11,12 +13,22 @@ class ImageEncode {
 
 	function __construct($url)
 	{
-		$this->url = $url;
-
-		if(strpos($this->url, "http")===false)
+		
+		if(strpos($url, "http")===false)
 		{
 			throw new \Exception("Bad image URL...");
 		}
+
+		$this->url = $url;
+
+		$this->getImage();
+
+	}
+
+	
+
+	protected function getImage()
+	{
 
 		$request = (new Guzzle())->request("GET", $this->url);
 
@@ -31,15 +43,22 @@ class ImageEncode {
 
 	}
 
-	function encode()
-	{
+	protected function resize(){
 
-		return "data:".$this->type.";base64," . base64_encode($this->file);
+
+		$manager = new ImageManager();
+
+		$image = $manager->make($this->file)->resize(400, null, function ($constraint) {
+    			$constraint->aspectRatio();
+		});
+
+		return $image->encode('data-url');
+
 	}
 
 	function __toString()
 	{
-		return (string) $this->encode();
+		return (string) $this->resize();
 	}
 
 }
