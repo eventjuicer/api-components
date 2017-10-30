@@ -57,7 +57,7 @@ class ParticipantPromoCreatives
     public function buildLink($creativeId, $target = "")
     {
 
-        $url = secure_url("~" . $this->buildHash($creativeId));
+        $url = url("~" . $this->buildHash($creativeId));
 
         $encUrl = rawurlencode($url);
 
@@ -185,7 +185,7 @@ class ParticipantPromoCreatives
 
     public function buildPublicFilename($creativeId, $ext = "jpg")
     {
-        return secure_asset("storage/" . $this->buildFilename($creativeId, $ext));
+        return asset("storage/" . $this->buildFilename($creativeId, $ext));
     }   
 
     public function buildFilename($creativeId, $ext = "jpg")
