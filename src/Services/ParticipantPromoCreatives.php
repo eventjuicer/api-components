@@ -57,7 +57,7 @@ class ParticipantPromoCreatives
     public function buildLink($creativeId, $target = "")
     {
 
-        $url = url("~" . $this->buildHash($creativeId));
+        $url = secure_url("~" . $this->buildHash($creativeId));
 
         $encUrl = rawurlencode($url);
 
