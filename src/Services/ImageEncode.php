@@ -1,64 +1,65 @@
 <?php namespace Eventjuicer\Services;
 
-use GuzzleHttp\Client as Guzzle;
-use Intervention\Image\ImageManager;
 
+use Intervention\Image\ImageManager;
 
 class ImageEncode {
 	
-	protected $url;
+	protected $urlOrPath;
 	protected $file;
 	protected $type;
+	protected $image;
+	protected $target;
 
-
-	function __construct($url)
+	function __construct($urlOrPath, $target = false)
 	{
 		
-		if(strpos($url, "http")===false)
-		{
-			throw new \Exception("Bad image URL...");
-		}
+		$this->urlOrPath = $urlOrPath;
 
-		$this->url = $url;
+		$this->target = $target;
 
-		$this->getImage();
+		$this->file  = (new ImageShared($urlOrPath))->getImage();
 
+		$this->image = (new ImageManager())->make($this->file);
 	}
 
-	
-
-	protected function getImage()
+	public function resize($width = 400)
 	{
 
-		$request = (new Guzzle())->request("GET", $this->url);
-
-		$this->file = (string) $request->getBody();
-
-		$this->type = finfo_buffer(finfo_open(), $this->file, FILEINFO_MIME_TYPE);
-
-		if(strpos($this->type, "image/")===false)
-		{
-			throw new \Exception("This file is not an image!!!!");
-		}
-
-	}
-
-	protected function resize(){
-
-
-		$manager = new ImageManager();
-
-		$image = $manager->make($this->file)->resize(400, null, function ($constraint) {
+		$this->image->resize((int) $width, null, function ($constraint) {
     			$constraint->aspectRatio();
+    			$constraint->upsize();
 		});
 
-		return $image->encode('data-url');
 
+		$this->save();
+
+		
+		return $this->image;
+		
 	}
 
-	function __toString()
+	public function width()
 	{
-		return (string) $this->resize();
+		return $this->image->width();
+	}
+
+	public function height()
+	{
+		return $this->image->height();
+	}
+
+
+	public function save()
+	{
+
+		if($this->target)
+		{
+			$this->image->save($this->target, 90);
+
+			return file_exists($this->target);
+		}
+
 	}
 
 }

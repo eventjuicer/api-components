@@ -8,7 +8,9 @@ class Hashids {
 	protected $length = 4;
 	protected $dictionary = "abcdefghijkmnpqrstuvwxyz";
 
-	function __construct()
+	protected $hashids;
+
+	function __construct($skipLimitations = false)
 	{
 		$this->key = trim(env("HASHIDS_KEY", false));
 
@@ -17,28 +19,42 @@ class Hashids {
 			throw new \Exception("No HASHIDS_KEY in .env!");
 		}
 
+		if($skipLimitations)
+		{
+			$this->hashids = new _Hashids(
+	        	$this->key
+	    	);
+		}
+		else
+		{
+			$this->hashids = new _Hashids(
+	        	$this->key, 
+	        	$this->length, 
+	        	$this->dictionary
+	    	);
+		}
+
+		
+
 	}
 
 	function encode($id = 0)
 	{
-	        $hashids = new _Hashids(
-	        	$this->key, 
-	        	$this->length, 
-	        	$this->dictionary
-	        );
-	        return $hashids->encode($id);
+	       
+	        return $this->hashids->encode($id);
 	}
 
-	function decode($code = "", $flat = true)
+	function decode($code = "")
 	{      
-	        $hashids = new _Hashids(
-	        	$this->key, 
-	        	$this->length, 
-	        	$this->dictionary
-	        );
 
-	        $id = $hashids->decode($code);
-	        return !empty($id[0]) ? $id[0] : 0;
+	        $arr = $this->hashids->decode($code);
+
+	        if(count($arr) === 1)
+	        {
+	        	return $arr[0];
+	        }
+
+	        return $arr;
 	}
 
 

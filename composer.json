@@ -22,6 +22,7 @@
         "illuminate/http" : "5.5.*",
         "illuminate/config" : "5.5.*",
         "illuminate/queue" : "5.5.*",
+        "illuminate/foundation" : "5.5.*",
         "bosnadev/repositories": "0.*",
         "elasticsearch/elasticsearch": "~5.0",
         "webpatser/laravel-uuid": "^3.0",
