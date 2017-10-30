@@ -95,7 +95,7 @@ class ParticipantPromo
 
     public function field($field)
     {
-        return array_get($this->participant, (string) $field, "");
+        return array_get($this->participant, "fields.".(string) $field, "");
     }
 
     protected function build()
