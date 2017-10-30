@@ -21,6 +21,12 @@ class ImageEncode {
 		$this->file  = (new ImageShared($urlOrPath))->getImage();
 
 		$this->image = (new ImageManager())->make($this->file);
+
+		$canvas = (new ImageManager())->canvas($this->image->width(), $this->image->height(), '#ffffff');
+
+		$this->image = $canvas->insert($this->image);
+
+		//$this->image->opacity(100);
 	}
 
 	public function resize($width = 400)
