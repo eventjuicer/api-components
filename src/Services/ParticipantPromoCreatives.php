@@ -99,7 +99,7 @@ class ParticipantPromoCreatives
         if($creative->act_as != "social")
         {
             $data["image"] =  $this->defaultImage($creative->id);
-            $data["title"] = sprintf(config("promo.og_title"), $this->promo->field("booth"));
+            $data["title"] =  sprintf(config("promo.og_title"), $this->promo->field("booth"));
             $data["description"] = sprintf(config("promo.og_description"), $this->promo->participantName());
         }
 
@@ -185,7 +185,7 @@ class ParticipantPromoCreatives
 
     public function buildPublicFilename($creativeId, $ext = "jpg")
     {
-        return asset("storage/" . $this->buildFilename($creativeId, $ext));
+        return secure_asset("storage/" . $this->buildFilename($creativeId, $ext));
     }   
 
     public function buildFilename($creativeId, $ext = "jpg")
