@@ -108,6 +108,18 @@ class ParticipantPromoCreatives
         
     }
 
+    public function targetUrl()
+    {
+        $creative = $this->current();
+
+        return sprintf(config("promo.link"), 
+
+                    $creative->participant_id, 
+                    $creative->act_as, 
+                    $creative->id
+                );
+    }
+
     public function defaultImage($creative)
     {
         if(!$this->promo->participantImage())
