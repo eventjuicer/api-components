@@ -35,14 +35,18 @@ class ParticipantPromoCreative extends FormRequest
     {
         return [
             
-            "name"              => "Musisz podać nazwę kreacji",
+            "name.required"   => "Musisz podać nazwę",
+            "name.min"        => "Musisz podać dłuższą nazwę",
+            "name.max"        => "Musisz podać krótszą nazwę",
             
             "data.title.required"   => "Musisz podać tytuł",
             "data.title.min"        => "Musisz podać dłuższy tytuł",
             "data.title.max"        => "Musisz podać krótszy tytuł",
             
-            "data.description"   => "",
-            "template_id"        => "Wybierz szablon"
+            "data.description.present"   => "Musisz podać opis",
+     
+            "template_id.required"       => "Wybierz szablon po prawej",
+            "template_id.numeric"        => "Wybierz szablon po prawej",
 
         ];
     }
