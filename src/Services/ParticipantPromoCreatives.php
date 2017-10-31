@@ -64,11 +64,13 @@ class ParticipantPromoCreatives
 
         $encUrl = rawurlencode($url);
 
+        $og = $this->openGraph();
+
         switch($target)
         {
             case "linkedin":
 
-            return "https://www.linkedin.com/shareArticle?mini=true&url=".$encUrl."&title=title&summary=summary&source=source";
+            return "https://www.linkedin.com/shareArticle?mini=true&url=".$encUrl."&title=".rawurlencode($og["title"])."&summary=".rawurlencode($og["description"]);
             break;
 
             case "twitter":

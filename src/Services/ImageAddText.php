@@ -187,7 +187,7 @@ The time complexity for N rectangles is O(N*log(N)) because for each 2*N x-coord
 				case "text":
 
 					
-					$text = "Agata Meble ".$this->creatives->getPromo()->field($mod["field"]);
+					$text = "Stoisko ".$this->creatives->getPromo()->field($mod["field"]);
 
 					$this->insertText($text, $s, $c, $x, $y);
 
