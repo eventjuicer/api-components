@@ -67,7 +67,7 @@ class PartnerPerformance {
 	public function sourceContains($search="")
 	{
 
-		return $this->repo->cached($search, 30, function() use ($search)
+		return $this->repo->cached($search, 10, function() use ($search)
         {
 
 			$response = Analytics::performQuery(

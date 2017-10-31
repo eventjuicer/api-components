@@ -69,7 +69,13 @@ class Repository extends BaseRepository
     public final function cached($key = "", $cachetime, Closure $closure)
     {
    
-        return $this->cache->remember($this->generateCacheKey($key), $cachetime, $closure);
+        if(env("USE_CACHE", true))
+        {
+            return $this->cache->remember($this->generateCacheKey($key), $cachetime, $closure);
+        }
+
+        return $closure();
+       
     }
 
     protected final function generateCacheKey($key = "")
