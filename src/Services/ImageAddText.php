@@ -27,6 +27,10 @@ class ImageAddText {
 	];
 
 	protected $areas = [];
+
+
+	static $fieldPattern = "@\[\[(?P<full>(?P<name>[a-zA-Z0-9_\-]+)(\?(?P<options>[a-z0-9=_\-&;]+)|))\]\]@i";
+
 /*
 
 
@@ -172,6 +176,8 @@ The time complexity for N rectangles is O(N*log(N)) because for each 2*N x-coord
 			$s = isset($mod["s"]) ? (int) $mod["s"] : 10;
 			$c = isset($mod["c"]) ? $mod["c"] : "#000000";
 
+			$text = !empty($mod["text"]) ? $mod["text"] : "";
+
 			switch($mod["insert"])
 			{
 
@@ -186,8 +192,7 @@ The time complexity for N rectangles is O(N*log(N)) because for each 2*N x-coord
 
 				case "text":
 
-					
-					$text = "Stoisko ".$this->creatives->getPromo()->field($mod["field"]);
+					$text = $this->personalize($text);
 
 					$this->insertText($text, $s, $c, $x, $y);
 
@@ -216,6 +221,34 @@ The time complexity for N rectangles is O(N*log(N)) because for each 2*N x-coord
 	
 		
 	}
+
+
+
+	protected function personalize($str = "")
+	{
+				
+		if(strstr($str, "[[")!==false)
+		{
+			
+			$obj = $this; 
+			
+			$str = preg_replace_callback(self::$fieldPattern, function($arr = array()) use($obj)
+			{ 					
+			
+
+				$fieldName = trim(array_get($arr, "name"));
+
+				return $obj->creatives->getPromo()->field($fieldName);
+
+		 	}, $str);
+		
+		}
+		
+		
+		return $str;
+		
+	}/*eom*/
+
 
 	protected function getFont($weight = "bold")
 	{
