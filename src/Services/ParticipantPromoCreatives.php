@@ -48,7 +48,10 @@ class ParticipantPromoCreatives
     }
 
 
-  
+    public function getPromo()
+    {
+        return $this->promo;
+    }
 
     /*
     *   $creativeId is primary Id from DB!

@@ -72,7 +72,7 @@ class PartnerPerformance {
 
 			$response = Analytics::performQuery(
 
-				Period::days(14), 
+				Period::days(180), 
 
 				"ga:sessions",  
 				[

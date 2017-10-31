@@ -29,10 +29,10 @@ class ImageEncode {
 		//$this->image->opacity(100);
 	}
 
-	public function resize($width = 400)
+	public function resize($width = 400, $height = 250)
 	{
 
-		$this->image->resize((int) $width, null, function ($constraint) {
+		$this->image->resize((int) $width, (int) $height, function ($constraint) {
     			$constraint->aspectRatio();
     			$constraint->upsize();
 		});
