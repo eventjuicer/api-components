@@ -64,13 +64,13 @@ class ParticipantPromoCreatives
 
         $encUrl = rawurlencode($url);
 
-        $og = $this->openGraph();
+        $data = $this->creatives->find( $creativeId );
 
         switch($target)
         {
             case "linkedin":
 
-            return "https://www.linkedin.com/shareArticle?mini=true&url=".$encUrl."&title=".rawurlencode($og["title"])."&summary=".rawurlencode($og["description"]);
+            return "https://www.linkedin.com/shareArticle?mini=true&url=".$encUrl."&title=".rawurlencode(array_get($data->data, "title"))."&summary=".rawurlencode(array_get($data->data, "description"));
             break;
 
             case "twitter":
