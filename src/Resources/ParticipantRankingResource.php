@@ -31,8 +31,13 @@ class ParticipantRankingResource extends Resource
 
         $data["email"] = (new EmailAddress($this->email))->obfuscated();
 
+
+
+
         $data["phone"] = isset($data["phone"]) ? 
-            str_pad(substr( str_replace(" ", "", $data["phone"]), -4), 9, "x", STR_PAD_LEFT) : "";
+            substr( str_replace(" ", "", $data["phone"]), -4) : "";
+
+        $data["phone"] = str_pad($data["phone"], 9, "x", STR_PAD_LEFT);
 
 		return $data;
             
