@@ -2,7 +2,7 @@
 
 namespace Eventjuicer\ValueObjects;
 
-class EmailAddress  
+class PhoneNumber  
 {
     private $address;
 
@@ -11,7 +11,7 @@ class EmailAddress
         $this->address = strtolower(trim($address));
     }
 
-    public function obfuscated($maskWith = "*")
+    public function obfuscated()
     {
         $len = min(strlen($this->address), 4);
 
