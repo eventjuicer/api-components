@@ -2,6 +2,8 @@
 
 use Illuminate\Database\Eloquent\Model;
 
+use Eventjuicer\Services\Hashids;
+
 class PersonPdfLabel {
 	
 	protected $model;
@@ -18,7 +20,7 @@ class PersonPdfLabel {
 	{
 		$user = $this->model;
 
-		$code = hashids_encode($user->id);
+		$code = (new Hashids())->encode($user->id); 
 
         $label = new PdfLabel();
     
@@ -27,7 +29,7 @@ class PersonPdfLabel {
             "first"     => $user->profile("fname"), 
             "second"    => $user->profile("lname"), 
             "third"     => $user->profile("cname2"),
-            "code"      => hashids_encode($user->id),
+            "code"      => $code
 
         ])
 

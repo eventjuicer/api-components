@@ -153,6 +153,7 @@ class SaveOrder {
 			$t->participant_id 	= $participant_id;
 			$t->purchase_id 	= $purchase->id;
 			$t->event_id 		= $this->event_id;
+			$t->formdata		= "";
 			$t->quantity 		= $quantity;
 			$t->sold 			= 1;
 			$t->save();
