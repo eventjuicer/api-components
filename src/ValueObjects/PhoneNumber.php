@@ -4,32 +4,32 @@ namespace Eventjuicer\ValueObjects;
 
 class PhoneNumber  
 {
-    private $address;
+    private $number;
 
-    public function __construct($address)
+    public function __construct($number)
     {
-        $this->address = strtolower(trim($address));
+        $this->number = preg_replace("/\s+/", "", $number);
     }
 
     public function obfuscated()
     {
-        $len = min(strlen($this->address), 4);
+        $len = min(strlen($this->number), 4);
 
-        return substr($this->address, 0, $len) . "---@---" .  substr($this->address, $len * -1);
+        return substr($this->number, 0, $len) . "---@---" .  substr($this->number, $len * -1);
     }
 
     public function isValid()
     {
-        return filter_var($this->address, FILTER_VALIDATE_EMAIL);
+       // return filter_var($this->address, FILTER_VALIDATE_EMAIL);
     }
 
     public function __toString()
     {
-        return $this->address;
+        return $this->number;
     }
 
-    public function equals(EmailAddress $address)
+    public function equals(PhoneNumber $number)
     {
-        return (string) $this === (string) $address;
+        return (string) $this === (string) $number;
     }
 }
