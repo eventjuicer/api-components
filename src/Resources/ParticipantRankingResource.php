@@ -57,11 +57,11 @@ class ParticipantRankingResource extends Resource
 
     protected function mask($str, $maskWith = "*")
     {
-        $strlen = strlen($str);
+        $strlen = mb_strlen($str);
         $mask   = round($strlen / 2);
 
         return str_pad( 
-                    substr( $str , -1 * $mask), 
+                    mb_substr( $str , -1 * $mask), 
                 $strlen, $maskWith, STR_PAD_LEFT);
     }
 
