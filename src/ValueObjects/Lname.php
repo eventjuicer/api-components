@@ -9,19 +9,26 @@ class Lname
     public function __construct($lname)
     {
         $this->lname = trim($lname);
+
     }
 
-    public function obfuscated()
+    public function obfuscated($maskWith = "*")
     {
-        $len = min(strlen($this->address), 4);
 
-        return substr($this->address, 0, $len) . "---@---" .  substr($this->address, $len * -1);
+        $strlen = max(mb_strlen($this->lname), 6);
+
+        $mask = round($strlen / 2);
+
+        $str = mb_substr( $this->lname , 0, $mask);
+
+        return str_pad( $str, $strlen, $maskWith, STR_PAD_RIGHT);
     }
 
-    public function isValid()
-    {
-        return filter_var($this->lname, FILTER_VALIDATE_EMAIL);
-    }
+
+    // public function isValid()
+    // {
+    //     return filter_var($this->lname, FILTER_VALIDATE_EMAIL);
+    // }
 
     public function __toString()
     {

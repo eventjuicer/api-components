@@ -7,6 +7,8 @@ use Illuminate\Http\Resources\Json\Resource;
 //use Eventjuicer\Models\Participant;
 
 use Eventjuicer\ValueObjects\EmailAddress;
+use Eventjuicer\ValueObjects\Lname;
+use Eventjuicer\ValueObjects\Phone;
 
 
 
@@ -31,13 +33,13 @@ class ParticipantRankingResource extends Resource
             {
                 case "phone":
                 
-                    $value = $this->mask( str_replace(" ", "", $value) );
+                    $value =  (new Phone($value))->obfuscated("*");
 
                 break;
 
                 case "lname":
 
-                    $value = $this->mask($value, STR_PAD_RIGHT);
+                    $value = (new Lname($value))->obfuscated("*");
 
                 break;
             }
@@ -55,16 +57,7 @@ class ParticipantRankingResource extends Resource
     }
 
 
-    protected function mask($str, $maskFrom = STR_PAD_LEFT, $maskWith = "*")
-    {
-        $strlen = mb_strlen($str);
-        $mask   = round($strlen / 2);
-
-        return str_pad( 
-                    mb_substr( $str , -1 * $mask), 
-                $strlen, $maskWith, $maskFrom);
-    }
-
+    
 
 }
 

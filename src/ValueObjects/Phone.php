@@ -2,7 +2,7 @@
 
 namespace Eventjuicer\ValueObjects;
 
-class PhoneNumber  
+class Phone 
 {
     private $number;
 
@@ -11,11 +11,18 @@ class PhoneNumber
         $this->number = preg_replace("/\s+/", "", $number);
     }
 
-    public function obfuscated()
+    public function obfuscated($maskWith = "*")
     {
-        $len = min(strlen($this->number), 4);
+        if(!$this->number)
+        {
+            return str_repeat($maskWith, 9);
+        }
 
-        return substr($this->number, 0, $len) . "---@---" .  substr($this->number, $len * -1);
+        $strlen = max(9, mb_strlen($this->number));
+
+        $str = mb_substr( $this->number , 0, floor( $strlen / 2));
+
+        return str_pad( $str, $strlen, $maskWith, STR_PAD_LEFT);
     }
 
     public function isValid()
@@ -28,7 +35,7 @@ class PhoneNumber
         return $this->number;
     }
 
-    public function equals(PhoneNumber $number)
+    public function equals(Phone $number)
     {
         return (string) $this === (string) $number;
     }
