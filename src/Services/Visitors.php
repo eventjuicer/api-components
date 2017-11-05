@@ -6,6 +6,7 @@ use Eventjuicer\Repositories\InputRepository;
 use Illuminate\Support\Collection;
 use Eventjuicer\ValueObjects\EmailAddress;
 
+use Eventjuicer\Services\Hashids;
 
 class Visitors {
 	
@@ -31,7 +32,7 @@ class Visitors {
 				return [$_item->name => $_item->pivot->field_value];
 			});
 
-			return $trans->put("code", hashids_encode( $participant->id ) );
+			return $trans->put("code", (new Hashids())->encode( $participant->id ) );
 
 		
 
