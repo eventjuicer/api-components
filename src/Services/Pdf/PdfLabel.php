@@ -165,11 +165,13 @@ class PdfLabel
 
 	public function save($filename)
 	{
-		$path = app()->basePath("public/temp/" . $filename);
+		
 
-		$this->pdf->Output($path, 'F');
+		$this->pdf->Output($filename, 'F');
 
-		return "https://api.eventjuicer.com".str_replace(app()->basePath("public"), "", $path);
+		return $filename;
+
+		//return "https://api.eventjuicer.com".str_replace(app()->basePath("public"), "", $path);
 	}
 
 
