@@ -6,7 +6,6 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 
-use Illuminate\Support\Facades\View;
 
 
 use Eventjuicer\Services\ParticipantPromo;
@@ -15,7 +14,6 @@ use Eventjuicer\Repositories\ParticipantRepository;
 use Eventjuicer\Repositories\CreativeRepository;
 use Eventjuicer\Repositories\CreativeTemplateRepository;
 
-use Eventjuicer\ViewComposers\ParticipantPromoComposer;
 
 class ApiComponents extends ServiceProvider
 {
@@ -25,7 +23,6 @@ class ApiComponents extends ServiceProvider
     {
 
         // Using class based composers...
-        View::composer('promo/*', ParticipantPromoComposer::class);
 
         // Using Closure based composers...
         //View::composer('xxxxxxxx', function ($view) {});a

@@ -88,6 +88,12 @@ class ParticipantPromo
         return $this->participantName;
     }
 
+    public function authQrCode()
+    {
+        return (new Hashids)->encode($this->participantId()) . "@" . substr(array_get($this->participant(), "token"), 0, 5);
+
+    }
+
     public function participantImage()
     {
         return $this->participantImage;
