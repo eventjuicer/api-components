@@ -12,7 +12,7 @@ use Eventjuicer\Services\Hashids;
 class PublicContestant extends Resource
 {
 
-    protected $presenterFields = ["cname2", "product_name", "product_description", "logotype"];
+    protected $presenterFields = ["cname2", "product_name", "product_description", "logotype", "justification", "project_name"];
 
 
     public function toArray($request)
