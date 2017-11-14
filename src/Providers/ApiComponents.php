@@ -14,6 +14,7 @@ use Eventjuicer\Repositories\ParticipantRepository;
 use Eventjuicer\Repositories\CreativeRepository;
 use Eventjuicer\Repositories\CreativeTemplateRepository;
 
+use Illuminate\Http\Response;
 
 class ApiComponents extends ServiceProvider
 {
@@ -21,6 +22,18 @@ class ApiComponents extends ServiceProvider
 
     public function boot()
     {
+
+
+        Collection::macro('paginate', function( $perPage, $total = null, $page = null, $pageName = 'page' ) {
+        $page = $page ?: LengthAwarePaginator::resolveCurrentPage( $pageName );
+
+        return new LengthAwarePaginator( $this->forPage( $page, $perPage ), $total ?: $this->count(), $perPage, $page, [
+        'path' => LengthAwarePaginator::resolveCurrentPath(),
+        'pageName' => $pageName,
+        ]);
+        });
+
+
 
         // Using class based composers...
 
@@ -105,14 +118,7 @@ class ApiComponents extends ServiceProvider
 
         });
 
-        Collection::macro('paginate', function( $perPage, $total = null, $page = null, $pageName = 'page' ) {
-        $page = $page ?: LengthAwarePaginator::resolveCurrentPage( $pageName );
-
-        return new LengthAwarePaginator( $this->forPage( $page, $perPage ), $total ?: $this->count(), $perPage, $page, [
-        'path' => LengthAwarePaginator::resolveCurrentPath(),
-        'pageName' => $pageName,
-        ]);
-        });
+       
 
     }
 }

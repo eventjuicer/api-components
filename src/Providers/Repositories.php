@@ -37,10 +37,10 @@ class Repositories extends ServiceProvider
             // search cluster or when deploying the search
             // to a live, running application at first.
             // if (!config('services.search.enabled')) {
-                return new ElasticsearchTicketRepository(  
-                     $app->make(Client::class)
-                );
-            // }
+            //     return new ElasticsearchTicketRepository(  
+            //          $app->make(Client::class)
+            //     );
+            // // }
 
             return new EloquentTicketRepository(
 
