@@ -28,33 +28,33 @@ class ApiComponents extends ServiceProvider
         //View::composer('xxxxxxxx', function ($view) {});a
 
 
-         \Response::macro('outputAsPlainText', function ($content) {
+         \Response::macro('outputAsPlainText', function ($content, $name = "newsletter") {
 
             $headers = [
              'Content-type'        => 'text/plain',
-             'Content-Disposition' => 'inline; filename="newsletter_'.date("YmdHi").'.html"',
+             'Content-Disposition' => 'inline; filename="'.str_slug($name).'_'.date("YmdHi").'.html"',
             ];
 
             return \Response::make($content, 200, $headers);
 
         });
 
-        \Response::macro('downloadViewAsHtml', function ($content) {
+        \Response::macro('downloadViewAsHtml', function ($content, $name = "newsletter") {
 
             $headers = [
              'Content-type'        => 'text/html',
-             'Content-Disposition' => 'attachment; filename="newsletter_'.date("YmdHi").'.html"',
+             'Content-Disposition' => 'attachment; filename="'.str_slug($name).'_'.date("YmdHi").'.html"',
             ];
 
             return \Response::make($content, 200, $headers);
 
         });
 
-         \Response::macro('outputImage', function ($content) {
+         \Response::macro('outputImage', function ($content, $name = "newsletter") {
 
             $headers = [
              'Content-type'        => 'image/png',
-             'Content-Disposition' => 'inline; filename="newsletter_'.date("YmdHi").'.png"',
+             'Content-Disposition' => 'inline; filename="'.str_slug($name).'_'.date("YmdHi").'.png"',
             ];
 
             return \Response::make($content, 200, $headers);
