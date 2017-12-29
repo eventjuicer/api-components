@@ -45,7 +45,11 @@ class EloquentTicketRepository extends Repository implements TicketRepositoryInt
        return $this->cached($role . $scope . $eventId, (int) $cache, function() use ($role, $scope, $eventId)
         {
 
-            $this->with(["participantsNotCancelled", "participantsNotCancelled.fields", "participantsNotCancelled.tickets"]);
+            $this->with([
+                "participantsNotCancelled", 
+            //    "participantsNotCancelled.fields", 
+                //"participantsNotCancelled.tickets"
+        ]);
 
             $this->pushCriteria(new ColumnMatches("role", $role));
 

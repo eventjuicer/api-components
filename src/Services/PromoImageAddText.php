@@ -1,11 +1,18 @@
 <?php namespace Eventjuicer\Services;
 
+use Illuminate\Database\Eloquent\Model;
+
+use Eventjuicer\Services\Hashids;
+
 use Intervention\Image\ImageManager;
 
-class ImageAddText {
+use Eventjuicer\Services\ParticipantPromoCreatives;
+
+
+class PromoImageAddText {
 	
 	
-	protected $template;
+	protected $template, $creatives;
 	
 	protected $target;
 
@@ -41,20 +48,22 @@ The time complexity for N rectangles is O(N*log(N)) because for each 2*N x-coord
 
 
 */
-	function __construct($source = "", array $template, $target = false)
+	function __construct(ParticipantPromoCreatives $creatives, $target = false)
 	{
 		
-		$this->file  	=  (new ImageShared(
+		$this->creatives = $creatives;
 
-			$source
-
-		))->getImage();		
-
-
-		
-		$this->template = $template;
+		$this->template = $creatives->current()->template;
 
 		$this->target = $target;
+
+		$localPath = public_path("templates/" . $this->template->template_path);
+
+		$this->file  	=  (new ImageShared(
+
+			$localPath
+
+		))->getImage();		
 
 		$this->image = ( new ImageManager() )->make($this->file);		
 	
@@ -101,20 +110,20 @@ The time complexity for N rectangles is O(N*log(N)) because for each 2*N x-coord
 		return (int) max(0, $this->getMiddle($newObjectHeight) + $this->stepY($y));
 	}	
 
-	// public function insertImage($urlOrPath, $x = 0, $y = 0, $w = 75, $h = 75)
-	// {
+	public function insertImage($urlOrPath, $x = 0, $y = 0, $w = 75, $h = 75)
+	{
 
-	// 	$w = !empty($w) ? $this->stepX($w) : $this->stepX(75);
+		$w = !empty($w) ? $this->stepX($w) : $this->stepX(75);
 
-	// 	$h = !empty($h) ? $this->stepY($h) : $w * 0.75;
+		$h = !empty($h) ? $this->stepY($h) : $w * 0.75;
 
-	// 	$insert = (
-	// 		(new ImageEncode($urlOrPath))->resize($w, $h)
-	// 	);
+		$insert = (
+			(new ImageEncode($urlOrPath))->resize($w, $h)
+		);
 
-	// 	$this->image->insert($insert, "top-left", $this->getX($insert->width(), $x), $this->getY($insert->height(), $y));
+		$this->image->insert($insert, "top-left", $this->getX($insert->width(), $x), $this->getY($insert->height(), $y));
 
-	// }
+	}
 
 	public function prepareText($text, $s = 10, $c = "#000000")
 	{
@@ -153,7 +162,7 @@ The time complexity for N rectangles is O(N*log(N)) because for each 2*N x-coord
 	public function build()
 	{
 
-		foreach($this->template as $mod)
+		foreach($this->template->data as $mod)
 		{
 
 
@@ -183,7 +192,7 @@ The time complexity for N rectangles is O(N*log(N)) because for each 2*N x-coord
 
 				case "text":
 
-					//$text = $this->personalize($text);
+					$text = $this->personalize($text);
 
 					$this->insertText($text, $s, $c, $x, $y);
 

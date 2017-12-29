@@ -2,39 +2,28 @@
 
 namespace Eventjuicer\Repositories;
 
-use Eventjuicer\Models\Participant;
+use Eventjuicer\Models\Company;
 use Eventjuicer\Repositories\Repository;
 
 use Carbon\Carbon;
 use Uuid;
 
-use Eventjuicer\Resources\ParticipantResource;
 
 
-class ParticipantRepository extends Repository
+class CompanyRepository extends Repository
 {
     
     protected $preventCriteriaOverwriting = false;
 
     public function model()
     {
-        return Participant::class;
+        return Company::class;
     }
 
 
 
-    public function byToken($token)
-    {
+  
 
-        $data = $this->with(["fields", "purchases.tickets.flags"])->findBy("token", $token);
-
-        if(is_null($data))
-        {
-            return [];
-        }
-
-        return (new ParticipantResource( $data ))->toArray($this->request );
-    }
 
 
 

@@ -2,38 +2,35 @@
 
 namespace Eventjuicer\Repositories;
 
-use Eventjuicer\Models\Participant;
+use Eventjuicer\Models\Meetup;
 use Eventjuicer\Repositories\Repository;
+use Eventjuicer\Repositories\Criteria\BelongsToCompany;
 
 use Carbon\Carbon;
 use Uuid;
 
-use Eventjuicer\Resources\ParticipantResource;
 
 
-class ParticipantRepository extends Repository
+class MeetupRepository extends Repository
 {
     
     protected $preventCriteriaOverwriting = false;
 
     public function model()
     {
-        return Participant::class;
+        return Meetup::class;
     }
 
 
-
-    public function byToken($token)
+    public function byCompany($company_id, $orderBy="")
     {
 
-        $data = $this->with(["fields", "purchases.tickets.flags"])->findBy("token", $token);
+        $this->pushCriteria(new BelongsToCompany($company_id));
+     
+        $data = $this->with(["participant.fields", "admin.fields"])->all();
 
-        if(is_null($data))
-        {
-            return [];
-        }
+        return $data;
 
-        return (new ParticipantResource( $data ))->toArray($this->request );
     }
 
 
