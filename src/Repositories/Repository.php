@@ -35,6 +35,18 @@ class Repository extends BaseRepository
         
     }
 
+
+
+    public function resetCriteria()
+    {
+        $this->criteria = new Collection;
+        $this->resetScope();
+        $this->makeModel();
+        return $this;
+    }
+
+
+
     public function model(){}  
 
     protected function getIDs(Collection $collection, $pk = "id")

@@ -22,6 +22,14 @@ class ParticipantRepository extends Repository
     }
 
 
+    public function findApiUserByEmail(string $emailAddress)
+    {
+        $this->pushCriteria(new Criteria\ColumnGreaterThanZero("company_id"));
+        $this->pushCriteria(new Criteria\ColumnMatches("email", $emailAddress));
+
+        return $this->all();
+    }
+
 
     public function byToken($token)
     {

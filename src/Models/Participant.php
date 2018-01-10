@@ -61,7 +61,24 @@ class Participant extends Model
     }
 
 
+    /**NEW**/
 
+    public function parent()
+    {
+        return $this->belongsTo(Participant::class, "parent_id");
+    }
+
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
+
+    public function children()
+    {
+        return $this->hasMany(Participant::class, "id", "parent_id");
+    }
+
+    /**NEW**/
 
 
 

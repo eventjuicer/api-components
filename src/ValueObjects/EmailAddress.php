@@ -18,6 +18,13 @@ class EmailAddress
         return substr($this->address, 0, $len) . "---@---" .  substr($this->address, $len * -1);
     }
 
+    public function domain()
+    {
+        $parts = explode("@", $this->address);
+
+        return $parts[1];
+    }
+
     public function isValid()
     {
         return filter_var($this->address, FILTER_VALIDATE_EMAIL);

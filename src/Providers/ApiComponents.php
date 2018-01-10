@@ -14,6 +14,8 @@ use Eventjuicer\Repositories\ParticipantRepository;
 use Eventjuicer\Repositories\CreativeRepository;
 use Eventjuicer\Repositories\CreativeTemplateRepository;
 
+use Eventjuicer\Services\SparkPost;
+use Eventjuicer\Contracts\Email\Templated;
 
 
 class ApiComponents extends ServiceProvider
@@ -51,6 +53,21 @@ class ApiComponents extends ServiceProvider
      */
     public function register()
     {
+
+        $this->app->bind(Templated::class, SparkPost::class);
+
+
+        $this->app->singleton(SparkPost::class, function($app)
+        {
+
+            return new SparkPost(
+
+                $app["request"]
+
+            );
+
+        });
+
 
 
         $this->app->singleton(ParticipantPromo::class, function($app)

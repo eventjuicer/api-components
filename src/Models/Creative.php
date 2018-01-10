@@ -9,7 +9,7 @@ class Creative extends Model
 {
    
 
-    protected $table = "eventjuicer_promo_creatives";
+    protected $table = "eventjuicer_company_creatives";
     
     protected $guarded = [];
 
@@ -20,9 +20,9 @@ class Creative extends Model
     ];
 
 
-    public function participant()
+    public function company()
     {
-        return $this->belongsTo(Participant::class);
+        return $this->belongsTo(Company::class);
     }
 
     public function template()
@@ -43,10 +43,6 @@ class Creative extends Model
 
     }
 
-    public function event()
-    {
-      return $this->belongsTo(Group::class);
-
-    }
+ 
 
 }
