@@ -51,6 +51,12 @@ class Ticket extends Model
 
     protected $table = "bob_tickets";
 
+    protected $casts = [
+
+        'price' => 'array',
+    ];
+
+
 
    //  public function pu()
    //  {

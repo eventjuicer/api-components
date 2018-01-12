@@ -29,7 +29,7 @@ class SparkPost implements Templated {
 			'content' => [
 			'from' => [
 			    'name' => 'Targi eHandlu',
-			    'email' => 'adam@exhibitordeck.com',
+			    'email' => 'expojuicer@expojuicer.com',
 			],
 			// 'subject' => 'First Mailing From PHP',
 			// 'html' => '<html><body><h1>Congratulations, {{name}}!</h1><p>You just sent your very first mailing!</p></body></html>',

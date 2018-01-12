@@ -12,6 +12,9 @@ use Eventjuicer\Repositories\Criteria\ColumnMatches;
 use Eventjuicer\Repositories\Criteria\ColumnGreaterThanZero;
 use Eventjuicer\Repositories\Criteria\RelHasNonZeroValue;
 
+use Eventjuicer\ValueObjects\EmailAddress;
+
+
 class ApiUser {
 	
 	protected $request, $json, $participants, $token, $user, $company;
@@ -28,108 +31,26 @@ class ApiUser {
 		$this->participants = $participants;
 	
 
-		$this->token = $request->header("x-token", 
+		$token = $request->header("x-token", 
 			$request->input("x-token", null)
 		);
 
-		$this->setUser();
-
-		$this->json = json_decode($request->getContent(), true);
+		$this->setToken($token);
 
 	}
 
-
-
-	public function postData($key = null)
+	public function getToken()
 	{
-		return $key ? array_get($this->json, $key, null) : $this->json;
+		return $this->token;
 	}
 
-
-
-	/*
-	*
-	* 
-	*/
-
-
-	protected function findSubaccountUser($findBy, $value)
-	{
-		//handle subaccounts....
-
-		$this->participants->resetCriteria();
-
-		$this->participants->with(["parent.company"]);
-
-		$this->participants->pushCriteria(new ColumnGreaterThanZero("parent_id"));
-
-		$this->participants->pushCriteria(new RelHasNonZeroValue("parent", "company_id"));
-
-        $this->participants->pushCriteria(new ColumnMatches($findBy, $value));
-        
-        return $this->participants->all();
-	}
-
-	protected function findCompanyUser($findBy, $value)
-	{
-		$this->participants->resetCriteria();
-
-		$this->participants->with(["company"]);
-
-		$this->participants->pushCriteria(new ColumnGreaterThanZero("company_id"));
-
-      	$this->participants->pushCriteria(new ColumnMatches($findBy, $value));
-
-      	return $this->participants->all();
-
-	}
-
-
-
-	public function authenticate()
-	{
-		$email = $this->postData("email");
-		$token = $this->postData("token");
-		$password = $this->postData("password");
-
-
-		$subaccounts = $this->findSubaccountUser("email", $email);
-		$master = $this->findCompanyUser("email", $email);
-
-		//dd($subaccounts->toArray());
-
-		$merged = $subaccounts->merge($master);
-
-		
-
-      	//dd($merged->toArray());
-
-     // 	dd($subaccounts->merge($other)->toArray());
-		
-
-
-
-		if($email && !$password)
-		{
-			//we must search for all users 
-
-		
-
-		}
-
-
-		return null;
-
-	}
-
-
-
-	
 	public function setToken($token)
 	{
-		if($this->validateToken($token))
+
+		$this->token = $token;
+
+		if($this->tokenIsValid())
 		{
-			$this->token = $token;
 			$this->setUser();
 		}
 	}
@@ -139,16 +60,15 @@ class ApiUser {
 		return $this->user;
 	}
 
+	public function company()
+	{
+		return $this->company;
+	}
+
+
 	public function __get($attr)
 	{
 		return $this->user ? $this->user->{$attr} : 0; 
-	}
-
-	function autoAssignCompany()
-	{
-
-
-
 	}
 
 	
@@ -165,10 +85,25 @@ class ApiUser {
 	}
 
 
+	public function assignToCompany($company_id)
+	{
+
+		$this->participants->update(compact("company_id"), $this->user->id);
+
+		//we have to refresh our data, right????
+		$this->setUser();
+	}
+
 	//scan or participants... check unique event_ids...!
 
 	public function accessibleEvents()
 	{
+
+	}
+
+	public function slug()
+	{
+		return str_slug((new EmailAddress($this->user->email))->domain());
 
 	}
 
@@ -178,21 +113,35 @@ class ApiUser {
 		return ( $this->user && $this->user->group_id && $this->user->group_id);
 	}
 
-	public function activeEventId()
+	public function log()
+	{
+
+	}
+
+	public function activeEventId($strict = false)
 	{	
-		return (int) Group::findOrFail($this->group_id )->active_event_id;
+
+		if($this->company)
+		{
+			return (int) Group::findOrFail( $this->company->group_id )->active_event_id;
+		}
+
+		if($strict)
+		{
+			return false;
+		}
+
+		return (int) Group::findOrFail( $this->group_id )->active_event_id;
 	}
 
 	protected function setUser()
 	{
 
-		if($this->token && $this->validateToken($this->token))
+		if($this->tokenIsValid())
 		{
-			$query = $this->participants->findBy("token", $this->token);
+			$this->user = $this->participants->findBy("token", $this->token);
 
-			//conditions???
-
-			$this->user = $query;
+			$this->setCompany();
 		}
 
 	}
@@ -200,33 +149,33 @@ class ApiUser {
 
 	protected function setCompany()
 	{
+		$this->company = null;
+
 		if($this->user)
 		{
 			//resolve from parent?
 
-			if(!$this->user->company_id)
+			if($this->user->company_id)
 			{
-				if($this->user->parent_id)
-				{
-					if($this->user->parent->company)
-					{
-						$this->company = $this->user->parent->company;
-					}
-				}
-				
+				$this->company = $this->user->company;
 			}
 			else
 			{
-				$this->company = $this->user->company;
+				if($this->user->parent_id && $this->user->parent->company_id)
+				{
+					$this->company = $this->user->parent->company;
+
+				}
+				
 			}
 		}
 		
 	}
 	
-	protected function validateToken($token)
+	public function tokenIsValid()
 	{
 
-		return preg_match(self::$tokenRegExp, $token);
+		return $this->token && preg_match(self::$tokenRegExp, $this->token);
       
 	}
 

@@ -61,7 +61,8 @@ class Participant extends Model
     }
 
 
-    /**NEW**/
+
+    /**NEW OR CHECKED**/
 
     public function parent()
     {
@@ -75,10 +76,43 @@ class Participant extends Model
 
     public function children()
     {
-        return $this->hasMany(Participant::class, "id", "parent_id");
+        return $this->hasMany(Participant::class, "parent_id");
     }
 
-    /**NEW**/
+    public function organizer()
+    {
+        return $this->belongsTo(Organizer::class);
+    }
+
+    public function group()
+    {
+        return $this->belongsTo(Group::class);
+    }
+
+    public function event()
+    {
+        return $this->belongsTo(Event::class);
+    }
+
+    public function tickets()
+    {
+        
+        return $this->belongsToMany(Ticket::class, 'bob_participant_ticket', 'participant_id', 'ticket_id')->withPivot("purchase_id", "sold");
+
+    }
+
+    public function fields()
+    {
+        
+        return $this->belongsToMany(Field::class, 'bob_participant_fields', 'participant_id', 'field_id')->withPivot("field_value","participant_id");//->withTimestamps();//->wherePivot("sold", 1);
+
+    }
+
+
+    /**NEW OR CHECKED**/
+
+
+
 
 
 
@@ -102,33 +136,14 @@ class Participant extends Model
     }
 
     
-    public function organizer()
-    {
-        return $this->belongsTo(Organizer::class);
-    }
+ 
 
-    public function group()
-    {
-        return $this->belongsTo(Group::class);
-    }
-
-    public function event()
-    {
-        return $this->belongsTo(Event::class);
-    }
-
-    public function tickets()
-    {
-        
-        return $this->belongsToMany(Ticket::class, 'bob_participant_ticket', 'participant_id', 'ticket_id')->withPivot("purchase_id", "sold");
-
-    }
 
 
     public function paidTickets()
     {
         
-        return $this->belongsToMany(Ticket::class, 'bob_participant_ticket', 'participant_id', 'ticket_id')->wherePivot("sold", 1);
+        return $this->belongsToMany(Ticket::class, 'bob_participant_ticket', 'participant_id', 'ticket_id')->wherePivot("sold", 1)->withPivot("purchase_id");
 
     }
 
@@ -140,12 +155,7 @@ class Participant extends Model
     }
 
 
-    public function fields()
-    {
-        
-        return $this->belongsToMany(Field::class, 'bob_participant_fields', 'participant_id', 'field_id')->withPivot("field_value","participant_id");//->withTimestamps();//->wherePivot("sold", 1);
-
-    }
+ 
 
         public function ssfields()
     {
