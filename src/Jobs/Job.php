@@ -3,6 +3,8 @@
 namespace Eventjuicer\Jobs;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Queue\InteractsWithQueue;
 
 abstract class Job
 {
@@ -17,5 +19,5 @@ abstract class Job
     |
     */
 
-    use Queueable;
+    use Queueable, InteractsWithQueue, SerializesModels;
 }

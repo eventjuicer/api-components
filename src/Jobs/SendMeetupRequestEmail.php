@@ -1,0 +1,37 @@
+<?php
+
+namespace Eventjuicer\Jobs;
+
+use Illuminate\Contracts\Queue\ShouldQueue;
+
+use Eventjuicer\Models\Meetup;
+
+use Eventjuicer\Contracts\Email\Templated;
+
+
+class SendMeetupRequestEmail extends Job implements ShouldQueue
+{
+
+
+    protected $meetup;
+
+    /**
+     * Create a new job instance.
+     *
+     * @return void
+     */
+    public function __construct(Meetup $meetup)
+    {
+        $this->meetup = $meetup;
+    }
+
+    /**
+     * Execute the job.
+     *
+     * @return void
+     */
+    public function handle(Templated $test)
+    {
+        //
+    }
+}

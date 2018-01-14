@@ -16,7 +16,9 @@ class VisitorResource extends Resource
     public function toArray($request)
     {
 
-            $data =  $this->fields->whereIn("name", $this->presenterFields)->mapWithKeys(function($item)
+            $data = [];
+
+            $data["profile"]=  $this->fields->whereIn("name", $this->presenterFields)->mapWithKeys(function($item)
             {     
 
                 $value = $item->pivot->field_value;

@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Eventjuicer\Repositories\ParticipantRepository;
 use Eventjuicer\Repositories\CompanyRepository;
 use Eventjuicer\Models\Group;
+use Eventjuicer\Models\Event;
+
 use Eventjuicer\Contracts\Email\Templated;
 
 use Eventjuicer\Repositories\Criteria\ColumnMatches;
@@ -80,7 +82,19 @@ class ApiUser {
 			return $this->company_id == $obj->company_id;
 		}
 
-		return $this->group_id == $obj->group_id;
+		if($obj->group_id > 0)
+		{
+			return $this->group_id == $obj->group_id;
+		}
+
+		if(isset($obj->event_id) && $obj->event_id > 0)
+		{
+
+			return $this->group_id == Event::find($obj->event_id)->group_id;
+		}
+
+
+		return false;
 		
 	}
 

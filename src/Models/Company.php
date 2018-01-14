@@ -3,11 +3,7 @@
 namespace Eventjuicer\Models;
 
 use Illuminate\Database\Eloquent\Model;
-
-use Eventjuicer\Models\Participant;
-
-use Eventjuicer\Models\Organizer;
-
+ 
 
 class Company extends Model
 {
@@ -17,12 +13,6 @@ class Company extends Model
     protected $table = "eventjuicer_companies";
     
    
-
-    
-    public function company()
-    {
-        return $this->belongsTo(Participant::class, "id", "owner_id");
-    }
 
     public function assignedBy()
     {
@@ -35,11 +25,23 @@ class Company extends Model
         return $this->hasMany(Participant::class);
     }
 
+    public function creatives()
+    {
+        return $this->hasMany(Creative::class);
+    }
+
 
     public function organizer()
     {
         return $this->belongsTo(Organizer::class, "id", "scanned_id");
     }
+
+    
+    public function group()
+    {
+        return $this->belongsTo(Group::class, "id", "owner_id");
+    }
+
 
 
 

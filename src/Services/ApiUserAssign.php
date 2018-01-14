@@ -20,7 +20,6 @@ class ApiUserAssign {
 	public function make()
 	{
 
-		$hasPaidPurchases = false;
 
 		if($this->user->company_id)
 		{
@@ -36,14 +35,8 @@ class ApiUserAssign {
 
 		//we can only assign to existing companies...
 
-		foreach($this->user->purchases AS $purchase)
-		{
-			if((int) $purchase->amount && $purchase->paid)
-			{
-				$hasPaidPurchases = true;
-				break;
-			}
-		}
+
+		$hasPaidPurchases = $this->user->user()->purchases()->where("amount",">", 0)->where("paid", 1)->count();
 
 
 		$company = $this->findCompany($this->user->group_id, $this->user->slug());

@@ -9,6 +9,7 @@ use Eventjuicer\Repositories\Criteria\BelongsToCompany;
 use Carbon\Carbon;
 use Uuid;
 
+use Eventjuicer\Services\ApiUser;
 
 
 class MeetupRepository extends Repository
@@ -22,67 +23,39 @@ class MeetupRepository extends Repository
     }
 
 
-    public function byCompany($company_id, $orderBy="")
+    public function prepare(array $postData, ApiUser $user)
     {
 
-        $this->pushCriteria(new BelongsToCompany($company_id));
-     
-        $data = $this->with(["participant.fields", "admin.fields"])->all();
+        $participant_id = array_get($postData, "participant_id", 0);
+        $creative_id = array_get($postData, "creative_id", 0);
 
-        return $data;
+        $data = [];
 
-    }
-
-
-
-    public function toSearchArray($id, $columns = [])
-    {
-
-        $data = $this->with(["fields", "purchases.tickets.flags"])->find($id);
-
-        if(is_null($data))
+        if( !$participant_id )
         {
-            return [];
+            return false;
         }
 
-        return (new ParticipantResource( $data ))->toArray($this->request );
-    }
+        if($creative_id && !$user->company()->creatives()->find($creative_id) )
+        {
+            return false;
+        }
 
-    public function profile($key = "", $replacement = "")
-    {
+        //check access to 
 
-        $profile = $this->fields->mapWithKeys(function($_item){
-                
-                return [$_item->name => $_item->pivot->field_value];
-        });
-        return !empty($key) ? $profile->get($key, $replacement) : $profile->all();    
-    }
+        $data["organizer_id"] = $user->company()->organizer_id;
+        $data["group_id"] = $user->company()->group_id;
+        $data["company_id"] = $user->company()->id;
+        $data["participant_id"] = $participant_id;
+        $data["user_id"] = $user->user()->id;
+        $data["creative_id"] = $creative_id;
+        $data["agreed"] = 0;
+        $data["retries"] = 0;
+        $data["message"] = ""; 
+        $data["comment"] = "";
+   
 
-
-
-    public function createOrUpdate($active_event_id = 0, $data = array())
-    {
-
-        $data = [
-
-            "email"         => $this->request->input("email"),
-            "token"         => sha1(Uuid::generate(4)),
-            "event_id"      => $active_event_id,
-            "group_id"      => 0,
-            "organizer_id"  => 0,
-            "lang"          => "pl",
-            "confirmed"     => 1,
-            "createdon"     => Carbon::now()
-
-        ];
-
-        $this->create($data);
-    }
-
-    public function toSql()
-    {
-    	$this->applyCriteria();
-    	return $this->model->toSql();
+        return $data;
     }
 
 
