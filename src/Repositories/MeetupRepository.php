@@ -23,6 +23,16 @@ class MeetupRepository extends Repository
     }
 
 
+    public function validateHash()
+    {
+
+        // sha1()
+
+    }
+
+
+
+
     public function prepare(array $postData, ApiUser $user)
     {
 

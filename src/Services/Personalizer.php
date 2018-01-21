@@ -22,12 +22,20 @@ class Personalizer {
 	protected $translated;
 	protected $model;
 
+	protected $profile;
+
  	function __construct(Model $model, $str, $replacements = [])
 	{
 
 		$this->model = $model;
+
 		$this->original = $str;
 		
+		$this->profile = $model->fields->mapWithKeys(function($_item){
+                
+                return [$_item->name => $_item->pivot->field_value];
+        });
+
 		if(strstr($this->original, "[[")===false)
 		{
 		
@@ -71,7 +79,7 @@ class Personalizer {
 				}
 				else
 				{
-					$output = (string) $model->profile($key);
+					$output = (string) array_get($this->profile, $key)
 				}
 
 				if(!empty($options))
@@ -101,15 +109,6 @@ class Personalizer {
 	}/*eom*/
 
 
-	public function profile(Model $model, $key = "", $replacement = "")
-    {
-
-        $profile = $model->fields->mapWithKeys(function($_item){
-                
-                return [$_item->name => $_item->pivot->field_value];
-        });
-        return !empty($key) ? $profile->get($key, $replacement) : $profile->all();    
-    }
 
     function __toString()
     {

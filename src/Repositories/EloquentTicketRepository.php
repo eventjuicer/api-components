@@ -19,6 +19,9 @@ class EloquentTicketRepository extends Repository implements TicketRepositoryInt
 {
     
 
+    protected $preventCriteriaOverwriting = false;
+
+
     public function model()
     {
         return Ticket::class;
@@ -49,7 +52,7 @@ class EloquentTicketRepository extends Repository implements TicketRepositoryInt
                 "participantsNotCancelled", 
              //  "participantsNotCancelled.fields", 
                 //"participantsNotCancelled.tickets"
-        ]);
+            ]);
 
             $this->pushCriteria(new ColumnMatches("role", $role));
 

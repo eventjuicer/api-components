@@ -21,7 +21,8 @@
         "elasticsearch/elasticsearch": "~5.0",
         "webpatser/laravel-uuid": "^3.0",
         "hashids/hashids": "^2.0",
-        "guzzlehttp/guzzle": "^6.3"
+        "guzzlehttp/guzzle": "^6.3",
+        "spatie/laravel-analytics": "^3.4"
     },
     "autoload": {
         "psr-4": {

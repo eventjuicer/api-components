@@ -5,74 +5,122 @@ namespace Eventjuicer\Services;
 use Closure;
 use Illuminate\Support\Collection;
 
-use Analytics;
 use Spatie\Analytics\Period;
+use Spatie\Analytics\Analytics;
+use Spatie\Analytics\AnalyticsClientFactory;
+
+
+use Eventjuicer\Repositories\EloquentTicketRepository;
 use Eventjuicer\Repositories\ParticipantRepository;
-use Eventjuicer\Repositories\Criteria\WhereIn;
-use Eventjuicer\Services\Personalizer;
+use Eventjuicer\Repositories\CompanyRepository;
+
+use Illuminate\Contracts\Cache\Repository as Cache;
+
+
+use Eventjuicer\Repositories\Criteria\ColumnMatches;
+use Eventjuicer\Repositories\Criteria\BelongsToEvent;
+use Eventjuicer\Repositories\Criteria\BelongsToGroup;
+
+use Eventjuicer\Services\ApiUser;
 
 class PartnerPerformance {
 	
 
-	protected $repo;
+	protected $repo, $participants, $comanies, $cache, $gaView, $analytics;
 	
+	protected $statsDefault = ["sessions" => 0, "conversions" => 0];
 
-	function __construct(ParticipantRepository $repo)
+	function __construct(
+			EloquentTicketRepository $repo, 
+			ParticipantRepository $participants,
+			CompanyRepository $companies,
+			Cache $cache)
 	{
 	
 		$this->repo = $repo;
+		$this->participants = $participants;
+		$this->companies = $companies;
+		$this->cache = $cache;
+
 	}
 
 
-	function matchWithParticipants(Collection $data, $role)
+
+	public function setView($viewId = "")
+	{
+		$config = config('analytics');
+
+        $client = AnalyticsClientFactory::createForConfig($config);
+
+        $this->gaView = $viewId;
+       	
+       	$this->analytics = new Analytics($client, $this->gaView);
+
+	}
+
+
+	private function merge(Collection $participants, 
+						Collection $analytics, 
+						string $glue = "stats", 
+						string $mergeBy = "company_id")
 	{
 
-		if($role == "company")
+		$analytics = $analytics->keyBy("id");
+
+		$participants->map(function($row) use ($analytics, $glue, $mergeBy)
 		{
-			$personalize = "[[cname2]]";
-		}
-		else
-		{
-			$personalize = "[[fname]] [[email?obfuscate]]";
-		}
 
-	 
-     	$this->repo->pushCriteria(new WhereIn("id", $data->pluck("source")->all()));
+			$row->{$glue} = $analytics->get($row->$mergeBy, $this->statsDefault);
 
-        $this->repo->with(["fields"]);
+		});
 
-        $participants = $this->repo->all()->keyBy("id");
-
-        $data->transform(function($item, $key) use ($participants, $personalize)
-        {
-
-        	$id = (int) $item["source"];
-
-        	if(!isset($participants[$id]))
-        	{
-        		return $item;
-        	}
-
-        	$item["name"] = (string) new Personalizer($participants[$id], $personalize);
-
-        	return $item;
-
-        });
-
-
-   		return $data;
+		return $participants;
 
    	}
 
-	public function sourceContains($search="")
+
+   	public function getStatsForCompanies($eventId)
+	{	
+
+
+		$data = $this->getParticipantsWithRole(["exhibitor"], $eventId);
+
+		//company_
+		$ga = $this->getAnalyticsForSource("company_");
+
+		//company_id
+		return $this->merge($data, $ga, "stats", "company_id");
+
+
+	}
+
+
+
+	/*
+		
+
+	$startDate = Carbon::now()->subYear();
+	$endDate = Carbon::now();
+
+	Period::create($startDate, $endDate);
+
+	*/
+
+	private function getAnalyticsForSource($search="", $period = 90) : Collection
 	{
 
-		return $this->repo->cached($search, 10, function() use ($search)
+		if(!$this->analytics)
+		{
+			throw new \Exception("No analytics VIEW set.");
+		}
+
+
+		$query = function() use ($search, $period)
         {
 
-			$response = Analytics::performQuery(
+			$response = $this->analytics->performQuery(
 
-				Period::days(90), 
+				Period::days($period), 
 
 				"ga:sessions",  
 				[
@@ -83,15 +131,59 @@ class PartnerPerformance {
 
 			);
 
-			return collect($response['rows'] ?? [])->map(function (array $pageRow) use ($search) {
+			return collect($response['rows'] ?? [])->map(function (array $pageRow, $position) use ($search) {
 				return [
-					'source' 	=> str_replace($search, "", $pageRow[0]),
-					'sessions' 	=> $pageRow[1]
+					'id' 			=> (int) str_replace($search, "", $pageRow[0]),
+					'sessions' 		=> (int) $pageRow[1],
+					'conversions' 	=> 0
 				];
 			});
 
-		});
+		};
 
+
+		return env("USE_CACHE", true) ? 
+			$this->cache->remember($this->gaView . $search, 10, $query) : 
+			$query();
+
+	}
+
+	private function getParticipantsWithRole(array $roles, int $scopeValue, string $scope = "event" ) : Collection
+	{
+
+		$query = function() use ($roles, $scopeValue, $scope){
+
+			$this->repo->with([
+            "participantsNotCancelled.company"
+
+        ]);
+
+        foreach($roles as $role)
+        {
+        	$this->repo->pushCriteria(new ColumnMatches("role", $role, false));
+
+        }
+
+        switch($scope)
+        {
+            case "event":
+                $this->repo->pushCriteria(new BelongsToEvent($scopeValue));
+            break;
+
+            case "group":
+                $this->repo->pushCriteria(new BelongsToGroup($scopeValue));
+            break;
+
+        }
+
+        return $this->repo->all()->pluck("participantsNotCancelled")->collapse();
+
+		};
+
+        return env("USE_CACHE", true) ? 
+			$this->cache->remember("PP_getParticipants_".$scopeValue, 10, $query) : 
+			$query();
+    
 	}
 
 

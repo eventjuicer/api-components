@@ -6,7 +6,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 
 use Eventjuicer\Models\Meetup;
 
-use Eventjuicer\Contracts\Email\Templated;
+use Eventjuicer\Contracts\Email\Templated as Mailer;
 
 
 class SendMeetupRequestEmail extends Job implements ShouldQueue
@@ -30,8 +30,11 @@ class SendMeetupRequestEmail extends Job implements ShouldQueue
      *
      * @return void
      */
-    public function handle(Templated $test)
+    public function handle(Mailer $mailer)
     {
-        //
+        
+        
+
+        dd("dead");
     }
 }
