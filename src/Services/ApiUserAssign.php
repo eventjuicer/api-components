@@ -69,7 +69,11 @@ class ApiUserAssign {
 				"organizer_id" => $this->user->organizer_id,
 				"group_id" => $this->user->group_id,
 				"assigned_by" => 0,
+
 				"slug" => $this->user->slug(),
+				"lang" => "en",
+				"name" => $this->user->slug(),
+
 				"password" => "",
 				"meetup_limit" => 5
 			]
