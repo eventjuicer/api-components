@@ -50,7 +50,7 @@ class CreativeRepository extends Repository
         $data["act_as"] = "newsletter";
         $data["organizer_id"] = $user->organizer_id;
         $data["group_id"] = $user->group_id;
-        $data["company_id"] = $user->company_id;
+        $data["company_id"] = $user->company()->id;
         $data["data"] = json_encode($data["data"]);
 
         return $data;

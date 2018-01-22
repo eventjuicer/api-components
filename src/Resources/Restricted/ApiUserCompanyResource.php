@@ -38,6 +38,7 @@ class ApiUserCompanyResource extends Resource
 
             "id" => $this->id,
             "active_event" => new ApiUserCompanyEventResource($active_event),
+            "name" => $this->name ?? $this->slug,
             "slug" => $this->slug,
             "meetup_limit" => $this->meetup_limit,
             "assigned_at" => (string) $this->assigned_at,
