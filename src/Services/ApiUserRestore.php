@@ -45,37 +45,35 @@ class ApiUserRestore {
 		$token = $this->postData("token");
 		$password = $this->postData("password");
 
-
-		$subaccounts = $this->findSubaccountUser("email", $email);
-		$master = $this->findCompanyUser("email", $email);
-
-		dd($subaccounts->toArray());
-
-		$merged = $subaccounts->merge($master);
-
-		
-
-      	//dd($merged->toArray());
-
-     // 	dd($subaccounts->merge($other)->toArray());
-		
-
-
-
-		if($email && !$password)
+		if($email)
 		{
+			$subaccounts = $this->findSubaccountUser("email", $email);
+			$master = $this->findCompanyUser("email", $email);
+
+			dd($subaccounts->toArray());
+
+			$merged = $subaccounts->merge($master);
+
+
+			//dd($merged->toArray());
+
+			// 	dd($subaccounts->merge($other)->toArray());
+
+			if($email && !$password)
+			{
 			//we must search for all users 
 
-		
 
+			}
 		}
+		
 
 
 		return null;
 
 	}
 
-	protected function findSubaccountUser($findBy, $value)
+	protected function findSubaccountUser($findBy, string $value)
 	{
 		//handle subaccounts....
 

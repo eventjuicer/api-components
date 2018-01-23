@@ -12,7 +12,7 @@ class ColumnMatches extends Criteria {
     private $value;
     private $or;
 
-    function __construct($column_name, $value, $or = false)
+    function __construct(string $column_name, string $value, $or = false)
     {
         $this->column_name  = $column_name;
         $this->value        = $value;

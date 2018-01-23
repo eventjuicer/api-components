@@ -19,7 +19,7 @@ use Eventjuicer\ValueObjects\EmailAddress;
 
 class ApiUser {
 	
-	protected $request, $json, $participants, $token, $user, $company;
+	protected $request, $json, $participants, $token, $user, $company, $representative;
 	
 	static $tokenRegExp = "/[a-z0-9]{32,40}/";
 
@@ -46,6 +46,28 @@ class ApiUser {
 		return $this->token;
 	}
 
+	public function switchToParent()
+	{
+		//is it sub account?
+		if($this->parent_id)
+		{
+			$this->representative = clone $this;
+
+			$this->setToken($this->parent->token);
+
+			return true;
+		}
+
+		return false;
+		
+	}
+
+	public function realUser()
+	{
+
+		return is_object($this->representative) ? $this->representative->user()->fresh() : $this->user();
+	}
+
 	public function setToken($token)
 	{
 
@@ -61,6 +83,7 @@ class ApiUser {
 	{
 		return $this->user;
 	}
+
 
 	public function company()
 	{
@@ -102,10 +125,17 @@ class ApiUser {
 	public function assignToCompany($company_id)
 	{
 
+		if(!$company_id || $this->parent_id)
+		{
+			throw new \Exception("cannot assign a company...");
+		}
+
+
 		$this->participants->update(compact("company_id"), $this->user->id);
 
 		//we have to refresh our data, right????
 		$this->setUser();
+
 	}
 
 	//scan or participants... check unique event_ids...!
@@ -167,20 +197,18 @@ class ApiUser {
 
 		if($this->user)
 		{
-			//resolve from parent?
+			if($this->user->parent_id && $this->user->parent->company_id)
+			{
+				$this->company = $this->user->parent->company;
+
+				return true;
+			} 
 
 			if($this->user->company_id)
 			{
 				$this->company = $this->user->company;
-			}
-			else
-			{
-				if($this->user->parent_id && $this->user->parent->company_id)
-				{
-					$this->company = $this->user->parent->company;
 
-				}
-				
+				return true;
 			}
 		}
 		

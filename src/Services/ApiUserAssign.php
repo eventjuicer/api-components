@@ -2,6 +2,9 @@
 
 namespace Eventjuicer\Services;
 
+
+use Illuminate\Database\Eloquent\Model;
+
 use Eventjuicer\Models\Participant;
 use Eventjuicer\Repositories\CompanyRepository;
 
@@ -21,25 +24,27 @@ class ApiUserAssign {
 	{
 
 
-		if($this->user->company_id)
+		if(
+			$this->user->company_id || 
+			($this->user->parent_id && $this->user->parent->company_id))
 		{
 			return true;
 		}
 
-		//we skip it as we probably wont be able to find nonfree, confirmed purchases!
 
+		//REPRESENTATIVE? We only care about master accounts!
 		if($this->user->parent_id)
 		{
-			return false;
+
+			$this->user->switchToParent();
+
 		}
 
-		//we can only assign to existing companies...
-
-
-		$hasPaidPurchases = $this->user->user()->purchases()->where("amount",">", 0)->where("paid", 1)->count();
-
-
 		$company = $this->findCompany($this->user->group_id, $this->user->slug());
+
+		$hasPaidPurchases = $this->findPaidPurchases($this->user->user());
+
+
 
 		if($hasPaidPurchases)
 		{
@@ -54,9 +59,22 @@ class ApiUserAssign {
 			return true;
 		}
 
+
+
+
 		return null;
 
 	}
+
+
+	protected function findPaidPurchases(Model $src)
+	{
+
+		return $src->purchases()->where("amount",">", 0)->where("paid", 1)->count();
+
+
+	}
+
 
 	protected function createCompany()
 	{
