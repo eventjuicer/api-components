@@ -93,6 +93,9 @@ class ApiUser {
 
 	public function __get($attr)
 	{
+
+
+
 		return $this->user ? $this->user->{$attr} : 0; 
 	}
 
@@ -102,7 +105,7 @@ class ApiUser {
 
 		if(isset($obj->company_id) && $obj->company_id > 0)
 		{
-			return $this->company_id == $obj->company_id;
+			return $this->company()->id == $obj->company_id;
 		}
 
 		if($obj->group_id > 0)

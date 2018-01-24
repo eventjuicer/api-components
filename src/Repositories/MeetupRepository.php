@@ -38,6 +38,8 @@ class MeetupRepository extends Repository
 
         $participant_id = array_get($postData, "participant_id", 0);
         $creative_id = array_get($postData, "creative_id", 0);
+        $message = array_get($postData, "message", "");
+        $json = array_get($postData, "data", []);
 
         $data = [];
 
@@ -61,9 +63,9 @@ class MeetupRepository extends Repository
         $data["creative_id"] = $creative_id;
         $data["agreed"] = 0;
         $data["retries"] = 0;
-        $data["message"] = ""; 
+        $data["message"] = $message; 
         $data["comment"] = "";
-   
+        $data["data"] = $json;
 
         return $data;
     }

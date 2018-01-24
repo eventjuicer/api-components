@@ -15,9 +15,13 @@ class Meetup extends Model
 
     protected $table = "eventjuicer_meetups";
     
-   
 
-    
+    protected $casts = [
+
+        'data' => 'array',
+    ];
+
+       
     public function company()
     {
         return $this->belongsTo(Company::class);
