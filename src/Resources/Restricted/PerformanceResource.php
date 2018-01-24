@@ -12,7 +12,7 @@ use Eventjuicer\ValueObjects\EmailAddress;
 class PerformanceResource extends Resource
 {
 
-    protected $visible = ["fname", "lname", "cname2", "position", "phone"];
+    protected $visible = ["fname", "lname", "cname2"];
 
     protected $skipParentCompany;
 
@@ -70,7 +70,6 @@ class PerformanceResource extends Resource
             }
 
             
-            $data["email"] = $this->email;
 
             $data["domain"] = (new EmailAddress($this->email))->domain();
 
