@@ -20,7 +20,7 @@ class ApiUserAssign {
 
 	}
 
-	public function make()
+	public function make($admin = false)
 	{
 
 
@@ -46,7 +46,7 @@ class ApiUserAssign {
 
 
 
-		if($hasPaidPurchases)
+		if($hasPaidPurchases || $admin)
 		{
 
 			if(!$company)
