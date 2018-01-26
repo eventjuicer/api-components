@@ -7,7 +7,7 @@ use Eventjuicer\ValueObjects\Url;
 
 class UrlImage {
 	
-	protected $url;
+	protected $url, $data;
 	protected $normalized;
 
 	function __construct(Url $url)
@@ -53,6 +53,37 @@ class UrlImage {
 	function ext()
 	{
 
+		$this->load();
+
+
+
+		if( 
+			bin2hex($this->data[0]) == 'ff' && 
+			bin2hex($this->data[1]) == 'd8'
+		)
+		{
+			return "jpg";
+		}
+
+		if(	bin2hex($this->data[0]) == '89' && 
+			$this->data[1] == 'P' && 
+			$this->data[2] == 'N' && 
+			$this->data[3] == 'G'
+		)
+		{
+			return "png";
+		}
+
+		return "gif";
+
+	}
+
+
+	function data()
+	{
+		$this->load();
+
+		return $this->data;
 	}
 
 
@@ -89,6 +120,29 @@ class UrlImage {
 		return $this->url->isImage(true);
 	}
 	
+	protected function load()
+	{
+		if($this->data)
+		{
+			return;
+		}
+
+		$this->data = @file_get_contents($this->url,
+
+			false,
+		    stream_context_create(
+		        array(
+		            'http' => array(
+		                'ignore_errors' => true
+		            )
+		        )
+		    )
+
+    	);
+
+
+
+	}
 
 	public function cache_image_file($url = "", $path = "posts", $id = 0)
 	{
@@ -115,18 +169,7 @@ class UrlImage {
 		//get and save ...
 		//get ...
 		
-		$original 	= @file_get_contents($url,
-
-			false,
-		    stream_context_create(
-		        array(
-		            'http' => array(
-		                'ignore_errors' => true
-		            )
-		        )
-		    )
-
-    	);
+		
 		
 		if(empty($original)){ return false; }
 		

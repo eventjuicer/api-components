@@ -10,6 +10,8 @@ class RichContent {
 	
 	const URL = "/(?:^|\s)(http[s]?:\/\/(?P<domain>[a-z0-9\-\.]+\.[a-z]{2,})\/[\p{L}0-9=~_:;,\|!#%&\^\?\.\(\)\{\}\-\+\@\/]+)\b/imu";
 
+	const IMAGE = "@\b(http://|ftp://|https://)[a-z0-9\-\.]+\.[a-z]{2,10}/[\p{L}0-9=~_:;,/\|!#%&\?\.\-\+\@]+\.(jpeg|jpg|png|gif)@imu";
+
 	protected $text;
 
 	protected $isTidy = false; 
@@ -182,7 +184,12 @@ class RichContent {
 		return ($return && $this->isTidy) ? (string) $tidy : $this->isTidy;
 	}
 
+	public function images()
+	{
+		preg_match_all(self::IMAGE, $this->text, $matches);
 
+		return $matches[0] ? array_map(function($v){return new UrlImage(new Url($v));}, $matches[0]) : [];
+	}
 
 
 	public function repair()

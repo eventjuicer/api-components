@@ -175,10 +175,18 @@ class ApiUser {
 
 	}
 
+	public function check()
+	{
+		if(!$this->isValid())
+		{
+			abort(404);
+		}
+	}
+
 
 	public function isValid()
 	{
-		return ( $this->user && $this->user->group_id && $this->user->group_id);
+		return ( $this->user && $this->id && $this->group_id);
 	}
 
 	public function log()
