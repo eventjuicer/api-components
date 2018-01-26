@@ -19,12 +19,14 @@ class Personalizer {
 		);
 
 	protected $original;
+
 	protected $translated;
+	
 	protected $model;
 
 	protected $profile;
 
- 	function __construct(Model $model, $str, $replacements = [])
+ 	function __construct(Model $model, $str = "", $replacements = [])
 	{
 
 		$this->model = $model;
@@ -36,17 +38,23 @@ class Personalizer {
                 return [$_item->name => $_item->pivot->field_value];
         });
 
-		if(strstr($this->original, "[[")===false)
+		if(strstr($this->original, "[[")!==false)
 		{
 		
-			$this->translated = $this->original;
+			$this->translated = $this->translate($str, $replacements);
 		}
+		
+	}/*eom*/
 
-		$this->translated = preg_replace_callback(
+
+	public function translate(string $str, $replacements = [])
+	{
+
+		return $this->translated = preg_replace_callback(
 
 			self::VALID_FIELDNAME, 
 
-			function($arr = array()) use($model, $replacements)
+			function($arr = array()) use ($replacements)
 			{ 		
 
 				$key 			= strtolower(array_get($arr, "name"));
@@ -73,9 +81,9 @@ class Personalizer {
 				// }
 
 
-				if(isset($model->$key))
+				if(isset($this->model->$key))
 				{
-					$output = $model->$key;
+					$output = $this->model->$key;
 				}
 				else
 				{
@@ -102,11 +110,10 @@ class Personalizer {
 				
 				return $output;
 			
-		 	}, $this->original);
-		
-		
-		
-	}/*eom*/
+		 	}, $str);
+
+
+	}
 
 
 
