@@ -79,7 +79,7 @@ class Personalizer {
 				}
 				else
 				{
-					$output = (string) array_get($this->profile, $key)
+					$output = (string) array_get($this->profile, $key);
 				}
 
 				if(!empty($options))

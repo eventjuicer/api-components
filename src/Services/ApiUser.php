@@ -15,7 +15,7 @@ use Eventjuicer\Repositories\Criteria\ColumnGreaterThanZero;
 use Eventjuicer\Repositories\Criteria\RelHasNonZeroValue;
 
 use Eventjuicer\ValueObjects\EmailAddress;
-
+use Eventjuicer\Services\Personalizer;
 
 class ApiUser {
 	
@@ -61,6 +61,27 @@ class ApiUser {
 		return false;
 		
 	}
+
+
+	public function personalize($str)
+	{
+		$this->switchToParent();
+
+		return (string) new Personalizer($this->user(), $str);
+	}
+
+	public function logotype()
+	{
+		$this->switchToParent();
+
+		return (string) new Personalizer($this->user(), "[[logotype]]");
+	}
+
+	public function trackingLink($medium = "banner", $ad = "")
+	{
+         return sprintf("https://ecommerceberlin.com/?utm_source=company_%d&utm_medium=%s&utm_campaign=eb3ej&utm_content=%s", $this->company()->id, $medium, $ad);
+	}
+
 
 	public function realUser()
 	{
