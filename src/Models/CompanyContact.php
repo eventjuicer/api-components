@@ -8,25 +8,19 @@ use Eventjuicer\Models\Company;
 use Eventjuicer\Models\Participant;
 use Eventjuicer\Models\Organizer;
 use Eventjuicer\Models\Group;
-use Eventjuicer\Models\CompanyContact;
 use Eventjuicer\Models\CompanyContactlist;
+use Eventjuicer\Models\CompanyImport;
 
-
-class CompanyImport extends Model
+class CompanyContact extends Model
 {
      
-    protected $table = "eventjuicer_company_imports";
+    protected $table = "eventjuicer_company_contacts";
        
     
     protected $casts = [
 
-        'data' => 'array',
+        'fields' => 'array',
     ];
-
-    public function contacts()
-    {
-         return $this->hasMany(CompanyContact::class);
-    }
 
 
     public function company()
@@ -34,9 +28,9 @@ class CompanyImport extends Model
         return $this->belongsTo(Company::class);
     }
 
-    public function contactlist()
+    public function contactlists()
     {
-        return $this->belongsTo(CompanyContactlist::class);
+        return $this->belongsToMany(CompanyImport::class, "eventjuicer_company_contact_contactlist", "contact_id", "contactlist_id")->withTimestamps();
     }
 
 
@@ -45,16 +39,24 @@ class CompanyImport extends Model
         return $this->belongsTo(Organizer::class);
     }
 
+    public function import()
+    {   
+        return $this->belongsTo(CompanyImport::class);
+    }
+
+
     public function group()
     {   
         return $this->belongsTo(Group::class);
     }
 
 
-    public function admin()
-    {
-        return $this->belongsTo(Participant::class, "user_id", "id");
-    }
+
+
+    // public function admin()
+    // {
+    //     return $this->belongsTo(Participant::class, "user_id", "id");
+    // }
 
 
 

@@ -35,6 +35,6 @@ class SendMeetupRequestEmail extends Job implements ShouldQueue
         
         
 
-        dd("dead");
+       
     }
 }

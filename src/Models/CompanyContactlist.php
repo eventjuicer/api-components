@@ -9,24 +9,12 @@ use Eventjuicer\Models\Participant;
 use Eventjuicer\Models\Organizer;
 use Eventjuicer\Models\Group;
 use Eventjuicer\Models\CompanyContact;
-use Eventjuicer\Models\CompanyContactlist;
 
-
-class CompanyImport extends Model
+class CompanyContactlist extends Model
 {
      
-    protected $table = "eventjuicer_company_imports";
+    protected $table = "eventjuicer_company_contactlists";
        
-    
-    protected $casts = [
-
-        'data' => 'array',
-    ];
-
-    public function contacts()
-    {
-         return $this->hasMany(CompanyContact::class);
-    }
 
 
     public function company()
@@ -34,9 +22,9 @@ class CompanyImport extends Model
         return $this->belongsTo(Company::class);
     }
 
-    public function contactlist()
+    public function contacts()
     {
-        return $this->belongsTo(CompanyContactlist::class);
+        return $this->belongsToMany(CompanyContact::class, "eventjuicer_company_contact_contactlist", "contactlist_id", "contact_id")->withTimestamps();
     }
 
 
@@ -49,7 +37,6 @@ class CompanyImport extends Model
     {   
         return $this->belongsTo(Group::class);
     }
-
 
     public function admin()
     {

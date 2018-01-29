@@ -33,6 +33,12 @@ class CompanyImportRepository extends Repository
     public function prepare(array $postData, ApiUser $user)
     {
 
+        $contactlist_id = (int) array_get($postData, "contactlist_id", 0);
+
+        if(!$contactlist_id)
+        {
+            return false;
+        }
 
         $name = array_get($postData, "name", "import");
         $manual = (array) array_get($postData, "imported_manually", []);
@@ -56,9 +62,10 @@ class CompanyImportRepository extends Repository
         $data["group_id"] = $user->company()->group_id;
         $data["company_id"] = $user->company()->id;
         $data["user_id"] = $user->user()->id;
+        $data["contactlist_id"] = $contactlist_id;
 
         $data["name"] = $name;
-        $data["count"] = count($manual);
+        $data["submitted"] = count($manual);
         $data["data"] = compact("manual", "csv");
 
         return $data;
