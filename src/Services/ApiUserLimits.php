@@ -80,7 +80,7 @@ class ApiUserLimits {
 
 				$base = 5;
 
-				return $base + round($this->points() / 10) - $howmany;
+				return $base + intval($this->points() / 5) - $howmany;
 
 			break;
 		}

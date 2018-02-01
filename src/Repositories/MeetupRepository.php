@@ -4,7 +4,6 @@ namespace Eventjuicer\Repositories;
 
 use Eventjuicer\Models\Meetup;
 use Eventjuicer\Repositories\Repository;
-use Eventjuicer\Repositories\Criteria\BelongsToCompany;
 
 use Carbon\Carbon;
 use Uuid;
