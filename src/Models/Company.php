@@ -12,7 +12,8 @@ class Company extends Model
 
     protected $table = "eventjuicer_companies";
     
-   
+    protected $dates = ['assigned_at', 'stats_updated_at'];
+
 
     public function assignedBy()
     {
