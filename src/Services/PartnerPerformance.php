@@ -95,6 +95,38 @@ class PartnerPerformance {
 	}
 
 
+	public function getCompanyRankingPosition(ApiUser $apiUser)
+	{
+
+		$stats = $this->getStatsForCompanies( $apiUser->activeEventId() );
+
+		$users = $stats->sortByDesc("stats.sessions")->values();
+
+		$position = 0;
+
+		$stats = ["position" => 0, "points" => 0];
+
+		foreach($users AS $user)
+		{	
+			$position++;
+
+			if(
+				($user->company && $user->company->id == $apiUser->company()->id) || 
+
+				($user->id == $apiUser->user()->id)
+			)
+			{
+
+				$stats = [ 
+					"position" => $position, 
+					"points" => array_get($user->stats, "sessions") 
+				];
+			}
+		}
+
+		return $stats;
+	}
+
 
 	/*
 		

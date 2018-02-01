@@ -5,8 +5,8 @@ namespace Eventjuicer\Repositories;
 use Eventjuicer\Models\Company;
 use Eventjuicer\Repositories\Repository;
 
-
-
+use Carbon\Carbon;
+use Closure;
 
 class CompanyRepository extends Repository
 {
@@ -19,7 +19,32 @@ class CompanyRepository extends Repository
     }
 
 
+    public function updateStatsIfNeeded($id, Closure $source)
+    {
 
+    	$company = $this->find($id);
+
+    	if(!$company) 
+    	{
+    		return [];
+    	}
+
+    	if(! is_null($company->stats_updated_at) && 
+    		Carbon::now()->diffInHours( $company->stats_updated_at ) < 3
+    	)
+    	{
+    		return $company->only( ["position", "points"] );
+    	}
+
+    	$stats = $source();
+
+    	return $this->update([
+    			"stats_updated_at" => Carbon::now(),
+    			"points" => array_get($stats, "points", 0),
+    			"position" => array_get($stats, "position", 0)
+    		], $id);
+
+    }
 
 
 

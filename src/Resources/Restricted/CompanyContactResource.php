@@ -18,7 +18,7 @@ class CompanyContactResource extends Resource
         $data["id"] = $this->id;
         $data["email"] = $this->email;
        
-        $data["contactlists"] =  $this->contactlists;
+        $data["contactlists"] =  CompanyContactlistResource::collection($this->contactlists);
 
         $data["starred"]    =  (int) $this->starred;
         $data["muted"]      =  (int) $this->muted;
