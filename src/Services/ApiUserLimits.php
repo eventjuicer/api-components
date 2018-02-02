@@ -78,7 +78,7 @@ class ApiUserLimits {
 		{
 			case "meetup":
 
-				$base = 5;
+				$base = $this->points() > 20 ? 50 : 5;
 
 				return $base + intval($this->points() / 10) - $howmany;
 
