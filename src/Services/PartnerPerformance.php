@@ -104,7 +104,7 @@ class PartnerPerformance {
 
 		$position = 0;
 
-		$stats = ["position" => 0, "points" => 0];
+		$stats = ["position" => 0, "points" => 0, "sessions" => 0];
 
 		foreach($users AS $user)
 		{	
@@ -118,8 +118,9 @@ class PartnerPerformance {
 			{
 
 				$stats = [ 
-					"position" => $position, 
-					"points" => array_get($user->stats, "sessions") 
+					"position" 	=> $position, 
+					"points" 	=> array_get($user->stats, "sessions"),
+					"sessions" 	=> array_get($user->stats, "sessions")
 				];
 			}
 		}

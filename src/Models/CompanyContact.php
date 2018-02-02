@@ -30,7 +30,7 @@ class CompanyContact extends Model
 
     public function contactlists()
     {
-        return $this->belongsToMany(CompanyImport::class, "eventjuicer_company_contact_contactlist", "contact_id", "contactlist_id")->withTimestamps();
+        return $this->belongsToMany(CompanyContactlist::class, "eventjuicer_company_contact_contactlist", "contact_id", "contactlist_id")->withTimestamps();
     }
 
 

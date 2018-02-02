@@ -19,10 +19,13 @@ class CompanyContactResource extends Resource
         $data["email"] = $this->email;
        
         $data["contactlists"] =  CompanyContactlistResource::collection($this->contactlists);
+        
+        $data["contactlist_ids"] = $this->contactlists->pluck("id");
 
         $data["starred"]    =  (int) $this->starred;
         $data["muted"]      =  (int) $this->muted;
-        $data["fields"]     = $this->fields;
+
+        $data["profile"]     = $this->fields;
 
        
         $data["created_at"] = (string) $this->created_at;
