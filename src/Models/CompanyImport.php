@@ -23,6 +23,13 @@ class CompanyImport extends Model
         'data' => 'array',
     ];
 
+
+    protected $dates = [
+        'imported_at'
+    ];
+
+
+
     public function contacts()
     {
          return $this->hasMany(CompanyContact::class);

@@ -10,6 +10,8 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Eventjuicer\Models\CompanyImport;
 use Eventjuicer\Repositories\CompanyContactRepository;
 use Eventjuicer\Repositories\CompanyContactlistRepository;
+use Eventjuicer\ValueObjects\Phone;
+
 
 //use Eventjuicer\Contracts\Email\Templated as Mailer;
 use Exception;
@@ -43,34 +45,42 @@ class ProcessImportData extends Job implements ShouldQueue
     {   
 
 
-        $counter = 0;
-
         $ids = [];
         
         foreach(array_get($this->import->data, "manual", []) as $email)
-        {
-            $contact = $contacts->makeModel();
+        {   
 
-            $data   = $contacts->prepare(
-                array_merge(
-                    $this->import->toArray(), 
-                    compact("email"),
-                    ["import_id" => $this->import->id]
-                )
-            );
+            $email = trim($email, " ,");
+        
+            $saved = $this->saveContact($contacts, compact("email"));
 
-            if($data)
+            if($saved)
             {
-                $contacts->saveModel($data);
-
-                $ids[] = $contact->id;
-
-                $counter++;
-
+                $ids[] = $saved;
             }
-            else
+
+        }
+
+
+        foreach(array_get($this->import->data, "csv", []) as $row)
+        {
+            $email = array_get($row, "email", false);
+
+            if($email)
             {
-               //we may still want to attach to contactlist?
+                unset($row["email"]);
+            }
+
+            if(isset($row["phone"]))
+            {
+                $row["phone"] = (string) (new Phone($row["phone"]));
+            }
+            
+            $saved = $this->saveContact($contacts, ["email" => $email, "data" => $row]);
+
+            if($saved)
+            {
+                $ids[] = $saved;
             }
 
         }
@@ -78,12 +88,35 @@ class ProcessImportData extends Job implements ShouldQueue
          
         $contactlists->find($this->import->contactlist_id)->contacts()->syncWithoutDetaching($ids);
 
-        $this->import->imported = $counter;
+        $this->import->imported = count($ids);
         $this->import->imported_at = Carbon::now();
         $this->import->save();
        
     }
 
+    protected function saveContact(CompanyContactRepository $contacts, $postData)
+    {
+
+        $contact = $contacts->makeModel();
+
+        $data   = $contacts->prepare(
+                array_merge(
+                    $this->import->toArray(), 
+                    $postData,
+                    ["import_id" => $this->import->id]
+                )
+        );
+
+        if($data)
+        {
+            $contacts->saveModel($data);
+
+            return $contact->id;
+        }
+        
+        return false;
+
+    }
 
  
     // public function failed(Exception $exception)

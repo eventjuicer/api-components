@@ -8,7 +8,8 @@ class Phone
 
     public function __construct($number)
     {
-        $this->number = preg_replace("/\s+/", "", $number);
+        
+        $this->number = preg_replace("/[\s\-\.]+/", "", $number);
     }
 
     public function obfuscated($maskWith = "*")

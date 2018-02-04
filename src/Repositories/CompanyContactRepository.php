@@ -52,7 +52,7 @@ class CompanyContactRepository extends Repository
         $data["import_id"]      = array_get($postData, "import_id");
 
         $data["email"]          = (string) $email;
-        $data["fields"]         = (array) array_get($postData, "fields", []);
+        $data["data"]         = (array) array_get($postData, "data", []);
 
 
         return $data;

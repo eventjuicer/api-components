@@ -19,8 +19,15 @@ class CompanyContact extends Model
     
     protected $casts = [
 
-        'fields' => 'array',
+        'data' => 'array',
     ];
+
+    protected $dates = [
+
+        'sent_at'
+    
+    ];
+
 
 
     public function company()

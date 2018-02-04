@@ -9,6 +9,15 @@ use Illuminate\Http\Resources\Json\Resource;
 class CompanyContactResource extends Resource
 {
 
+    protected $profileFields = [
+
+        "fname"     => "", 
+        "lname"     => "", 
+        "cname2"    => "", 
+        "phone"     => "", 
+        "position"  => ""
+    ];
+
 
     public function toArray($request)
     {
@@ -25,8 +34,10 @@ class CompanyContactResource extends Resource
         $data["starred"]    =  (int) $this->starred;
         $data["muted"]      =  (int) $this->muted;
 
-        $data["profile"]     = $this->fields;
+        $data["data"]     = array_merge($this->profileFields, 
+            (array) $this->data);
 
+        $data["comment"] = (string) $this->comment;
        
         $data["created_at"] = (string) $this->created_at;
         $data["updated_at"] = (string) $this->updated_at;
