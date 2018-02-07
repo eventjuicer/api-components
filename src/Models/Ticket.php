@@ -77,7 +77,7 @@ class Ticket extends Model
     public function participantsNotCancelled()
     {
         
-        return $this->belongsToMany(Participant::class, 'bob_participant_ticket', 'ticket_id', 'participant_id')->wherePivot("sold", 1);
+        return $this->belongsToMany(Participant::class, 'bob_participant_ticket', 'ticket_id', 'participant_id')->wherePivot("sold", 1)->orderBy("participant_id", "DESC");
 
     }
 
