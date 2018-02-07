@@ -14,7 +14,7 @@ class ParticipantSearch {
 protected $result;
 
 
-function __construct(Repository $repo, int $event_id, string $q)
+function __construct(Repository $repo, int $event_id, string $q, $addFields = [])
 {
 
         if(!$q || strlen($q) < 3)
@@ -44,7 +44,7 @@ function __construct(Repository $repo, int $event_id, string $q)
             else
             {
 
-                $rows1 = ParticipantFields::with("participant", "participant.fields")->where("event_id", $event_id)->whereIn("field_id", [3,11])->where("field_value", "LIKE", $q."%")->get()->pluck("participant");
+                $rows1 = ParticipantFields::with("participant", "participant.fields")->where("event_id", $event_id)->whereIn("field_id", array_merge([3,11], (array) $addFields))->where("field_value", "LIKE", $q."%")->get()->pluck("participant");
 
                 $repo->with(["fields"]);
                 $repo->pushCriteria(new BelongsToEvent($event_id));
