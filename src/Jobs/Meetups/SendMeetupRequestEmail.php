@@ -1,6 +1,6 @@
 <?php
 
-namespace Eventjuicer\Jobs;
+namespace Eventjuicer\Jobs\Meetups;
 
 use Illuminate\Contracts\Queue\ShouldQueue;
 

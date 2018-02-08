@@ -5,14 +5,14 @@ namespace Eventjuicer\Repositories\Criteria;
 use Bosnadev\Repositories\Criteria\Criteria;
 use Bosnadev\Repositories\Contracts\RepositoryInterface as Repository;
 
- 
-class ColumnNotNull extends Criteria {
+class ColumnLessThan extends Criteria {
 
-    protected $column;
+    protected $column, $value;
 
-    function __construct($column = "")
+    function __construct($column = "", $value = 0)
     {
-        $this->column = $column;
+        $this->column   = $column;
+        $this->value    = $value;
     }
 
     /**
@@ -22,7 +22,7 @@ class ColumnNotNull extends Criteria {
      */
     public function apply($model, Repository $repository)
     {
-        $model = $model->whereNotNull($this->column);
+        $model = $model->where($this->column, "<", $this->value);
         return $model;
     }
 }

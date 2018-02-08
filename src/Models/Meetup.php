@@ -21,7 +21,16 @@ class Meetup extends Model
         'data' => 'array',
     ];
 
-       
+    
+    protected $dates = [
+
+        'sent_at',
+        'resent_at',
+        'responded_at',
+        'scheduled_at'
+    
+    ];
+   
     public function company()
     {
         return $this->belongsTo(Company::class);

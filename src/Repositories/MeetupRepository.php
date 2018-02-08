@@ -21,14 +21,30 @@ class MeetupRepository extends Repository
         return Meetup::class;
     }
 
+ 
 
-    public function validateHash()
+    public function updateAfterSent($id)
     {
 
-        // sha1()
+        $meetup = $this->find($id);
+
+        $data = [];
+
+        if($meetup->retries == 0)
+        {
+            $data["sent_at"] = Carbon::now("UTC");
+
+        }
+        else
+        {
+            $data["resent_at"] = Carbon::now("UTC");
+        }
+
+        $data["retries"] = $meetup->retries + 1;
+
+        $this->update($data, $id);
 
     }
-
 
 
 

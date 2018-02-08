@@ -6,7 +6,7 @@ use Bosnadev\Repositories\Criteria\Criteria;
 use Bosnadev\Repositories\Contracts\RepositoryInterface as Repository;
 
  
-class ColumnNotNull extends Criteria {
+class ColumnIsNull extends Criteria {
 
     protected $column;
 
@@ -22,7 +22,7 @@ class ColumnNotNull extends Criteria {
      */
     public function apply($model, Repository $repository)
     {
-        $model = $model->whereNotNull($this->column);
+        $model = $model->whereNull($this->column);
         return $model;
     }
 }

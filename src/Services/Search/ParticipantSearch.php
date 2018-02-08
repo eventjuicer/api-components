@@ -55,6 +55,10 @@ function __construct(Repository $repo, int $event_id, string $q, $addFields = []
       
         }
 
+        //filter CANCELLED...
+
+        
+
         $this->result = $rows->unique("id")->values();
 
        

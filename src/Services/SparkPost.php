@@ -18,7 +18,10 @@ class SparkPost implements Templated {
 	function __construct(Request $request)
 	{
 		$httpClient = new GuzzleAdapter(new Client());
-		$this->sparky = new SparkPostLib($httpClient, ['key'=> env("SPARKPOST_KEY"), 'async' => true ]);
+		
+		$this->sparky = new SparkPostLib($httpClient, [
+			'key'=> env("SPARKPOST_SECRET"), 
+			'async' => true ]);
 	}
 
 

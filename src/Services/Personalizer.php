@@ -26,12 +26,16 @@ class Personalizer {
 
 	protected $profile;
 
+	protected $replacements;
+
  	function __construct(Model $model, $str = "", $replacements = [])
 	{
 
 		$this->model = $model;
 
 		$this->original = $str;
+
+		$this->replacements = (array) $replacements;
 		
 		$this->profile = $model->fields->mapWithKeys(function($_item){
                 
@@ -41,7 +45,7 @@ class Personalizer {
 		if(strstr($this->original, "[[")!==false)
 		{
 		
-			$this->translated = $this->translate($str, $replacements);
+			$this->translated = $this->translate($str);
 		}
 		
 	}/*eom*/
@@ -49,6 +53,9 @@ class Personalizer {
 
 	public function translate(string $str, $replacements = [])
 	{
+
+		$replacements = array_merge($this->replacements, (array) $replacements);
+
 
 		return $this->translated = preg_replace_callback(
 
@@ -87,7 +94,12 @@ class Personalizer {
 				}
 				else
 				{
-					$output = (string) array_get($this->profile, $key);
+					$output = (string) array_get($this->profile, $key, "");
+				}
+
+				if(empty($output))
+				{
+					$output = array_get($replacements, $key, "");
 				}
 
 				if(!empty($options))
