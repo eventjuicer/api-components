@@ -28,6 +28,11 @@ class MeetupRepository extends Repository
 
         $meetup = $this->find($id);
 
+        if(!$meetup)
+        {
+            return;
+        }
+
         $data = [];
 
         if($meetup->retries == 0)
