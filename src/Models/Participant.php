@@ -64,6 +64,13 @@ class Participant extends Model
 
     /**NEW OR CHECKED**/
  
+    
+
+    public function ticketdownloads()
+    {
+        return $this->hasMany(TicketDownload:: class);
+    }
+
 
     public function parent()
     {
