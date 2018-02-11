@@ -5,14 +5,17 @@ namespace Eventjuicer\Repositories\Criteria;
 use Bosnadev\Repositories\Criteria\Criteria;
 use Bosnadev\Repositories\Contracts\RepositoryInterface as Repository;
 
-class SortByDesc extends Criteria {
+class ColumnGreaterThan extends Criteria {
 
-    protected $orderby;
+    protected $column, $value;
 
-    function __construct($orderby = "")
+    function __construct(string $column, $value)
     {
-        $this->orderby = $orderby;
+        $this->column = $column;
+        $this->value = $value;
+
     }
+
     /**
      * @param $model
      * @param RepositoryInterface $repository
@@ -20,7 +23,7 @@ class SortByDesc extends Criteria {
      */
     public function apply($model, Repository $repository)
     {
-        $model = $model->orderby($this->orderby, "DESC");
+        $model = $model->where($this->column, ">", $this->value);
         return $model;
     }
 }
