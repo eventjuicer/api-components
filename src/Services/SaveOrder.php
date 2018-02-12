@@ -53,7 +53,7 @@ class SaveOrder {
 		$this->purchase = $purchase;
 	}
 
-	function make($event_id = 0, $participant_id = 0, array $tickets, array $fields)
+	function make($event_id = 0, $participant_id = 0, array $tickets, array $fields, $skipValidation = false)
 	{
 		$this->tickets 	= $tickets;
 		$this->fields 	= $fields;
@@ -70,13 +70,13 @@ class SaveOrder {
 		$this->group_id 		= $event->group_id;
 		$this->organizer_id 	= $event->organizer_id;
 
-		if(! $this->validateFields($fields))
+		if(! $skipValidation && ! $this->validateFields($fields))
 		{
 			throw new \Exception("Problem with fields");
 		}
 
 
-		if(! $this->validateTickets($tickets))
+		if( ! $this->validateTickets($tickets))
 		{
 			throw new \Exception("Problem with tickets");
 		}

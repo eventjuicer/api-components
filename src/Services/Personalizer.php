@@ -51,6 +51,12 @@ class Personalizer {
 	}/*eom*/
 
 
+	public function getProfile()
+	{
+		return $this->profile;
+	}
+
+
 	public function translate(string $str, $replacements = [])
 	{
 
