@@ -61,7 +61,7 @@ class SaveOrder {
 
 		if(! (int) $event_id && ! (int) $participant_id)
 		{
-			throw new \Exception();
+			throw new \Exception("Either event id or participant id must be given!");
 		}
 
 		$event = Event::find($event_id);
