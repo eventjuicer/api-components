@@ -40,7 +40,8 @@ class Personalizer {
 		$this->profile = $model->fields->mapWithKeys(function($_item){
                 
                 return [$_item->name => $_item->pivot->field_value];
-        });
+
+        })->all();
 
 		if(strstr($this->original, "[[")!==false)
 		{

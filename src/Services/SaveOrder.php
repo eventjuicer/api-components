@@ -70,16 +70,22 @@ class SaveOrder {
 		$this->group_id 		= $event->group_id;
 		$this->organizer_id 	= $event->organizer_id;
 
-		if(! $skipValidation && ! $this->validateFields($fields))
+		if( ! $skipValidation )
 		{
-			throw new \Exception("Problem with fields");
-		}
+
+			if( ! $this->validateFields($fields))
+			{
+				throw new \Exception("Problem with fields");
+			}
 
 
-		if( ! $this->validateTickets($tickets))
-		{
-			throw new \Exception("Problem with tickets");
+			if( ! $this->validateTickets($tickets))
+			{
+				throw new \Exception("Problem with tickets");
+			}
+		
 		}
+
 
 		if(empty($participant_id))
 		{
