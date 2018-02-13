@@ -21,6 +21,7 @@ class ParticipantSendable {
 
 	protected $deliveries;
 	protected $mutes;
+	protected $checkUniqueness = true;
 
 	protected $unique = [];
 	protected $then = "";
@@ -42,7 +43,16 @@ class ParticipantSendable {
 		$this->then 	= Carbon::now("UTC")->subHours( (int) $muteTime);
 	}
 
+	public function checkUniqueness(bool $val)
+	{
+		$this->checkUniqueness = $val;
+	}
 
+	public function setEmailResolver(Closure $func)
+	{
+		$this->resolver = $func;
+	}
+	
 	public function filter(Collection $dataset, $eventId = 0, array $excludes = [])
 	{
 
@@ -54,11 +64,12 @@ class ParticipantSendable {
 
 			$email = $this->resolver->__invoke($item);
 
-			if(
-				in_array($email, $this->unique) || 
-				in_array($email, $deliveries) || 
-				in_array($email, $mutes)
-			)
+			if( in_array($email, $deliveries) || in_array($email, $mutes) )
+			{
+				return false;
+			}
+
+			if($this->checkUniqueness && in_array($email, $this->unique))
 			{
 				return false;
 			}
@@ -78,10 +89,7 @@ class ParticipantSendable {
 
 	}
 
-	protected function setEmailResolver(Closure $func)
-	{
-		$this->resolver = $func;
-	}
+	
 
 
 	protected function getDeliveries($eventId = 0)
