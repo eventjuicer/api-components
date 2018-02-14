@@ -4,15 +4,11 @@ namespace Eventjuicer\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-use Eventjuicer\Models\ScanComment;
-use Eventjuicer\Models\Participant;
-
 
 class Scan extends Model
 {
 
      
-
     protected $table = "eventjuicer_barcode_scans";
     
     protected $guarded = ['id'];
@@ -23,12 +19,15 @@ class Scan extends Model
         return $this->hasMany(ScanComment::class, "scan_id")->orderBy("created_at", "DESC");;
     }
 
-
     public function owner()
     {   
          return $this->belongsTo(Participant::class, "id", "owner_id");
     }
 
+    public function company()
+    {   
+         return $this->belongsTo(Company::class);
+    }
 
     public function participant()
     {
