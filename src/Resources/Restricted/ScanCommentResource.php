@@ -13,6 +13,7 @@ class ScanCommentResource extends Resource
 
         $data = [];		
         $data["id"] = $this->id;
+        $data["comment"] = $this->comment;
 		return $data;
         
     }

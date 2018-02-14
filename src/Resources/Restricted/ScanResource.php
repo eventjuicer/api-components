@@ -10,7 +10,7 @@ class ScanResource extends Resource
 {
 
     protected $presenterFields = [
-        "email", 
+       
         "fname", 
         "lname", 
         "cname2", 
@@ -24,14 +24,18 @@ class ScanResource extends Resource
 
         $data = [];
 
+        $data["id"] = $this->id;
+
 		$data["profile"] = $this->participant->fields->whereIn("name", $this->presenterFields)->mapWithKeys(function($item)
         {     
             return [ $item->name => $item->pivot->field_value] ;
 
         })->all();
 
-        $data["id"] = $this->id;
-       
+        $data["profile"]["email"] = $this->participant->email;
+
+        $data["commented"] = $this->comments->count();
+  
 		$data["comments"] = ScanCommentResource::collection($this->comments);
 
         $data["created_at"] = (string) $this->created_at;
