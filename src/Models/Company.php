@@ -43,6 +43,10 @@ class Company extends Model
         return $this->belongsTo(Group::class, "id", "owner_id");
     }
 
+    public function scans()
+    {
+        return $this->hasMany(Scan::class);
+    }
 
 
 
