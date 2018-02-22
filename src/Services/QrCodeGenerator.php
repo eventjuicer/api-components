@@ -21,7 +21,7 @@ class QrCodeGenerator {
 	{
 
 		$qrCode = new QrCode($code);
-		$qrCode->setSize(300);
+		$qrCode->setSize(500);
 
 
 				// Set advanced options
@@ -36,7 +36,7 @@ class QrCodeGenerator {
 		//$qrCode->setLogoPath(__DIR__.'/../assets/images/symfony.png');
 		//$qrCode->setLogoWidth(150);
 		$qrCode->setRoundBlockSize(true);
-		$qrCode->setValidateResult(true);
+		$qrCode->setValidateResult(false);
 
 
 		return response(
