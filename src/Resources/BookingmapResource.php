@@ -12,6 +12,7 @@ class BookingmapResource extends Resource
     {   
         
         $data = $this->data;
+        $data["booths"] = json_decode($this->data["booths"]);
  		$data["id"] = $this->id;
 
         return $data;
