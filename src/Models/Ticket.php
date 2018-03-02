@@ -54,6 +54,7 @@ class Ticket extends Model
     protected $casts = [
 
         'price' => 'array',
+        'names' => 'array'
     ];
 
 

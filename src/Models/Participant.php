@@ -116,6 +116,13 @@ class Participant extends Model
 
     }
 
+    public function ticketpivot()
+    {
+        
+        return $this->hasMany(ParticipantTicket::class, "participant_id");
+
+    }
+
 
     /**NEW OR CHECKED**/
 

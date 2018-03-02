@@ -15,9 +15,9 @@ class TicketResource extends Resource
     public function toArray($request)
     {
        return [
-            "id"    => (int) $this->id
-            
-           
+            "id"    => (int) $this->id,
+            "name" => array_get($this->names, "pl"),
+            "role" => $this->role
         ];
     }
 }
