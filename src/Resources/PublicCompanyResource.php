@@ -18,8 +18,15 @@ class PublicCompanyResource extends Resource
             "id" => $this->id,        
             "name" => $this->name ?? $this->slug,
             "slug" => $this->slug,
-          	
-          	"tickets"=> $this->participants->pluck("ticketpivot")->collapse()
+          	 
+            "fields" => [
+
+                        "company_description" => "lorem ipsum",
+                        "logotype" => "lorem ipsum", 
+                        "cname2" => "lorem ipsum"
+                      ],
+
+          	"instances"=> $this->participants->pluck("ticketpivot")->collapse()
         ];
     }
 }
