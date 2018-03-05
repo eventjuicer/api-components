@@ -26,7 +26,7 @@ class PublicCompanyResource extends Resource
                         "cname2" => "lorem ipsum"
                       ],
 
-          	"instances"=> $this->participants->pluck("ticketpivot")->collapse()
+          	"instances"=> $this->participants->pluck("ticketpivot")->collapse()->values()
         ];
     }
 }
