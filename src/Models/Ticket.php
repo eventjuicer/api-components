@@ -57,6 +57,8 @@ class Ticket extends Model
         'names' => 'array'
     ];
 
+    protected $dates = ['start', 'end'];
+
 
 
    //  public function pu()
@@ -94,7 +96,20 @@ class Ticket extends Model
         return $this->belongsTo(Event::class);
     }
 
-  
+    
+    public function ticketpivot()
+    {
+        
+        return $this->hasMany(ParticipantTicket::class, "ticket_id");
+
+    }
+
+    public function group()
+    {
+        
+        return $this->belongsTo(TicketGroup::class, "ticket_group_id");
+
+    }
   
 
 }

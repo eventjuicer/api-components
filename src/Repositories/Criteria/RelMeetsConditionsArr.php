@@ -30,7 +30,14 @@ class RelMeetsConditionsArr extends Criteria {
         {
             foreach($this->conditions as $condition)
             {
-                 $query->where($condition[0], $condition[1], $condition[2]);
+
+                if(isset($condition[2]))
+                {
+                    $query->where($condition[0], $condition[1], $condition[2]);
+                }
+                else {
+                   $query->where($condition[0], $condition[1]);
+                }
             } 
             
         });
