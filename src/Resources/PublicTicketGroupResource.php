@@ -14,14 +14,14 @@ class PublicTicketGroupResource extends Resource
 
         return [
 
-            "id" => $this->id,        
-            "name" => $this->name,
-            "descriptions" => $this->descriptions,
-            "style" => $this->booth,
-            "limit" => $this->limit,
-            "remaining" => $this->limit,
-          	"max" => $this->max,
-            "tickets" => PublicTicketResource::collection($this->tickets),
+            "id"            => $this->id,        
+            "name"          => $this->name,
+            "descriptions"  => $this->descriptions,
+            "style"         => $this->booth,
+            "limit"         => $this->limit,
+            "remaining"     => $this->limit,
+          	"max"           => $this->max,
+            "tickets"       => PublicTicketResource::collection($this->whenLoaded("tickets")),
         ];
     }
 }

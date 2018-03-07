@@ -23,31 +23,59 @@ class PublicTicketResource extends Resource
 
     public function toArray($request)
     {   
-    	$between = Carbon::now()->between($this->start, $this->end);
+    	$datePassed 	= Carbon::now()->greaterThan( $this->end );
+ 		$dateInFuture 	= Carbon::now()->lessThan( $this->start );
 
     	$data = [];
 
- 		$data["id"] = $this->id;
- 		$data["group_id"] = $this->ticket_group_id;
+ 		$data["id"] 		= $this->id;
+ 		$data["group_id"] 	= $this->ticket_group_id;
  		
- 		$data["names"] = $this->names;
- 		$data["price"] = $this->price;
- 		$data["role"] = in_array($this->role, $this->roles) ? $this->role : "";
+ 		$data["names"] 		= $this->names;
+ 		$data["price"] 		= $this->price;
+ 		$data["role"] 		= in_array($this->role, $this->roles) ? $this->role : "";
  		
- 		$data["limit"] = $this->limit;
+ 		$data["limit"] 		= $this->limit;
  		$data["max_quantity"] = $this->max;
 
- 		$data["start"] = (string) $this->start;
- 		$data["end"] = (string) $this->end;
+ 		$data["start"] 		= (string) $this->start;
+ 		$data["end"] 		= (string) $this->end;
 
- 		$data["customers"] = $this->ticketpivot->count();
- 		$data["sold"] = $this->ticketpivot->sum("quantity");
+ 		$data["customers"] 	= $this->ticketpivot->count();
 
- 		$data["remaining"] = $data["limit"] - $data["sold"];
+ 		$data["sold"] 		= $this->ticketpivot->sum("quantity");
 
- 		$data["in_dates"] = (int) $between;
+ 		$data["remaining"] 	= $data["limit"] - $data["sold"];
 
- 		$data["bookable"] = intval( $data["remaining"] && $between );
+ 		$data["in_dates"] 	= intval( !$datePassed && !$dateInFuture );
+
+ 		$data["bookable"] 	= intval( $data["remaining"] && $data["in_dates"] );
+
+
+
+ 		
+ 		$data["errors"] 	= [];
+
+ 		if(! $data["in_dates"] )
+ 		{
+ 			
+ 			if($datePassed)
+ 			{
+ 				$data["errors"][] = 'overdue';
+ 			}
+
+ 			if(!$datePassed && $dateInFuture)
+ 			{
+ 				$data["errors"][] = 'future';
+ 			}
+  		}
+
+  		if(! $data["remaining"] > 0 )
+  		{
+  			$data["errors"][] = 'soldout';
+  		}
+
+ 		
  		
         return $data;
     }
