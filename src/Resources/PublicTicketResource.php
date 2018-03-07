@@ -55,10 +55,12 @@ class PublicTicketResource extends Resource
  		$data["start"] 		= (string) $this->start;
  		$data["end"] 		= (string) $this->end;
 
- 		$data["customers"] 	= $this->ticketpivot->count();
+ 		$data["agg"] = [
+ 				"customers" => $this->ticketpivot->count(),
+ 				"sold" 		=> $this->ticketpivot->sum("quantity")			
+ 		];
 
- 		$data["sold"] 		= $this->ticketpivot->sum("quantity");
-
+ 	 
 
  		if( $this->ticket_group_id && self::$groupInfo)
  		{
@@ -66,14 +68,15 @@ class PublicTicketResource extends Resource
 
  			$group = self::$groupInfo[$this->ticket_group_id];
 
- 			$groupRemaining = $group->offered - $group->sold;
+ 			$remainingInGroup = $group->limit - $group->agg["sold"];
 
- 			$data["remaining"] 	= min($groupRemaining, ($data["limit"] - $data["sold"]));
+ 			$data["remaining"] 	= min($remainingInGroup, ($data["limit"] - $data["agg"]["sold"]) );
  		}
  		else
  		{
- 			$data["remaining"] 	= $data["limit"] - $data["sold"];
+ 			$data["remaining"] 	= $data["limit"] - $data["agg"]["sold"];
  		}
+
 
  		
  		$data["in_dates"] 	= intval( !$datePassed && !$dateInFuture );
@@ -99,7 +102,14 @@ class PublicTicketResource extends Resource
   		if(! $data["remaining"] > 0 )
   		{
   			$data["errors"][] = 'soldout';
+
+  			if(isset($remainingInGroup))
+  			{
+  				$data["errors"][] = 'soldout_pool';
+  			}
+
   		}
+
 
  		
  		

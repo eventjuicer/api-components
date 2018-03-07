@@ -19,9 +19,7 @@ class PublicTicketGroupResource extends Resource
             "map"               => $this->booth,
             "limit"             => $this->limit,
 
-            "offered"           => isset($this->offered) ? $this->offered  : null,
-            "sold"              => isset($this->sold) ?  $this->sold  : null,
-            "customers"         => isset($this->customers) ? $this->customers  : null,
+            "agg" => isset($this->agg) ? $this->agg  : [],
             
             "tickets"           => PublicTicketResource::collection($this->whenLoaded("tickets")),
         ];
