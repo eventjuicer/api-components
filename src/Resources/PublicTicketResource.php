@@ -8,6 +8,8 @@ use Eventjuicer\Services\Personalizer;
 
 use Carbon\Carbon;
 
+use Illuminate\Support\Collection;
+
 class PublicTicketResource extends Resource
 {
 
@@ -15,16 +17,28 @@ class PublicTicketResource extends Resource
 
 	protected $limitFromGroup;
 
+	static $groupInfo;
+
 	public function __construct($resource, $limitFromGroup = 0)
     {
         $this->resource = $resource;
         $this->limitFromGroup = $limitFromGroup;
     }
 
+    public static function enhanceWithGroupInfo(Collection $groupsByGroupId)
+    {
+    	self::$groupInfo = $groupsByGroupId;
+    }
+
+
     public function toArray($request)
     {   
+
+
     	$datePassed 	= Carbon::now()->greaterThan( $this->end );
  		$dateInFuture 	= Carbon::now()->lessThan( $this->start );
+
+
 
     	$data = [];
 
@@ -45,15 +59,27 @@ class PublicTicketResource extends Resource
 
  		$data["sold"] 		= $this->ticketpivot->sum("quantity");
 
- 		$data["remaining"] 	= $data["limit"] - $data["sold"];
 
+ 		if( $this->ticket_group_id && self::$groupInfo)
+ 		{
+ 			//lookup for GROUP limit!
+
+ 			$group = self::$groupInfo[$this->ticket_group_id];
+
+ 			$groupRemaining = $group->offered - $group->sold;
+
+ 			$data["remaining"] 	= min($groupRemaining, ($data["limit"] - $data["sold"]));
+ 		}
+ 		else
+ 		{
+ 			$data["remaining"] 	= $data["limit"] - $data["sold"];
+ 		}
+
+ 		
  		$data["in_dates"] 	= intval( !$datePassed && !$dateInFuture );
 
  		$data["bookable"] 	= intval( $data["remaining"] && $data["in_dates"] );
 
-
-
- 		
  		$data["errors"] 	= [];
 
  		if(! $data["in_dates"] )
