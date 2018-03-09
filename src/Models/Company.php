@@ -37,6 +37,11 @@ class Company extends Model
         return $this->belongsTo(Organizer::class, "id", "scanned_id");
     }
 
+    public function data()
+    {
+        return $this->hasMany(CompanyData::class);
+    }
+
     
     public function group()
     {
