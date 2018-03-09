@@ -8,23 +8,38 @@ use Illuminate\Http\Resources\Json\Resource;
 class PublicCompanyResource extends Resource
 {
 
+    protected $presenterFields = [
+
+        "about", 
+        "products",
+        "expo", 
+        "keywords",
+        "website",
+        "facebook",
+        "twitter",
+        "linkedin",
+        "logotype",
+
+    ];
+
     public function toArray($request)
     {   
         
- 	 
-
+ 	
         return [
 
             "id" => $this->id,        
             "name" => $this->name ?? $this->slug,
             "slug" => $this->slug,
           	 
-            "fields" => [
+            "profile"   =>  $this->data->whereIn("name", $this->presenterFields)->mapWithKeys(function($item)
+            {     
 
-                        "company_description" => "lorem ipsum",
-                        "logotype" => "lorem ipsum", 
-                        "cname2" => "lorem ipsum"
-                      ],
+    
+                return [ $item->name => $item->data ] ;
+
+            })->all(),
+
 
           	"instances"=> $this->participants->pluck("ticketpivot")->collapse()->values()
         ];
