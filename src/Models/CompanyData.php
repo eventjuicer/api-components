@@ -14,7 +14,7 @@ class CompanyData extends Model
     
     protected $casts = [
 
-        'data' => 'array',
+        'value' => 'array',
     ];
 
 
