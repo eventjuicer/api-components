@@ -23,14 +23,9 @@ class CompanyDataResource extends Resource
             $data = [];
 
             $data["id"] = $this->id;
-
             $data["name"] = $this->name;
-
-            $data["data"] = $this->data;
-
-
+            $data["value"] = $this->value;
             $data["created_at"] = (string) $this->created_at;
-
             $data["updated_at"] = (string) $this->updated_at;
 
             return $data;
