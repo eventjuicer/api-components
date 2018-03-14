@@ -36,7 +36,7 @@ class PublicCompanyResource extends Resource
             {     
 
     
-                return [ $item->name => $item->data ] ;
+                return [ $item->name => $item->value ] ;
 
             })->all(),
 
