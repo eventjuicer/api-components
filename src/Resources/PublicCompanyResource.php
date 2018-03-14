@@ -10,6 +10,7 @@ class PublicCompanyResource extends Resource
 
     protected $presenterFields = [
 
+        "name",
         "about", 
         "products",
         "expo", 
@@ -19,6 +20,7 @@ class PublicCompanyResource extends Resource
         "twitter",
         "linkedin",
         "logotype",
+        "countries"
 
     ];
 
@@ -29,7 +31,7 @@ class PublicCompanyResource extends Resource
         return [
 
             "id" => $this->id,        
-            "name" => $this->name ?? $this->slug,
+            
             "slug" => $this->slug,
           	 
             "profile"   =>  $this->data->whereIn("name", $this->presenterFields)->mapWithKeys(function($item)
