@@ -15,6 +15,12 @@ class SparkPost implements Templated {
 	
 	protected $sparky;
 
+	protected $defaultParams = [
+
+		"template_id" => "pl-visitors-registration",
+		 
+	];
+
 	function __construct(Request $request)
 	{
 		$httpClient = new GuzzleAdapter(new Client());
@@ -25,48 +31,42 @@ class SparkPost implements Templated {
 	}
 
 
-	public function send()
+	public function send(array $params = [])
 	{
+
+		$params = array_merge($this->defaultParams, $params);
+
 
 		$promise = $this->sparky->transmissions->post([
 			'content' => [
-			'from' => [
-			    'name' => 'Targi eHandlu',
-			    'email' => 'expojuicer@expojuicer.com',
-			],
-			// 'subject' => 'First Mailing From PHP',
+			// 'from' => [
+			//     'name' => 'Targi eHandlu',
+			//     'email' => array_get($params, "from")
+			// ],
+		//	'subject' => array_get($params, "subject"),
+
 			// 'html' => '<html><body><h1>Congratulations, {{name}}!</h1><p>You just sent your very first mailing!</p></body></html>',
 			// 'text' => 'Congratulations, {{name}}!! You just sent your very first mailing!',
 			// ],
 
-			'template_id' => "exhibitordeck-auth-request-an-access",
+			'template_id' => array_get($params, "template_id"),
+
 			'use_draft_template'=> true,
 
 			],
 
-			'substitution_data' => [
-				'name' => 'YOUR_FIRST_NAME'
-			],
+			'substitution_data' => array_get($params, "substitution_data", []),
+
 			'recipients' => [
 				[
 				    'address' => [
-				        'name' => 'Adam Zygadlewicz',
-				        'email' => 'adam@zygadlewicz.com',
+				        'name' => array_get($params, "recipient.name", ""),
+				        'email' => array_get($params, "recipient.email", ""),
 				    ],
-				    'substitution_data' => [
-				    	'token' => 'pru'
-				    ],
+				    // 'substitution_data' => [
+				    // 	'token' => 'pru'
+				    // ],
 				],
-				// [
-				//     'address' => [
-				//         'name' => 'Adam Z Zygadlewicz',
-				//         'email' => 'adam+test@zygadlewicz.com',
-				//     ],
-				//     'substitution_data' => [
-				//     	'token' => 'sru'
-				//     ],
-				// ],
-
 			],
 			// 'cc' => [
 			// [
