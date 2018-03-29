@@ -25,9 +25,10 @@ class ApiUserLimits {
 		$this->companies 	= $companies;
 
 
-		$this->performance->setView(112949308);
+		$this->performance->setView(63645499);
 		
-		//PL 63645499
+		//BERLIN 112949308
+		//PL 
 
 	}
 
@@ -78,9 +79,9 @@ class ApiUserLimits {
 		{
 			case "meetup":
 
-				$base = $this->points() > 20 ? 50 : 5;
+				$base = $this->points() > 19 ? 50 : 5;
 
-				return $base + intval($this->points() / 10) - $howmany;
+				return $base + intval($this->points() / 5) - $howmany;
 
 			break;
 		}
