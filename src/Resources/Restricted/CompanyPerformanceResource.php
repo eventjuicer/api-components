@@ -26,10 +26,15 @@ class CompanyPerformanceResource extends Resource
 
             $data["slug"] = $this->slug;
 
-            $data["data"] = array_merge(
+            $data["profile"] = array_merge(
 
                 array_fill_keys($this->visible, ""), $this->remapFields($this->data)
             );
+
+            if(empty($data["profile"]["name"]))
+            {
+                $data["profile"]["name"] = $this->slug;
+            }
 
             $data["stats"] = $this->stats;
 
