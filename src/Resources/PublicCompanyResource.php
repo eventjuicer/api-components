@@ -8,6 +8,10 @@ use Illuminate\Http\Resources\Json\Resource;
 class PublicCompanyResource extends Resource
 {
 
+
+    public static $skipPurchases = false;
+
+
     protected $presenterFields = [
 
         "name",
@@ -24,10 +28,15 @@ class PublicCompanyResource extends Resource
 
     ];
 
+    public static function disablePurchases()
+    {
+        self::$skipPurchases = true;
+    }
+
+
     public function toArray($request)
     {   
-        
- 	
+
         return [
 
             "id" => $this->id,        
@@ -39,13 +48,16 @@ class PublicCompanyResource extends Resource
             "profile"   =>  $this->data->whereIn("name", $this->presenterFields)->mapWithKeys(function($item)
             {     
 
-    
                 return [ $item->name => $item->value ] ;
 
             })->all(),
 
 
-          	"instances"=> $this->participants->pluck("ticketpivot")->collapse()->values()
+          	"instances" => $this->when(
+                !self::$skipPurchases, 
+                $this->participants->pluck("ticketpivot")->collapse()->values()
+            )
+            
         ];
     }
 }
