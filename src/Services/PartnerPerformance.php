@@ -15,7 +15,7 @@ use Eventjuicer\Repositories\ParticipantRepository;
 use Eventjuicer\Repositories\CompanyRepository;
 
 use Illuminate\Contracts\Cache\Repository as Cache;
-
+use Eventjuicer\Models\Event;
 
 use Eventjuicer\Repositories\Criteria\ColumnMatches;
 use Eventjuicer\Repositories\Criteria\BelongsToEvent;
@@ -26,7 +26,7 @@ use Eventjuicer\Services\ApiUser;
 class PartnerPerformance {
 	
 
-	protected $repo, $participants, $comanies, $cache, $gaView, $analytics;
+	protected $repo, $participants, $companies, $role, $cache, $gaView, $analytics;
 	
 	protected $statsDefault = ["sessions" => 0, "conversions" => 0];
 
@@ -34,12 +34,14 @@ class PartnerPerformance {
 			EloquentTicketRepository $repo, 
 			ParticipantRepository $participants,
 			CompanyRepository $companies,
+			GetByRole $role,
 			Cache $cache)
 	{
 	
 		$this->repo = $repo;
 		$this->participants = $participants;
 		$this->companies = $companies;
+		$this->role = $role;
 		$this->cache = $cache;
 
 	}
@@ -70,7 +72,12 @@ class PartnerPerformance {
 		$participants->map(function($row) use ($analytics, $glue, $mergeBy)
 		{
 
-			$row->{$glue} = $analytics->get($row->$mergeBy, $this->statsDefault);
+			if(!is_null($row))
+			{
+				$row->{$glue} = $analytics->get($row->$mergeBy, $this->statsDefault);
+
+			}
+
 
 		});
 
@@ -82,15 +89,20 @@ class PartnerPerformance {
    	public function getStatsForCompanies($eventId)
 	{	
 
+		$data = $this->getParticipantsWithRole("exhibitor", $eventId, ['company.data']);
 
-		$data = $this->getParticipantsWithRole(["exhibitor"], $eventId);
+		$companies = $data->pluck("company")->unique();
 
-		//company_
+		//in case some company was not assigned!!!
+
+		$companies = $companies->filter(function($value, $key){
+			return $value != null;
+		});
+
 		$ga = $this->getAnalyticsForSource("company_");
 
-		//company_id
-		return $this->merge($data, $ga, "stats", "company_id");
-
+		//we used glue company_id when we matched with participants.. => plucking companies!
+		return $this->merge($companies, $ga, "stats", "id");
 
 	}
 
@@ -181,41 +193,18 @@ class PartnerPerformance {
 
 	}
 
-	private function getParticipantsWithRole(array $roles, int $scopeValue, string $scope = "event" ) : Collection
+
+	private function getParticipantsWithRole($role, int $eventId, array $withRels = []) : Collection
 	{
 
-		$query = function() use ($roles, $scopeValue, $scope){
 
-			$this->repo->with([
-            "participantsNotCancelled.company"
-
-        ]);
-
-        foreach($roles as $role)
-        {
-        	$this->repo->pushCriteria(new ColumnMatches("role", $role, false));
-
-        }
-
-        switch($scope)
-        {
-            case "event":
-                $this->repo->pushCriteria(new BelongsToEvent($scopeValue));
-            break;
-
-            case "group":
-                $this->repo->pushCriteria(new BelongsToGroup($scopeValue));
-            break;
-
-        }
-
-        return $this->repo->all()->pluck("participantsNotCancelled")->collapse();
-
+		$query = function() use ($role, $eventId, $withRels)
+		{
+			return $this->role->get($eventId, $role, $withRels);
 		};
 
-        return env("USE_CACHE", true) ? 
-			$this->cache->remember("PP_getParticipants_".$scopeValue, 10, $query) : 
-			$query();
+
+		return env("USE_CACHE", true) ? $this->cache->remember("xxxxxx" . $role . $eventId, 10, $query) : $query();
     
 	}
 
