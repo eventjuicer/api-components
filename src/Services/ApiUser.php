@@ -89,6 +89,11 @@ class ApiUser {
 		return is_object($this->representative) ? $this->representative->user()->fresh() : $this->user();
 	}
 
+	public function cacheKey($part = "")
+	{
+		return md5($this->company()->id . "_". $part);
+	}
+
 	public function setToken($token)
 	{
 
