@@ -111,6 +111,26 @@ class ApiUser {
 		return $this->company;
 	}
 
+	public function companyData()
+	{
+
+		return $this->company()->data->mapWithKeys(function($_item){
+                
+                return [$_item->name => $_item->value];
+
+        })->all();
+	}
+
+	public function companyFormdata($eventId = 0)
+	{
+
+		$this->company()->load("participants.ticketpivot");
+	
+		return $this->company()->participants->pluck("ticketpivot")->collapse()->where("sold", 1)->when($eventId > 0, function($collection) use ($eventId){
+				return $collection->where("event_id", $eventId);
+			})->pluck("formdata")->all();
+	}
+
 
 	public function __get($attr)
 	{
