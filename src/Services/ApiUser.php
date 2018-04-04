@@ -79,7 +79,7 @@ class ApiUser {
 
 	public function trackingLink($medium = "banner", $ad = "")
 	{
-         return sprintf("https://ecommerceberlin.com/?utm_source=company_%d&utm_medium=%s&utm_campaign=eb3ej&utm_content=%s", $this->company()->id, $medium, $ad);
+         return sprintf("?utm_source=company_%d&utm_medium=%s&utm_campaign=teh14c&utm_content=%s", $this->company()->id, $medium, $ad);
 	}
 
 
