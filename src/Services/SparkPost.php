@@ -30,6 +30,30 @@ class SparkPost implements Templated {
 			'async' => true ]);
 	}
 
+	public function preview($templateId, array $substitution_data = [])
+	{
+			$promise = $this->sparky->request('POST', 
+				'templates/'.$templateId.'/preview?draft=true', 
+				[
+					"substitution_data" => $substitution_data
+				]);
+				
+				try {
+
+					$response = $promise->wait();
+
+					return $response->getBody();
+
+				} catch (\Exception $e) {
+
+					//dd($e->getMessage());
+
+					//echo $e->getCode()."\n";
+
+					return false;
+				}
+	}
+
 
 	public function send(array $params = [])
 	{
