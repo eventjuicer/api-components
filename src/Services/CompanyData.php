@@ -28,7 +28,8 @@ class CompanyData {
         "twitter",
         "linkedin",
         "logotype",
-        "countries"
+        "countries",
+        "opengraph_image"
     ];
 
     protected $mappings = [
