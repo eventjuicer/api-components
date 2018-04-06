@@ -4,11 +4,11 @@ namespace Eventjuicer\Services;
 
 
 
-use Illuminate\Database\Eloquent\Model;
 use Eventjuicer\Repositories\CompanyDataRepository;
 use Eventjuicer\Services\Personalizer;
 
-
+use Eventjuicer\Models\Participant;
+use Eventjuicer\Models\Company;
 
 class CompanyData {
 	
@@ -18,18 +18,18 @@ class CompanyData {
 	protected $names = 
 
     [
-        "name",
-        "about", 
-        "products",
-        "expo", 
-        "keywords",
-        "website",
-        "facebook",
-        "twitter",
-        "linkedin",
-        "logotype",
-        "countries",
-        "opengraph_image"
+        "name"          => 1,
+        "about"         => 1, 
+        "products"      => 0,
+        "expo"          => 0, 
+        "keywords"      => 1,
+        "website"       => 0,
+        "facebook"      => 0,
+        "twitter"       => 0,
+        "linkedin"      => 0,
+        "logotype"      => 1,
+        "countries"     => 1,
+        "opengraph_image" => 0
     ];
 
     protected $mappings = [
@@ -46,7 +46,7 @@ class CompanyData {
 		$this->companyDataRepo = $companyDataRepo;
 	}
 
-	public function make(Model $company)
+	public function make(Company $company)
 	{
     
         if( ! $this->isUpToDate( $company ) )
@@ -57,7 +57,8 @@ class CompanyData {
         return $company->data;
 	}
 
-    public function migrate(Model $participant)
+
+    public function migrate(Participant $participant)
     {
         $company = $participant->company;
 
@@ -101,15 +102,72 @@ class CompanyData {
 
     }
 
-	
-	protected function isUpToDate(Model $company )
-    {
-      
-        $diff = $company->data->count() ? 
-        array_diff($this->names, $company->data->pluck("name")->all()) : 
-        $this->names;
 
-        foreach($diff as $name)
+    public function status(Company $company)
+    {
+        $this->make($company);
+
+        $presentDataFields = $this->toArray($company);
+
+        $errors = [];
+
+        foreach(array_filter($this->names) as $name => $___value)
+        {
+            //get present value!
+
+            $value = $presentDataFields[$name];
+
+            switch($name)
+            {
+                //CUSTOM CHECKS here!
+                case "asssbout":
+
+                    //check for formatting??
+
+                break;
+
+                default: 
+
+                if(is_array($value))
+                {
+                    if(!count($value))
+                    {
+                        $errors[$name] = "empty";
+                    }
+                }
+                else
+                {
+                    if(strlen($value) < 10)
+                    {
+                        $errors[$name] = "empty";
+                    }
+                }
+            }
+        }
+
+        return $errors;
+    }
+
+
+    public function toArray(Company $company )
+    {
+
+        return $company->data->mapWithKeys(function($_item){
+                
+                return [$_item->name => $_item->value];
+
+        })->all();
+    }
+
+	
+	protected function isUpToDate(Company $company )
+    {
+
+        $presentDataFields = $this->toArray($company);
+      
+        $diff = count($presentDataFields) ? array_diff_key($this->names,  $presentDataFields ) :  $fieldNames;
+
+        foreach($diff as $name => $value)
         {
             $companydata = $this->companyDataRepo->makeModel();
 
