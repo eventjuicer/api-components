@@ -3,8 +3,9 @@
 
 namespace Eventjuicer\Services;
 
-use Illuminate\Database\Eloquent\Model;
 use Eventjuicer\ValueObjects\EmailAddress;
+use Illuminate\Database\Eloquent\Model;
+
 
 class Personalizer {
 
@@ -37,7 +38,9 @@ class Personalizer {
 
 		$this->replacements = (array) $replacements;
 		
-		$this->profile = $model->fields->mapWithKeys(function($_item){
+
+
+		$this->profile = $this->model->fields->mapWithKeys(function($_item){
                 
                 return [$_item->name => $_item->pivot->field_value];
 
@@ -57,6 +60,25 @@ class Personalizer {
 		return $this->profile;
 	}
 
+
+	public function __get($attr) {
+
+		if(isset($this->profile[$attr]))
+		{
+			return $this->profile[$attr];
+		}
+
+		return $this->model->$attr;
+	}
+
+	public function __call($name, $arguments) {
+       return call_user_func_array($this->model, $arguments);
+    }
+
+    public function filter(array $profileFieldNames)
+    {
+    	 return array_intersect_key($this->getProfile(), array_flip($profileFieldNames));
+    }
 
 	public function translate(string $str, $replacements = [])
 	{
