@@ -22,6 +22,7 @@ class ParticipantSendable {
 	protected $deliveries;
 	protected $mutes;
 	protected $checkUniqueness = true;
+	protected $validateEmails = false;
 
 	protected $unique = [];
 	protected $then = "";
@@ -48,6 +49,11 @@ class ParticipantSendable {
 		$this->checkUniqueness = $val;
 	}
 
+	public function validateEmails(bool $val)
+	{
+		$this->validateEmails = $val;
+	}
+
 	public function setEmailResolver(Closure $func)
 	{
 		$this->resolver = $func;
@@ -64,10 +70,6 @@ class ParticipantSendable {
 
 			$email = $this->resolver->__invoke($item);
 
-			if( in_array($email, $deliveries) || in_array($email, $mutes) )
-			{
-				return false;
-			}
 
 			if($this->checkUniqueness && in_array($email, $this->unique))
 			{
@@ -78,6 +80,15 @@ class ParticipantSendable {
 			{
 				return false;
 			}
+
+			if( in_array($email, $deliveries) || in_array($email, $mutes) )
+			{
+				return false;
+			}
+
+			if($this->validateEmails && ! (new EmailAddress($email))->isValid() ) {
+				return false;
+			}		
 
 			$this->unique[] = $email;
 
