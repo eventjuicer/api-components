@@ -4,8 +4,7 @@ namespace Eventjuicer\Resources\Restricted;
 
 use Illuminate\Http\Resources\Json\Resource;
 
-use Eventjuicer\Models\Group;
-use Eventjuicer\Models\Event;
+
 
 
 /*
@@ -27,22 +26,48 @@ use Eventjuicer\Models\Event;
 class ApiUserCompanyResource extends Resource
 {
 
+
+
+    protected $presenterFields = [
+
+        "name",
+        "about", 
+        "products",
+        "expo", 
+        "keywords",
+        "website",
+        "facebook",
+        "twitter",
+        "linkedin",
+        "logotype",
+        "opengraph_image",
+        "countries"
+
+    ];
+
     public function toArray($request)
     {   
         
-        $active_event_id =  Group::find($this->group_id)->active_event_id;
-
-        $active_event = Event::find($active_event_id);
 
         return [
 
             "id" => $this->id,
-            "active_event" => new ApiUserCompanyEventResource($active_event),
+      
             "name" => $this->name ?? $this->slug,
+
             "slug" => $this->slug,
-            "meetup_limit" => $this->meetup_limit,
+        
             "assigned_at" => (string) $this->assigned_at,
+            
             "has_password" => intval( strlen($this->password) === 40),
+
+            "profile"   =>  $this->data->whereIn("name", $this->presenterFields)->mapWithKeys(function($item)
+            {     
+
+                return [ $item->name => $item->value ] ;
+
+            })->all(),
+
           //  "users" => ApiUserCompanyUserResource::collection($this->participants)
         ];
     }

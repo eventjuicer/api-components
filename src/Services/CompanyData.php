@@ -13,11 +13,9 @@ use Eventjuicer\Models\Company;
 class CompanyData {
 	
 	protected $companyDataRepo;
+    protected $company;
 
-
-	protected $names = 
-
-    [
+	protected $names = [
         "name"          => 1,
         "about"         => 1, 
         "products"      => 0,
@@ -30,6 +28,18 @@ class CompanyData {
         "logotype"      => 1,
         "countries"     => 1,
         "opengraph_image" => 0
+    ];
+
+    protected $namesInternal = [
+        "logotype_cdn",
+        "opengraph_image_cdn" 
+    ];
+
+
+    protected $translations = [
+
+        
+
     ];
 
     protected $mappings = [
@@ -165,27 +175,52 @@ class CompanyData {
 
         $presentDataFields = $this->toArray($company);
       
-        $diff = count($presentDataFields) ? array_diff_key($this->names,  $presentDataFields ) :  $fieldNames;
 
-        foreach($diff as $name => $value)
+        foreach(array_diff_key( $this->names,  $presentDataFields ) as $name => $value)
         {
-            $companydata = $this->companyDataRepo->makeModel();
+            
+            $this->addField($company, $name, "company");
+        }
 
-            $data = [
-
-                "organizer_id" => $company->organizer_id,
-                "group_id" => $company->group_id,      
-                "company_id" => $company->id,
-                "access" => "company",
-                "name" => $name,
-                "value" => ""
-            ];
-
-            $this->companyDataRepo->saveModel($data);
+        foreach(array_diff_key( array_flip($this->namesInternal),  $presentDataFields ) as $name => $value)
+        {
+            
+            $this->addField($company, $name, "admin");
         }
 
         return false;
 
     }
+
+    protected function addField(Company $company, $name, $access = "company" )
+    {
+
+            $companydata = $this->companyDataRepo->makeModel();
+
+             $data = [
+
+                "organizer_id" => $company->organizer_id,
+                "group_id" => $company->group_id,      
+                "company_id" => $company->id,
+                "access" => $access,
+                "name" => $name,
+                "value" => ""
+            ];
+
+            $this->companyDataRepo->saveModel($data);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
    
 }

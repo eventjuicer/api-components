@@ -24,7 +24,11 @@ class PublicCompanyResource extends Resource
         "twitter",
         "linkedin",
         "logotype",
-        "countries"
+        "opengraph_image",
+        "countries",
+        
+        "logotype_cdn",
+        "opengraph_image_cdn"
 
     ];
 

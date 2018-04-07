@@ -5,9 +5,9 @@ namespace Eventjuicer\Resources\Restricted;
 use Illuminate\Http\Resources\Json\Resource;
 
 use Eventjuicer\Models\Group;
+use Eventjuicer\Models\Event;
 
 use Eventjuicer\ValueObjects\EmailAddress;
-
 
 class ApiUserResource extends Resource
 {
@@ -25,6 +25,13 @@ class ApiUserResource extends Resource
 
     public function toArray($request)
     {       
+
+
+            $active_event_id =  Group::find($this->group_id)->active_event_id;
+
+            $active_event = Event::find($active_event_id);
+            
+
 
             $parentProfile = [];
 
@@ -71,6 +78,7 @@ class ApiUserResource extends Resource
 
             $data["domain"] = (new EmailAddress($this->email))->domain();
 
+            $data["active_event"] = new ApiUserCompanyEventResource($active_event);
 
            return $data;
     }
