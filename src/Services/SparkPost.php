@@ -2,6 +2,8 @@
 
 namespace Eventjuicer\Services;
 
+use Illuminate\Support\Collection;
+
 use Eventjuicer\Contracts\Email\Templated;
 
 use SparkPost\SparkPost as SparkPostLib;
@@ -54,6 +56,85 @@ class SparkPost implements Templated {
 				}
 	}
 
+	protected function substitutionData($str)
+	{
+		preg_match_all("@{{(?P<full>(?P<name>[a-zA-Z0-9_\-]+)(\?(?P<options>[a-z0-9=_\-&;]+)|))}}@i", $str, $matches);
+
+		return $matches["name"];
+	}
+
+
+	public function bulk(Collection $recipients, array $data)
+	{
+
+		//check if we have legacy placeholders
+
+		$substitutionData = $this->substitutionData($data["message"] . $data["subject"]);
+ 
+		$recipients = $recipients->map(function($item) use ($substitutionData) {
+
+				$subdata = $item->filter($substitutionData);
+				$subdata["token"] = $item->token;
+				$subdata["id"] = $item->id;
+
+				return [
+					"address" => [
+						"name" => $item->translate("[[fname]] [[lname]]"),
+						"email" => $item->email
+					],
+					"substitution_data" => $subdata,
+					"metadata" => [
+						"id" => $item->id
+					]
+				];
+
+		})->all();
+
+
+		$promise = $this->sparky->transmissions->post([
+
+			"options" => [
+				"open_tracking" => true,
+				"click_tracking" => false,
+				"transactional" => false,
+				// "sandbox" => false,
+				// "inline_css" => false
+			], 
+   
+			'content' => [
+			 'from' => [
+			     'name'  => array_get($data, "sender.name"),
+			     'email' => array_get($data, "sender.email")
+			 ],
+
+			'subject' 	=> $data["subject"],
+			//'html' 		=> $data["message"],
+
+			'text' => $data["message"],
+
+
+			//'template_id' => array_get($params, "template_id"),
+			//'use_draft_template'=> true,
+
+			],
+
+		//	'substitution_data' => [],
+
+			'recipients' => $recipients, 
+
+		]);
+
+		try {
+			$response = $promise->wait();
+		//	return $response->getStatusCode();
+			return $response->getBody();
+		} catch (\Exception $e) {
+			//return $e->getCode();
+			return $e->getCode() . $e->getMessage();
+		}
+
+
+	}
 
 	public function send(array $params = [])
 	{
