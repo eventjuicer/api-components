@@ -119,7 +119,7 @@ class ApiUser {
 	public function companyData($access = "company")
 	{
 
-		return $this->company()->data->where("access", $scope)->mapWithKeys(function($_item){
+		return $this->company()->data->where("access", $access)->mapWithKeys(function($_item){
                 
                 return [$_item->name => $_item->value];
 
