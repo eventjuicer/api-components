@@ -22,7 +22,8 @@
         "webpatser/laravel-uuid": "^3.0",
         "hashids/hashids": "^2.0",
         "guzzlehttp/guzzle": "^6.3",
-        "spatie/laravel-analytics": "^3.4"
+        "spatie/laravel-analytics": "^3.4",
+        "cloudinary/cloudinary_php": "^1.9"
     },
     "autoload": {
         "psr-4": {

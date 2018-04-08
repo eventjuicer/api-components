@@ -7,12 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 
 
 use Eventjuicer\Events\ImageUrlWasProvided;
-use Eventjuicer\Services\Cloudinary;
-use Eventjuicer\Repositories\CompanyDataRepository;
-use Eventjuicer\Repositories\Criteria\BelongsToCompany;
-use Eventjuicer\Repositories\Criteria\FlagEquals;
-
-use Eventjuicer\Services\CompanyData;
+use Eventjuicer\Jobs\SendImageToCloudinaryJob;
 
 /*
 
@@ -39,23 +34,32 @@ use Eventjuicer\Services\CompanyData;
 */
 class ImageUrlWasProvidedListener
 {
+
+
+
+      /**
+     * The name of the connection the job should be sent to.
+     *
+     * @var string|null
+     */
+  //  public $connection = 'sqs';
+
+    /**
+     * The name of the queue the job should be sent to.
+     *
+     * @var string|null
+     */
+//    public $queue = 'listeners';
+
+
     /**
      * Create the event listener.
      *
      * @return void
      */
+   
 
-    protected $image, $companydataRepo, $companydataPrepare;
-
-    public function __construct(
-        Cloudinary $image, 
-        CompanyDataRepository $companydataRepo, 
-        CompanyData $companydataPrepare
-    ){
-        $this->image = $image;
-        $this->companydataRepo = $companydataRepo;
-        $this->companydataPrepare = $companydataPrepare;
-    }
+    public function __construct(){}
 
     /**
      * Handle the event.
@@ -65,32 +69,7 @@ class ImageUrlWasProvidedListener
      */
 
     public function handle(ImageUrlWasProvided $event)
-    {
-        
-        $companydata    = $event->model;
-        $company        = $companydata->company;
-
-        $pubName        = "c," . $company->id . "," . $companydata->name;
-
-        $response = $this->image->upload($companydata->value, $pubName);
-
-        //just in case :D
-
-        $this->companydataPrepare->make($company);
-
-
-        //validate Cloudinary response????
-
-        $this->companydataRepo->pushCriteria(new BelongsToCompany($company->id));
-        $this->companydataRepo->pushCriteria(new FlagEquals("name", $companydata->name . "_cdn"));
-
-        $target = $this->companydataRepo->all()->first();
-
-        if($target)
-        {
-            $target->value = array_get($response, "secure_url", "");
-            $target->save();
-        }
-
+    {               
+        dispatch( new SendImageToCloudinaryJob( $event->model ) );
     }
 }
