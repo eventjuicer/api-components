@@ -49,28 +49,43 @@ class SendImageToCloudinaryJob extends Job //implements ShouldQueue
 
         $company        = $this->companydata->company;
 
-        $pubName        = "c_" . $company->id . "_" . $this->companydata->name;
-
-        $response = $image->upload($this->companydata->value, $pubName);
-
-        //just in case :D
-
-        $companydataPrepare->make($company);
-
-
-        //validate Cloudinary response????
-
-        $companydataRepo->pushCriteria(new BelongsToCompany($company->id));
-        $companydataRepo->pushCriteria(new FlagEquals("name", $this->companydata->name . "_cdn"));
-
-        $target = $companydataRepo->all()->first();
-
-        if($target)
+        if(stristr($this->companydata->value, "http") === false)
         {
-            $target->value = array_get($response, "secure_url", "");
-            $target->save();
+            //nothing to do!!!!
+            return;
         }
 
+        $pubName        = "c_" . $company->id . "_" . $this->companydata->name;
+
+
+        try {
+
+            $response = $image->upload($this->companydata->value, $pubName);
+
+            //just in case :D
+
+            $companydataPrepare->make($company);
+
+            //validate Cloudinary response????
+
+            $companydataRepo->pushCriteria(new BelongsToCompany($company->id));
+            $companydataRepo->pushCriteria(new FlagEquals("name", $this->companydata->name . "_cdn"));
+
+            $target = $companydataRepo->all()->first();
+
+            if($target)
+            {
+                $target->value = array_get($response, "secure_url", "");
+                $target->save();
+            }
+
+            
+        } catch (Exception $e) {
+            
+            //LOG TO SENTRY
+
+         //   throw new \Exception("cannot upload to Cloudinary");
+        }
 
     }
 }
