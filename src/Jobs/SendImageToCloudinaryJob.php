@@ -49,7 +49,7 @@ class SendImageToCloudinaryJob extends Job //implements ShouldQueue
 
         $company        = $this->companydata->company;
 
-        $pubName        = "c," . $company->id . "," . $this->companydata->name;
+        $pubName        = "c_" . $company->id . "_" . $this->companydata->name;
 
         $response = $image->upload($this->companydata->value, $pubName);
 
