@@ -5,7 +5,7 @@ namespace Eventjuicer\Jobs;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Foundation\Bus\Dispatchable;
+//use Illuminatee \Foundation\Bus\Dispatchable;
 
 abstract class Job
 {
@@ -20,5 +20,7 @@ abstract class Job
     |
     */
 
-   use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+   use InteractsWithQueue, Queueable, SerializesModels;
+
+  // use Dispatchable;
 }

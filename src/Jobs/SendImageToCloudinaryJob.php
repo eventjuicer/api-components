@@ -19,7 +19,7 @@ use Eventjuicer\Services\CompanyData;
 
 
 
-class SendImageToCloudinaryJob extends Job implements ShouldQueue
+class SendImageToCloudinaryJob extends Job //implements ShouldQueue
 {
     //use Dispatchable;
 
