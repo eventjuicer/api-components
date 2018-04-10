@@ -214,6 +214,18 @@ class CompanyData {
     protected function addField(Company $company, $name, $access = "company" )
     {
 
+            //double check if not exists
+
+            $exists = $this->companyDataRepo->findWhere([
+                "name" => $name,
+                "company_id" => $company->id
+            ])->count();
+
+            if($exists)
+            {
+                return;
+            }
+
             $companydata = $this->companyDataRepo->makeModel();
 
              $data = [
