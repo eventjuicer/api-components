@@ -117,6 +117,11 @@ class CompanyData {
         {
             //get present value!
 
+            if(!isset($presentDataFields[$name]))
+            {
+                continue;
+            }
+
             $value = $presentDataFields[$name];
 
             switch($name)
