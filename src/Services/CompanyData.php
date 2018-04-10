@@ -18,10 +18,10 @@ class CompanyData {
 	protected $names = [
         "name"          => 1,
         "about"         => 1, 
-        "products"      => 0,
-        "expo"          => 0, 
+        "products"      => 1,
+        "expo"          => 1, 
         "keywords"      => 1,
-        "website"       => 0,
+        "website"       => 1,
         "facebook"      => 0,
         "twitter"       => 0,
         "linkedin"      => 0,
@@ -36,12 +36,6 @@ class CompanyData {
     ];
 
 
-    protected $translations = [
-
-        
-
-    ];
-
     protected $mappings = [
 
         "name"      => "cname2",
@@ -51,13 +45,12 @@ class CompanyData {
     ];
 
 
-	function __construct(CompanyDataRepository $companyDataRepo)
-	{
+	function __construct(CompanyDataRepository $companyDataRepo) {
 		$this->companyDataRepo = $companyDataRepo;
 	}
 
-	public function make(Company $company)
-	{
+
+	public function make(Company $company) {
     
         if( ! $this->isUpToDate( $company ) )
         {
@@ -68,8 +61,7 @@ class CompanyData {
 	}
 
 
-    public function migrate(Participant $participant)
-    {
+    public function migrate(Participant $participant) {
         $company = $participant->company;
 
         if(is_null($company))
@@ -113,15 +105,15 @@ class CompanyData {
     }
 
 
-    public function status(Company $company)
-    {
+    public function status(Company $company) {
         $this->make($company);
 
         $presentDataFields = $this->toArray($company);
 
         $errors = [];
 
-        foreach(array_filter($this->names) as $name => $___value)
+
+        foreach(array_filter($this->names) as $name => $isRequired)
         {
             //get present value!
 
@@ -129,13 +121,42 @@ class CompanyData {
 
             switch($name)
             {
-                //CUSTOM CHECKS here!
-                case "asssbout":
+         
+                case "website":
+                case "facebook":
+                case "twitter":
+                case "linkedin":
+                case "logotype":
 
-                    //check for formatting??
+                    if(!trim($value))
+                    {
+                        $errors[$name] = "empty";
+
+                    }else{
+                        
+                        if(strpos($value, "http")===false) {
+                             $errors[$name] = "badformat";
+                        }
+                    }
+
+                   
+                break;
+                case "about":
+                case "products":
+                case "expo":
+
+                    if(!trim($value) || strlen($value) < 20)
+                    {
+                        $errors[$name] = "empty";
+
+                    }else{
+                        
+                        if($value == strip_tags($value)) {
+                            $errors[$name] = "nohtml";
+                        }
+                    }
 
                 break;
-
                 default: 
 
                 if(is_array($value))
@@ -147,7 +168,7 @@ class CompanyData {
                 }
                 else
                 {
-                    if(strlen($value) < 10)
+                    if(strlen($value) < 5)
                     {
                         $errors[$name] = "empty";
                     }
@@ -159,8 +180,7 @@ class CompanyData {
     }
 
 
-    public function toArray(Company $company )
-    {
+    public function toArray(Company $company ) {
 
         return $company->data->mapWithKeys(function($_item){
                 
@@ -170,8 +190,7 @@ class CompanyData {
     }
 
 	
-	protected function isUpToDate(Company $company )
-    {
+	protected function isUpToDate(Company $company ) {
 
         $presentDataFields = $this->toArray($company);
       
