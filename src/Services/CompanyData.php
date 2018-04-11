@@ -188,6 +188,14 @@ class CompanyData {
     }
 
 
+    public function lang(Company $company ) {
+
+        $profile = $this->toArray($company);
+
+        return !empty($profile["lang"]) ? $profile["lang"] : false;
+    }
+
+
     public function toArray(Company $company ) {
 
         return $company->data->mapWithKeys(function($_item){

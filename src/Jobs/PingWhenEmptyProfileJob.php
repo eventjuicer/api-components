@@ -54,6 +54,7 @@ class PingWhenEmptyProfileJob extends Job // implements ShouldQueue
             return;
         }
 
+     
         //check for companydata fields freshness :)
         //check for required fields
 
