@@ -58,7 +58,7 @@ class SendImageToCloudinaryJob extends Job //implements ShouldQueue
         $pubName        = "c_" . $company->id . "_" . $this->companydata->name;
 
 
-        try {
+        // try {
 
             $response = $image->upload($this->companydata->value, $pubName);
 
@@ -80,12 +80,12 @@ class SendImageToCloudinaryJob extends Job //implements ShouldQueue
             }
 
             
-        } catch (Exception $e) {
+        // } catch (Exception $exception) {
             
-            //LOG TO SENTRY
-
-         //   throw new \Exception("cannot upload to Cloudinary");
-        }
+        //        if ( app()->bound('sentry') ) {
+        //         app('sentry')->captureException($exception);
+        //        }
+        // }
 
     }
 }
