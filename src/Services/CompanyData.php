@@ -27,7 +27,10 @@ class CompanyData {
         "linkedin"      => 0,
         "logotype"      => 1,
         "countries"     => 1,
-        "opengraph_image" => 0
+        "opengraph_image" => 0,
+        "lang"          => 0,
+        "event_manager" => 0
+
     ];
 
     protected $namesInternal = [
