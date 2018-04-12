@@ -23,6 +23,7 @@ class PresenterResource extends Resource
         "presentation_venue",
         "presentation_time",
         "avatar",
+        "logotype",
         "bio"
     ];
 
