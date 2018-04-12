@@ -4,6 +4,8 @@ namespace Eventjuicer\Services;
 
 use Cloudinary as CloudinaryBase;
 use Cloudinary\Uploader;
+use Eventjuicer\ValueObjects\UrlImage;
+use Eventjuicer\ValueObjects\Url;
 
 //use Eventjuicer\Events\ImageShouldBeRescaled;
 
@@ -54,7 +56,17 @@ class Cloudinary {
 
 	public function upload($path, $name = "", $expect = "")
 	{
+
+		$url = new UrlImage(new URl($path));
+
+		if(!$url->isValid())
+		{
+			return [];
+		}
+
 		$options = [];
+
+		$name = env("APP_ENV", "local") === "local" ? 'test_' . $name : $name;
 
 		if(!empty($name))
 		{
@@ -63,12 +75,9 @@ class Cloudinary {
 
 		$response = Uploader::upload($path, $options);
 
-		// if( $expect && isset( $this->expects[$expect] ) )
-		// {
-		// 	//event( new ImageShouldBeRescaled() );
-		// }
-
 		return $response;
+		
+		
 	}
 
 }

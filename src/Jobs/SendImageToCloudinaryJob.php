@@ -58,34 +58,32 @@ class SendImageToCloudinaryJob extends Job //implements ShouldQueue
         $pubName        = "c_" . $company->id . "_" . $this->companydata->name;
 
 
-        // try {
+        $response = $image->upload($this->companydata->value, $pubName);
 
-            $response = $image->upload($this->companydata->value, $pubName);
+        if(empty($response))
+        {
+            throw new \Exception('Cannot upload given resource to: ' . $pubName);
+        }
 
-            //just in case :D
+        //just in case :D
 
-            $companydataPrepare->make($company);
+        $companydataPrepare->make($company);
 
-            //validate Cloudinary response????
+        //validate Cloudinary response????
 
-            $companydataRepo->pushCriteria(new BelongsToCompany($company->id));
-            $companydataRepo->pushCriteria(new FlagEquals("name", $this->companydata->name . "_cdn"));
+        $companydataRepo->pushCriteria(new BelongsToCompany($company->id));
+        $companydataRepo->pushCriteria(new FlagEquals("name", $this->companydata->name . "_cdn"));
 
-            $target = $companydataRepo->all()->first();
+        $target = $companydataRepo->all()->first();
 
-            if($target)
-            {
-                $target->value = array_get($response, "secure_url", "");
-                $target->save();
-            }
+        if($target)
+        {
+            $target->value = array_get($response, "secure_url", "");
+            $target->save();
+        }
 
-            
-        // } catch (Exception $exception) {
-            
-        //        if ( app()->bound('sentry') ) {
-        //         app('sentry')->captureException($exception);
-        //        }
-        // }
+        
+    
 
     }
 }
