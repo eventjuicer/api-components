@@ -19,7 +19,7 @@ class CompanyData {
         "name"          => 1,
         "about"         => 1, 
         "products"      => 1,
-        "expo"          => 1, 
+        "expo"          => 0, 
         "keywords"      => 1,
         "website"       => 1,
         "facebook"      => 0,
