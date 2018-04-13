@@ -48,6 +48,8 @@ class PublicCompanyResource extends Resource
             "slug" => $this->slug,
 
             "featured" => $this->featured,
+
+            "debut" => $this->debut,
           	 
             "profile"   =>  $this->data->whereIn("name", $this->presenterFields)->mapWithKeys(function($item)
             {     
