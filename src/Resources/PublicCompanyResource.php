@@ -17,6 +17,7 @@ class PublicCompanyResource extends Resource
         "name",
         "about", 
         "products",
+        "lang",
         "expo", 
         "keywords",
         "website",
