@@ -4,6 +4,7 @@ namespace Eventjuicer\Resources;
 
 use Illuminate\Http\Resources\Json\Resource;
  
+use Eventjuicer\Services\Cloudinary; 
 
 class PublicCompanyResource extends Resource
 {
@@ -42,7 +43,7 @@ class PublicCompanyResource extends Resource
     public function toArray($request)
     {   
 
-        return [
+        $data = [
 
             "id" => $this->id,        
             
@@ -59,13 +60,18 @@ class PublicCompanyResource extends Resource
 
             })->all(),
 
-
+        
           	"instances" => $this->when(
                 !self::$skipPurchases, 
                 $this->participants->pluck("ticketpivot")->collapse()->values()
             )
             
         ];
+
+        
+
+
+        return $data;
     }
 }
 

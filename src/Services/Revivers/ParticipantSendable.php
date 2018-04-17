@@ -39,7 +39,7 @@ class ParticipantSendable {
 		$this->setMuteTime();
 	}
 
-	public function setMuteTime($muteTime = 10)
+	public function setMuteTime($muteTime = 16)
 	{
 		$this->then 	= Carbon::now("UTC")->subHours( (int) $muteTime);
 	}
