@@ -42,6 +42,10 @@ class Company extends Model
         return $this->hasMany(CompanyData::class);
     }
 
+    public function representatives() {
+        
+        return $this->hasMany(CompanyRepresentative::class);
+    }
     
     public function group()
     {

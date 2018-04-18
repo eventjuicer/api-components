@@ -53,8 +53,15 @@ class SaveOrder {
 		$this->purchase = $purchase;
 	}
 
-	function make($event_id = 0, $participant_id = 0, array $tickets, array $fields, $skipValidation = false)
-	{
+	function make(
+							$event_id = 0, 
+							$participant_id = 0, 
+							array $tickets, 
+							array $fields, 
+							$skipValidation = false, 
+							$parent_id = 0
+	) {
+
 		$this->tickets 	= $tickets;
 		$this->fields 	= $fields;
 
@@ -102,6 +109,11 @@ class SaveOrder {
 			$participant->group_id 		= $this->group_id;
 			$participant->organizer_id 	= $this->organizer_id;
 
+
+			$participant->parent_id 	= $parent_id;
+			$participant->company_id 	= $parent_id ? Participant::find($parent_id)->company_id : 0;
+			
+
 			$participant->token 		= sha1(Uuid::generate(4));
 			$participant->createdon 	= Carbon::now();
 			$participant->email 		= $fields["email"];
@@ -120,7 +132,6 @@ class SaveOrder {
 		}
 		
 	}
-
 
 
 	function getParticipant()
@@ -171,6 +182,8 @@ class SaveOrder {
 
 		foreach($fields as $field_name => $field_value)
 		{
+
+			//this is senseless... array should be checked..!
 
 			$input = Input::where("name", $field_name)->first();
 
