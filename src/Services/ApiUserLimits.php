@@ -81,6 +81,10 @@ class ApiUserLimits {
 
 				$base = $this->points() > 19 ? 50 : 5;
 
+				if($this->user->company()->id == 1155){
+					$base = $base + 30;
+				}
+
 				return $base + intval($this->points() / 5) - $howmany;
 
 			break;
