@@ -41,7 +41,9 @@ class ApiUserCompanyResource extends Resource
         "linkedin",
         "logotype",
         "opengraph_image",
-        "countries"
+        "countries",
+        "invitation_template",
+        "event_manager"
 
     ];
 

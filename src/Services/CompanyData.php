@@ -16,21 +16,21 @@ class CompanyData {
     protected $company;
 
 	protected $names = [
-        "name"          => 1,
-        "about"         => 1, 
-        "products"      => 1,
-        "expo"          => 0, 
-        "keywords"      => 1,
-        "website"       => 1,
-        "facebook"      => 0,
-        "twitter"       => 0,
-        "linkedin"      => 0,
-        "logotype"      => 1,
-        "countries"     => 1,
-        "opengraph_image" => 0,
-        "lang"          => 0,
-        "event_manager" => 0
-
+        "name"                  => 1,
+        "about"                 => 1, 
+        "products"              => 1,
+        "expo"                  => 0, 
+        "keywords"              => 1,
+        "website"               => 1,
+        "facebook"              => 0,
+        "twitter"               => 0,
+        "linkedin"              => 0,
+        "logotype"              => 1,
+        "countries"             => 1,
+        "opengraph_image"       => 0,
+        "lang"                  => 0,
+        "event_manager"         => 0,
+        "invitation_template"   => 0
     ];
 
     protected $namesInternal = [

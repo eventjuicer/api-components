@@ -53,6 +53,19 @@ class SaveOrder {
 		$this->purchase = $purchase;
 	}
 
+
+	function configure($event_id){
+
+
+		$event = Event::find($event_id);
+
+		$this->event_id 		= $event_id;
+		$this->group_id 		= $event->group_id;
+		$this->organizer_id 	= $event->organizer_id;
+
+	}
+
+
 	function make(
 							$event_id = 0, 
 							$participant_id = 0, 
@@ -71,11 +84,11 @@ class SaveOrder {
 			throw new \Exception("Either event id or participant id must be given!");
 		}
 
-		$event = Event::find($event_id);
 
-		$this->event_id 		= $event_id;
-		$this->group_id 		= $event->group_id;
-		$this->organizer_id 	= $event->organizer_id;
+
+		$this->configure( $event_id );
+
+		
 
 		if( ! $skipValidation )
 		{
@@ -204,6 +217,39 @@ class SaveOrder {
 			$pf->field_id 		= $field_id;
 			$pf->field_value 	= $field_value;
 			$pf->save();
+
+		}
+
+	}
+
+
+	public function updateFields($participant_id, array $fields = [])
+	{
+
+		$user = Participant::find( $participant_id );
+
+		if(empty($user->id)){
+			throw new \Exception("No such user!");
+		}
+
+		foreach($fields as $field_name => $field_value)
+		{
+
+			//this is senseless... array should be checked..!
+
+			$input = Input::where("name", $field_name)->first();
+
+			$field_id = $input ? $input->id : 0;
+
+			if(empty($field_id)) {
+
+				continue;
+			}	
+
+			$user->fields()->updateExistingPivot($field_id, [
+				"field_value" 	=> $field_value,
+				"updatedon" 	=> Carbon::now()
+			]);
 
 		}
 
