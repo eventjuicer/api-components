@@ -119,6 +119,11 @@ class ApiUser {
 	public function companyData($access = "company")
 	{
 
+		if( empty( $this->company() ) || empty( $this->company()->id ) )
+		{
+			return [];
+		}
+
 		return $this->company()->data->where("access", $access)->mapWithKeys(function($_item){
                 
                 return [$_item->name => $_item->value];
@@ -134,6 +139,14 @@ class ApiUser {
 		return $this->company()->participants->pluck("ticketpivot")->collapse()->where("sold", 1)->when($eventId > 0, function($collection) use ($eventId){
 				return $collection->where("event_id", $eventId);
 			})->pluck("formdata")->all();
+	}
+
+	public function companyPublicProfile(){
+
+		$name = array_get($this->companyData, "name", $this->company()->slug);
+
+		return 'https://targiehandlu.pl/' . str_slug($name, '-') . ",c," . $this->company()->id;
+
 	}
 
 
