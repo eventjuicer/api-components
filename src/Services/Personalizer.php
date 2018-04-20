@@ -5,7 +5,7 @@ namespace Eventjuicer\Services;
 
 use Eventjuicer\ValueObjects\EmailAddress;
 use Illuminate\Database\Eloquent\Model;
-
+use Eventjuicer\Services\Hashids;
 
 class Personalizer {
 
@@ -104,6 +104,8 @@ class Personalizer {
 
 
 
+
+
 				// if(!empty($options) && getval($options, "name"))
 				// {
 				// 	return $obj->field($key)->label;
@@ -117,8 +119,7 @@ class Personalizer {
 				// }
 
 
-				if(isset($this->model->$key))
-				{
+				if(isset($this->model->$key)) {
 					$output = $this->model->$key;
 				}
 				else
@@ -126,9 +127,18 @@ class Personalizer {
 					$output = (string) array_get($this->profile, $key, "");
 				}
 
+
+				if( $key === "code" || $key === "hash" ) {
+
+					$output = (new Hashids())->encode($this->model->id);
+				}
+
+
 				if(empty($output))
 				{
-					$output = array_get($replacements, $key, "");
+					$output = is_scalar($replacements) ? 
+								$replacements : 
+								array_get($replacements, $key, "");
 				}
 
 				if(!empty($options))
