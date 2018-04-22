@@ -55,9 +55,20 @@ class Personalizer {
 	}/*eom*/
 
 
-	public function getProfile()
+	public function getProfile($enrich = false)
 	{
-		return $this->profile;
+
+		$profile = $this->profile;
+
+		if($enrich)
+		{
+			$profile["code"] = (new Hashids())->encode($this->model->id);
+			$profile["hash"] = $profile["code"];
+			$profile["token"] = $this->model->token;
+			$profile["id"] = $this->model->id;
+		}
+
+		return $profile;
 	}
 
 
@@ -77,7 +88,8 @@ class Personalizer {
 
     public function filter(array $profileFieldNames)
     {
-    	 return array_intersect_key($this->getProfile(), array_flip($profileFieldNames));
+    	
+    	return array_intersect_key($this->getProfile(true), array_flip($profileFieldNames));
     }
 
 	public function translate(string $str, $replacements = [])

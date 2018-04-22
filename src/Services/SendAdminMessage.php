@@ -102,7 +102,7 @@ class SendAdminMessage {
 	}
 
 
-	public function make(array $ids, $eventId, bool $uniqueCheck = true)
+	public function make(array $ids, $eventId, bool $uniqueCheck = true, bool $throttle = false)
 	{
 		$this->participants->pushCriteria( new WhereIn("id", $ids) );
 		$this->participants->with(["fields", "ticketpivot"]);
@@ -119,9 +119,11 @@ class SendAdminMessage {
 	
 		//check if we do not spam too much....
 
-		$filtered = $this->sendable->filter($all, $eventId)->values();
+		if($throttle) {
+			$all = $this->sendable->filter($all, $eventId)->values();
+		}
 
-		return $filtered->mapInto(Personalizer::class);
+		return $all->mapInto(Personalizer::class);
 
 	}
 

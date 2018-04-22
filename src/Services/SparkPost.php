@@ -11,7 +11,6 @@ use GuzzleHttp\Client;
 use Http\Adapter\Guzzle6\Client as GuzzleAdapter;
 use Illuminate\Http\Request;
 
-
 class SparkPost implements Templated {
 
 	
@@ -74,9 +73,7 @@ class SparkPost implements Templated {
 		$recipients = $recipients->map(function($item) use ($substitutionData) {
 
 				$subdata = $item->filter($substitutionData);
-				$subdata["token"] = $item->token;
-				$subdata["id"] = $item->id;
-
+	
 				return [
 					"address" => [
 						"name" => $item->translate("[[fname]] [[lname]]"),
