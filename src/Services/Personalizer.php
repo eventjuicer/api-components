@@ -65,6 +65,8 @@ class Personalizer {
 			$profile["code"] = (new Hashids())->encode($this->model->id);
 			$profile["hash"] = $profile["code"];
 			$profile["token"] = $this->model->token;
+			$profile["company_id"] = $this->model->company_id;
+			$profile["parent_id"] = $this->model->parent_id;
 			$profile["id"] = $this->model->id;
 		}
 

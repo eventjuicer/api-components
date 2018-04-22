@@ -21,7 +21,10 @@ class ParticipantSendable {
 
 	protected $deliveries;
 	protected $mutes;
+
 	protected $checkUniqueness = true;
+	protected $checkDeliveries = true;
+	
 	protected $validateEmails = false;
 
 	protected $unique = [];
@@ -48,6 +51,12 @@ class ParticipantSendable {
 	{
 		$this->checkUniqueness = $val;
 	}
+
+	public function checkDeliveries(bool $val)
+	{
+		$this->checkDeliveries = $val;
+	}
+
 
 	public function validateEmails(bool $val)
 	{
@@ -81,7 +90,7 @@ class ParticipantSendable {
 				return false;
 			}
 
-			if( in_array($email, $deliveries) || in_array($email, $mutes) )
+			if($this->checkDeliveries && ( in_array($email, $deliveries) || in_array($email, $mutes) ))
 			{
 				return false;
 			}
