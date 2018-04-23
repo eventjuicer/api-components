@@ -112,27 +112,22 @@ class PartnerPerformance {
 
 		$stats = $this->getStatsForCompanies( $apiUser->activeEventId() );
 
-		$users = $stats->sortByDesc("stats.sessions")->values();
+		$companies = $stats->sortByDesc("stats.sessions")->values();
 
 		$position = 0;
 
 		$stats = ["position" => 0, "points" => 0, "sessions" => 0];
 
-		foreach($users AS $user)
+		foreach($companies AS $company)
 		{	
 			$position++;
 
-			if(
-				($user->company && $user->company->id == $apiUser->company()->id) || 
-
-				($user->id == $apiUser->user()->id)
-			)
+			if( $company->id == $apiUser->company()->id )
 			{
-
 				$stats = [ 
 					"position" 	=> $position, 
-					"points" 	=> array_get($user->stats, "sessions"),
-					"sessions" 	=> array_get($user->stats, "sessions")
+					"points" 	=> array_get($company->stats, "sessions"),
+					"sessions" 	=> array_get($company->stats, "sessions")
 				];
 			}
 		}

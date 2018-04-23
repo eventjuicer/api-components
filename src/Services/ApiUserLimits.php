@@ -11,7 +11,7 @@ class ApiUserLimits {
 
 	protected $user, $performance, $companies;
 
-	protected $stats;
+	protected $stats = null;
 
 	function __construct(
 		ApiUser $user, 
@@ -66,11 +66,14 @@ class ApiUserLimits {
 
 		$name = str_singular($name);
 
-		$howmany = 0;
+		$base = 0;
+		$earned = 0;
+		$used = 0;
+		$remaining = 0;
 
 		if(isset($params[0]) && $params[0] instanceof Repository)
 		{
-			$howmany = $params[0]->pushCriteria(
+			$used = $params[0]->pushCriteria(
 				new BelongsToCompany($this->user->company()->id)
 			)->all()->count();
 		}
@@ -79,18 +82,25 @@ class ApiUserLimits {
 		{
 			case "meetup":
 
-				$base = $this->points() > 19 ? 50 : 5;
+				$base = 5;
 
 				if($this->user->company()->id == 1155){
 					$base = $base + 30;
 				}
 
-				return $base + intval($this->points() / 5) - $howmany;
+				if($this->points() > 19){
+					$earned = $earned + 50;
+				}
+
+				$earned = $earned + intval($this->points() / 5);
+
 
 			break;
 		}
 
-		return $results;
+		$remaining = $base + $earned - $used;
+
+		return $remaining >= 0 ? $remaining : 0;
 
 	}
 
