@@ -115,13 +115,13 @@ class SendAdminMessage {
 			return (bool) $model->ticketpivot->where("sold", 1)->count();
 		});
 
-		$this->sendable->checkUniqueness( $uniqueCheck);
+		// $this->sendable->checkUniqueness( $uniqueCheck);
 	
-		//check if we do not spam too much....
+		// //check if we do not spam too much....
 
-		if($throttle) {
-			$all = $this->sendable->filter($all, $eventId)->values();
-		}
+		// if($throttle) {
+		// 	$all = $this->sendable->filter($all, $eventId)->values();
+		// }
 
 		return $all->mapInto(Personalizer::class);
 
