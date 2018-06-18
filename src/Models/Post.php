@@ -12,10 +12,9 @@ namespace Eventjuicer\Models;
 
 
 use Illuminate\Database\Eloquent\Model;
-use Eventjuicer\Services\AbleTrait;
+//use Eventjuicer\Services\AbleTrait;
 
 
-use Contracts\Context;
 
 //sync Topics 
 
@@ -30,7 +29,7 @@ use Carbon\Carbon;
 
 
 use Eventjuicer\Models\Traits\AbleTrait;
-
+use Eventjuicer\Models\PostMeta;
 
 class Post extends Model 
 {
@@ -104,7 +103,7 @@ class Post extends Model
 
     public function meta()
     {
-    	return $this->hasOne("Models\PostMeta", "post_id");
+    	return $this->hasOne(PostMeta::class, "post_id");
     }
 
 

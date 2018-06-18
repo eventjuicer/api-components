@@ -15,7 +15,7 @@ use Contracts\Imageable;
 //http://viewtext.org/
 
 
-class PostMeta extends Model implements PresentableInterface
+class PostMeta extends Model
 {
 
 	protected $primaryKey = 'post_id';
@@ -31,12 +31,6 @@ class PostMeta extends Model implements PresentableInterface
 	//protected $touches = ['post'];
 	
 	public $preparse = ["quote", "body"];
-
-
-
-   
-
-
 
 
 
