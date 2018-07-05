@@ -36,7 +36,7 @@ class GetByRole {
 
     	if(empty($ticketIds))
     	{
-    		return [];
+    		return collect([]);
     	}
 
     	//GET PARTICIPANTS FILTERED BY ABOVE TICKETS AND PAID STATUS
@@ -46,7 +46,7 @@ class GetByRole {
 
     	if(empty($participantIds))
     	{
-    		return [];
+    		return collect([]);
     	}
 
     	//GET PARTICIPANTS 
