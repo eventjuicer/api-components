@@ -3,6 +3,8 @@
 namespace Eventjuicer\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
+
 
 class Text extends Model
 {
@@ -12,14 +14,12 @@ class Text extends Model
      *
      * @var string
      */
-    protected $table = 'eventjuicer_texts';
-
-  //  protected $primaryKey = 'name';
+    protected $table = 'bob_texts';
 
 
-  //  protected $primaryKey = array('name', 'textable_id', 'textable_type');
+    public $incrementing = false;
 
-    //public $incrementing = false; 
+    protected $primaryKey = array('name', 'lang', 'event_id');
 
 
     /**
@@ -27,47 +27,46 @@ class Text extends Model
      *
      * @var array
      */
-    protected $fillable = ['name', 'data'];
+    protected $fillable = ['*'];
 
+    protected $hidden = []; //
+
+    public $timestamps = false;
+
+    protected $dates = ['updatedon'];
+
+    //protected $casts = ["data"=>"array"];
+
+
+    protected function getKeyForSaveQuery(){
+
+        $primaryKeyForSaveQuery = array(count($this->primaryKey));
+
+        foreach ($this->primaryKey as $i => $pKey) {
+            $primaryKeyForSaveQuery[$i] = isset($this->original[$this->getKeyName()[$i]])
+                ? $this->original[$this->getKeyName()[$i]]
+                : $this->getAttribute($this->getKeyName()[$i]);
+        }
+
+        return $primaryKeyForSaveQuery;
+
+    }
 
     /**
-     * The attributes excluded from the model's JSON form.
-     *
-     * @var array
-     */
-    protected $hidden = ['user_id','textable_type', 'textable_id', 'created_at', 'updated_at']; //
+    * Set the keys for a save update query.
+    *
+    * @param  \Illuminate\Database\Eloquent\Builder  $query
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    protected function setKeysForSaveQuery(Builder $query){
 
-    //public $timestamps = false;
-
-    //protected $dates = ['updatedon'];
-
-
-    protected $casts = ["data"=>"array"];
-
-
-    public function textable()
-    {
-        return $this->morphTo();
-    }
-/*
-    //http://stackoverflow.com/questions/24152048/laravel-seed-table-with-composite-primary-key
-
-    protected function setKeysForSaveQuery(\Illuminate\Database\Eloquent\Builder $query)
-    {
-        if(is_array($this->primaryKey))
-        {
-            foreach($this->primaryKey as $pk)
-            {
-                $query->where($pk, '=', $this->original[$pk]);
-            }
-            return $query;
+        foreach ($this->primaryKey as $i => $pKey) {
+            $query->where($this->getKeyName()[$i], '=', $this->getKeyForSaveQuery()[$i]);
         }
-        else
-        {
-            return parent::setKeysForSaveQuery($query);
-        }
+
+        return $query;
     }
 
-*/
+
 
 }
