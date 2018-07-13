@@ -5,7 +5,6 @@ namespace Eventjuicer\Repositories\Criteria;
 use Bosnadev\Repositories\Criteria\Criteria;
 use Bosnadev\Repositories\Contracts\RepositoryInterface as Repository;
 
-use Context;
 
 class BelongsToGroup extends Criteria {
 
@@ -13,7 +12,7 @@ class BelongsToGroup extends Criteria {
 
     function __construct($id = 0)
     {
-        $this->id = (int) $id ? (int) $id : Context::level()->get("group_id") ;
+       $this->id = (int) $id;
     }
 
     /**

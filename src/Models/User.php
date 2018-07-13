@@ -12,7 +12,7 @@ use Laravel\Passport\HasApiTokens;
 class User extends BaseUser
 {
    
-    use HasApiTokens, AbleTrait;
+    use HasApiTokens, Traits\AbleTrait;
     
     //use EntrustUserTrait;
     //use \SammyK\LaravelFacebookSdk\SyncableGraphNodeTrait;
