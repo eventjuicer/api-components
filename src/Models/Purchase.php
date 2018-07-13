@@ -5,6 +5,9 @@ namespace Eventjuicer\Models;
 use Illuminate\Database\Eloquent\Model;
 use Eventjuicer\Models\Ticket;
 
+
+
+
 class Purchase extends Model
 {
 	
@@ -17,29 +20,29 @@ class Purchase extends Model
 
 	public function organizer()
     {
-        return $this->belongsTo('Models\Organizer');
+        return $this->belongsTo(Organizer::class);
     }
 
 
 	public function group()
     {
-        return $this->belongsTo('Models\Group');
+        return $this->belongsTo(Group::class);
     }
 
 
    	public function event()
     {
-        return $this->belongsTo('Models\Event');
+        return $this->belongsTo(Event::class);
     }
 
     public function participant()
     {
-        return $this->belongsTo('Models\Participant');
+        return $this->belongsTo(Participant::class);
     }
 
     public function fields()
     {
-    	return $this->hasMany("Models\Field");
+    	return $this->hasMany(Field::class);
     }
 
     // public function tickets()
