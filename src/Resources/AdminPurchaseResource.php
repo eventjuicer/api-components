@@ -21,6 +21,10 @@ class AdminPurchaseResource extends Resource
         
            "id"    => (int) $this->id,
 
+           "participant_id" => $this->participant_id,
+
+           "company_id" => $this->participant->company_id,
+         
            "email" => $this->participant->email,
                 
            "paid" => $this->paid,
