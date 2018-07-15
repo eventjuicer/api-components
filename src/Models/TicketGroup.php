@@ -27,6 +27,14 @@ class TicketGroup extends Model
 
     }
 
-  
+  	
+    public function oldtags()
+    {
+        
+        return $this->belongsToMany(Tag::class, 'bob_taggings', 'object_id', 'tag_id')->wherePivot("object_name", "ticket_group")->withPivot("createdon");
+
+    }
+
+
 
 }
