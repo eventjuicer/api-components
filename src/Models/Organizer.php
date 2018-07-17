@@ -19,45 +19,45 @@ class Organizer extends Model
 
    	public function groups()
    	{
-   		return $this->hasMany("Models\Group", "organizer_id");
+   		return $this->hasMany(Group::class, "organizer_id");
    	}
 
    	public function events()
    	{
-   		return $this->hasMany("Models\Event", "organizer_id");
+   		return $this->hasMany(Event::class, "organizer_id");
    	}
 
    	public function portals()
    	{
-   		return $this->hasMany("Models\Portal", "organizer_id");
+   		return $this->hasMany(Portal::class, "organizer_id");
    	}
 
       public function hosts()
       {
-          return $this->hasMany("Models\Host", "organizer_id");
+          return $this->hasMany(Host::class, "organizer_id");
       }
 
       public function users()
       {
-         return $this->belongsToMany('Models\User', "eventjuicer_user_organizations", "organizer_id", "user_id");
+         return $this->belongsToMany(User::class, "eventjuicer_user_organizations", "organizer_id", "user_id");
       }
 
 
       public function imports()
       {
-         return $this->hasMany("Models\SenderImport", "organizer_id");
+         return $this->hasMany(SenderImport::class, "organizer_id");
 
       }
 
       public function newsletters()
       {
-         return $this->hasMany("Models\SenderNewsletter", "organizer_id");
+         return $this->hasMany(SenderNewsletter::class, "organizer_id");
 
       }
 
       public function campaigns()
       {
-         return $this->hasMany("Models\SenderCampaign", "organizer_id")->orderBy("scheduled_at", "DESC");
+         return $this->hasMany(SenderCampaign::class, "organizer_id")->orderBy("scheduled_at", "DESC");
 
       }
 

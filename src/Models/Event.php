@@ -21,28 +21,28 @@ class Event extends Model
 
     public function tickets()
     {
-    	return $this->hasMany("Models\Ticket", "event_id");
+    	return $this->hasMany(Ticket::class, "event_id");
     }
       
     public function purchases()
     {
-    	return $this->hasMany("Models\Purchase", "event_id");
+    	return $this->hasMany(Purchase::class, "event_id");
     }
 
     public function participants()
     {
-        return $this->hasMany("Models\Participant", "event_id");
+        return $this->hasMany(Participant::class, "event_id");
     }
 
     public function group()
     {
-    	return $this->belongsTo("Models\Group");
+    	return $this->belongsTo(Group::class);
 
     }
 
  	public function organizer()
     {
-    	return $this->belongsTo("Models\Organizer");
+    	return $this->belongsTo(Organizer::class);
     }
 
 

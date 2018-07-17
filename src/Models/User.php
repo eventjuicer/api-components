@@ -51,12 +51,12 @@ class User extends BaseUser
 
     public function apps()
     {
-        return $this->hasMany("Models\UserSetting");
+        return $this->hasMany(UserSetting::class);
     }
 
     public function settings()
     {
-        return $this->hasMany("Models\UserSetting");
+        return $this->hasMany(UserSetting::class);
     }
 
  
@@ -64,7 +64,7 @@ class User extends BaseUser
     {
 
         //return $this->belongsToMany('Models\Organizer', "eventjuicer_user_organizations", "user_id", "organizer_id");
-        return $this->belongsToMany('Models\Organizer', "eventjuicer_user_organizations");
+        return $this->belongsToMany(Organizer::class, "eventjuicer_user_organizations");
 
     }
 

@@ -20,7 +20,17 @@ class Group extends Model
     
     public function events()
     {
-        return $this->hasMany(Event::class, "group_id")->orderBy("id", "DESC");;
+        return $this->hasMany(Event::class, "group_id");
+    }
+
+    public function activeEvent()
+    {
+
+        return $this->events()->where(function($el){
+
+           return $el->id = $this->active_event_id;
+        });
+
     }
 
 
