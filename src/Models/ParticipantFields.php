@@ -31,7 +31,7 @@ class ParticipantFields extends Model
 
     public function input()
     {
-    	return $this->belongsTo(Input::class);
+    	return $this->belongsTo(Input::class, "field_id");
     }
 
     public function field2()

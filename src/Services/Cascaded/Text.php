@@ -19,20 +19,23 @@ class Text
     
     }
 
-    public function cascaded($eventId){
+    public function cascaded($eventId, $backend = true){
 
         $event = Event::findOrFail($eventId);
 
         $organizer = $this->transform(
-            EloquentText::where("organizer_id", $event->organizer_id)->get()
+            EloquentText::where("organizer_id", $event->organizer_id)->get(),
+            $backend
         );
 
         $group = $this->transform(
-            EloquentText::where("group_id", $event->group_id)->get()
+            EloquentText::where("group_id", $event->group_id)->get(),
+            $backend
         );
 
         $event = $this->transform(
-            EloquentText::where("event_id", $eventId)->get()
+            EloquentText::where("event_id", $eventId)->get(),
+            $backend
         );
 
        return array_replace_recursive( $organizer, $group, $event );
@@ -40,7 +43,7 @@ class Text
     }
 
 
-    protected function transform(Collection $collection, $backend = false)
+    protected function transform(Collection $collection, $backend = true)
     {
 
 
