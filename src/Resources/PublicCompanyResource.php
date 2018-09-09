@@ -6,14 +6,16 @@ use Illuminate\Http\Resources\Json\Resource;
  
 use Eventjuicer\Services\Cloudinary; 
 
+
 class PublicCompanyResource extends Resource
 {
 
 
     public static $skipPurchases = false;
+    public static $skipProfile = false;
 
 
-    protected $presenterFields = [
+    protected static $presenterFields = [
 
         "name",
         "about", 
@@ -39,6 +41,21 @@ class PublicCompanyResource extends Resource
         self::$skipPurchases = true;
     }
 
+    public static function enablePurchases()
+    {
+        self::$skipPurchases = false;
+    }
+
+      public static function disableProfile()
+    {
+        self::$skipProfile = true;
+    }
+
+    public static function enableProfile()
+    {
+        self::$skipProfile = false;
+    }
+
 
     public function toArray($request)
     {   
@@ -53,16 +70,17 @@ class PublicCompanyResource extends Resource
 
             "debut" => $this->debut,
           	 
-            "profile"   =>  $this->data->whereIn("name", $this->presenterFields)->mapWithKeys(function($item)
-            {     
+            "profile"   =>  $this->when(!self::$skipProfile, 
 
-                return [ $item->name => $item->value ] ;
+                $this->data->whereIn("name", self::$presenterFields)->mapWithKeys(function($item)
+                {     
 
-            })->all(),
+                    return [ $item->name => $item->value ] ;
 
-        
-          	"instances" => $this->when(
-                !self::$skipPurchases, 
+                })->all()
+            ),
+
+          	"instances" => $this->when( !self::$skipPurchases, 
                 $this->participants->pluck("ticketpivot")->collapse()->values()
             )
             

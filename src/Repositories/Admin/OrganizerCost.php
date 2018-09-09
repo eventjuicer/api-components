@@ -71,7 +71,7 @@ class OrganizerCost extends Repository
 
     }
 
-	public function update(array $data, $id)
+	public function update(array $data, $id, $attribute = "id")
 	{
     	//return true;
 

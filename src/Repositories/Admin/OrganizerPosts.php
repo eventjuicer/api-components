@@ -143,7 +143,7 @@ class OrganizerPosts extends Repository
         return $this->createOrUpdate($data, 0);
     }
 
-    public function update(array $data, $id)
+    public function update(array $data, $id, $attribute = "id")
     {
         return $this->createOrUpdate($data, $id);
     }
