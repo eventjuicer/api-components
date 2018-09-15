@@ -1,7 +1,7 @@
 <?php
 
 namespace Eventjuicer\Services\Pdf;
-use FPDI;
+use setasign\Fpdi\Fpdi;
 
 
 
