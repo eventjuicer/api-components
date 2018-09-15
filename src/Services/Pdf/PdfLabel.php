@@ -1,6 +1,6 @@
 <?php namespace Eventjuicer\Services\Pdf;
 
-use setasign\Fpdi\TcpdfFpdi;
+use TCPDF;
 
 class PdfLabel
 {
