@@ -101,6 +101,8 @@ class PdfTicket
 			$pagecount 	= $this->pdf->setSourceFile($template); 
 			$tplidx 	= $this->pdf->importPage(1, '/MediaBox');
 		
+			//$this->pdf->useTemplate($tplidx, null, null, 0, 0, true);
+
 			$this->pdf->useTemplate($tplidx, null, null, 0, 0, true);
 		}
 
