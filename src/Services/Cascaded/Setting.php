@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Eventjuicer\Models\Setting as Eloquent;
 use Eventjuicer\Models\Event;
 
+use Exception;
 
 class Setting
 {
@@ -19,7 +20,11 @@ class Setting
     
     }
 
-    public function cascaded($eventId){
+    public function cascaded($eventId, $namespace=""){
+
+        if(empty($namespace)){
+            throw new Exception("No namespace provided!");
+        }
 
         $event = Event::findOrFail($eventId);
 
@@ -35,7 +40,11 @@ class Setting
             Eloquent::where("event_id", $eventId)->get()
         );
 
-       return array_replace_recursive( $organizer, $group, $event );
+       $merged = array_replace( $organizer, $group, $event );
+
+       return array_filter($merged, function($key) use ($namespace){
+            return strpos($key, $namespace)===0;
+       }, ARRAY_FILTER_USE_KEY);
 
     }
 
@@ -43,13 +52,10 @@ class Setting
     protected function transform(Collection $collection, $backend = false)
     {
 
+        return $collection->mapWithKeys(function($item){
+                return [$item["name"] => $item["data"]];
+            })->all(); 
 
-        return $collection->groupBy("name")->transform(function($name) use ($backend) {
-
-            return $backend ? $name->keyBy("lang") : $name->mapWithKeys(function($lang){
-                return [$lang["lang"] => $lang["data"]];
-            }); 
-        })->toArray();
     }
 
 

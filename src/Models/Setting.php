@@ -12,34 +12,20 @@ class Setting extends Model
      *
      * @var string
      */
-    protected $table = 'eventjuicer_settings';
+    protected $table = 'bob_settings';
 
-  //  protected $primaryKey = 'name';
-
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
     protected $fillable = ['name', 'data' ];
 
+    protected $dates = ['updatedon'];
 
-    /**
-     * The attributes excluded from the model's JSON form.
-     *
-     * @var array
-     */
-    protected $hidden = ['organizer_id', 'group_id', 'event_id', 'user_id']; //
-
-    //public $timestamps = false;
+    public $timestamps = false;
 
     //protected $dates = ['updatedon'];
 
 
-    public function settingable()
-    {
-        return $this->morphTo();
-    }
+    // public function settingable()
+    // {
+    //     return $this->morphTo();
+    // }
 
 }
