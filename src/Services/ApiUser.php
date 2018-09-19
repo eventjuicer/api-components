@@ -131,6 +131,10 @@ class ApiUser {
         })->all();
 	}
 
+	public function setting($name = "lang"){
+		return $this->company()->data->where("name", $name)->first()->value;
+	}
+
 	public function companyFormdata($eventId = 0)
 	{
 
