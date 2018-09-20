@@ -132,7 +132,14 @@ class ApiUser {
 	}
 
 	public function setting($name = "lang"){
-		return $this->company()->data->where("name", $name)->first()->value;
+
+		$filtered = $this->company()->data->where("name", $name);
+
+		if($filtered->count()){
+			return $filtered->first()->value;
+		}
+		
+		return "";
 	}
 
 	public function companyFormdata($eventId = 0)
