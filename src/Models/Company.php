@@ -8,7 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Company extends Model
 {
 
-     
+
+    protected $fillable = ['featured','promo'];
 
     protected $table = "eventjuicer_companies";
     

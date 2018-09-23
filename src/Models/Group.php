@@ -17,6 +17,8 @@ class Group extends Model
     
     public $timestamps = false;
 
+    protected $fillable = ['active_event_id'];
+
     
     public function events()
     {

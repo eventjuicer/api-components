@@ -10,8 +10,9 @@ class CompanyData extends Model
 {
      
     protected $table = "eventjuicer_company_data";
-       
     
+    protected $touches = ['company'];
+
     protected $casts = [
 
         'value' => 'array',

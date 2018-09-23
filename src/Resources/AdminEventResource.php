@@ -27,9 +27,11 @@ class AdminEventResource extends Resource
 
        $group = array_get(self::$groups, $this->group_id, null);
 
+
        return [
 
             "id"        => (int) $this->id,
+            "group_id" => $this->group_id,
             "name"      => $this->names,
             "loc"       => $this->location,
             "starts"    => $this->starts,

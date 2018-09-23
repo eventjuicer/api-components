@@ -52,7 +52,17 @@ class AdminCompanyResource extends Resource
             "slug" => $this->slug,
 
             "featured" => $this->featured,
-          	 
+
+
+            "debut" => $this->debut, 
+
+            "promo" =>   $this->promo,
+ 
+            "points" =>   $this->points,
+            
+            "position" =>   $this->position,
+
+
             "profile"   =>  $this->data->whereIn("access", "company")->mapWithKeys(function($item)
             {     
                 return [ $item->name => $item->value ] ;
