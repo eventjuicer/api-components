@@ -51,6 +51,10 @@ class AdminUser {
 		//throw new \Exception("No Criteria ...");
 	}
 
+	public function canAccess(){
+		return true;
+	}
+
 
 	public function validate(){
 

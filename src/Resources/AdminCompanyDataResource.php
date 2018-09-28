@@ -23,6 +23,7 @@ class AdminCompanyDataResource extends Resource
             $data = [];
 
             $data["id"] = $this->id;
+            $data["company_id"] = $this->company_id;
             $data["name"] = $this->name;
             $data["value"] = $this->value;
             $data["created_at"] = (string) $this->created_at;
