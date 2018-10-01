@@ -9,6 +9,8 @@ use Eventjuicer\Repositories\GroupRepository;
 
 use Eventjuicer\Repositories\Criteria\BelongsToEvent;
 use Eventjuicer\Repositories\Criteria\BelongsToGroup;
+use Eventjuicer\Repositories\Criteria\Dumb;
+
 use Eventjuicer\Repositories\Criteria\WhereIn;
 
 
@@ -16,7 +18,7 @@ use Illuminate\Support\Facades\Auth;
 
 class AdminUser {
 
-	protected $request, $events, $user;
+	protected $request, $events, $user, $group_ids;
 
 	function __construct(Request $request, EventRepository $events){
 
@@ -24,41 +26,63 @@ class AdminUser {
 		$this->events = $events;
 		$this->user = Auth::user();
 
+		//we will for an authorization and scope...
+		$this->user->load("organizations.groups");
+
+		$this->group_ids = $this->group_ids();
+
 	}
+
 
 	public function criteria($groupLevel = false){
 
-		$id_like = trim($this->request->input("id_like", ""));
+		//validate group?id_like=1|2|3|4|5!
 
-		$active_event_id = $this->active_event_id();
+		$id_like = $this->request->input("id_like", false);
 
 		if(!empty($id_like) && (is_numeric($id_like) || strpos($id_like, "|")!==false)){
 			return new WhereIn("id", explode("|", $id_like));
 		}
 
-		if($active_event_id > 0){
+		$active_event_id = $this->active_event_id();
+		$active_group_id = $this->active_group_id();
+
+		if($active_event_id){
+
+			$groupId = $this->events->find($active_event_id)->group_id;
+
+			if(!$this->check($groupId)){
+				throw new \Exception("you cannot access this resource");
+			}
 
 			if($groupLevel){
 
-				return new BelongsToGroup( $this->active_group_id() );
+				return new BelongsToGroup($groupId);
 			}
 
 			return new BelongsToEvent($active_event_id);
 		}
-
-		//if none exists...throw an Exception
 		
-		//throw new \Exception("No Criteria ...");
+		if($active_group_id){
+
+			if(!$this->check($active_group_id)){
+				throw new \Exception("you cannot access this resource");
+			}
+
+			return new BelongsToGroup( $active_group_id );
+		}
+
+		return new WhereIn("group_id", $this->group_ids );
+
 	}
 
 	public function canAccess(){
 		return true;
 	}
 
+	public function check($groupId){
 
-	public function validate(){
-
-		//either id_like or event_id must be present!
+		return in_array($groupId, $this->group_ids);
 	}
 
 	public function active_event_id(){
@@ -68,10 +92,10 @@ class AdminUser {
 
 	public function active_group_id(){
 
-		$e = $this->active_event_id();
+		return (int) $this->request->input("group_id", 0);
 
-		return $e ? $this->events->find($e)->group_id : 0;
 	}
+
 
 	public function organizations(){
 
@@ -92,8 +116,6 @@ class AdminUser {
 	}
 
 	public function groups(){
-
-		$this->user->load("organizations.groups");
 
 		return $this->organizations()->pluck("groups")->collapse();
 

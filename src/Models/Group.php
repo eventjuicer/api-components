@@ -28,10 +28,7 @@ class Group extends Model
     public function activeEvent()
     {
 
-        return $this->events()->where(function($el){
-
-           return $el->id = $this->active_event_id;
-        });
+        return $this->events()->select("bob_events.*")->join($this->table, $this->table.".active_event_id", "=", "bob_events.id");
 
     }
 
