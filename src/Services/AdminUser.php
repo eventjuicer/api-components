@@ -38,7 +38,7 @@ class AdminUser {
 
 		//validate group?id_like=1|2|3|4|5!
 
-		$id_like = $this->request->input("id_like", false);
+		$id_like = $this->request->input("id_like", null);
 
 		if(!empty($id_like) && (is_numeric($id_like) || strpos($id_like, "|")!==false)){
 			return new WhereIn("id", explode("|", $id_like));
@@ -49,7 +49,7 @@ class AdminUser {
 
 		if($active_event_id){
 
-			$groupId = $this->events->find($active_event_id)->group_id;
+			$groupId = $this->active_group_id($active_event_id);
 
 			if(!$this->check($groupId)){
 				throw new \Exception("you cannot access this resource");
@@ -90,7 +90,11 @@ class AdminUser {
 		return (int) $this->request->input("event_id", 0);
 	}
 
-	public function active_group_id(){
+	public function active_group_id($active_event_id = 0){
+
+		if($active_event_id){
+			return $this->events->find($active_event_id)->group_id;
+		}
 
 		return (int) $this->request->input("group_id", 0);
 
