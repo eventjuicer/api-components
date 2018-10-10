@@ -29,23 +29,28 @@ class PingWhenEmptyProfileJob extends Job // implements ShouldQueue
      * @return void
      */
 
-    protected $participant, $eventId;
+    protected $participant, $eventId, $lang, $event_manager;
 
 
-    public function __construct(Participant $participant, int $eventId)
-    {
+    public function __construct(
+        Participant $participant, 
+        int $eventId, 
+        string $lang="pl",
+        string $event_manager
+    ){
         
-        $this->participant = $participant;
-        $this->eventId = $eventId;
+        $this->participant   = $participant;
+        $this->eventId       = $eventId;
+        $this->lang          = $lang;
+        $this->event_manager = $event_manager;
 
     }
 
     public function handle(
         ParticipantDeliveryRepository $deliveries, 
         ParticipantSendable $sendable, 
-        CompanyData $cd)
-    {
-
+        CompanyData $cd
+    ){
 
         //do we have company assigned?
 
@@ -74,8 +79,10 @@ class PingWhenEmptyProfileJob extends Job // implements ShouldQueue
 
 
         Mail::send(
-            new Email( $this->participant, $errors )
+            new Email( $this->participant, $errors, $this->lang, $this->event_manager )
         );
+
+        //register COMPANY admin message?
 
 
         if(! env("MAIL_TEST", true))

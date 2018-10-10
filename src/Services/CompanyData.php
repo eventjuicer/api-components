@@ -22,14 +22,15 @@ class CompanyData {
         "expo"                  => 0, 
         "keywords"              => 1,
         "website"               => 1,
-        "facebook"              => 0,
-        "twitter"               => 0,
-        "linkedin"              => 0,
+        "facebook"              => 1,
+        "twitter"               => 1,
+        "linkedin"              => 1,
         "logotype"              => 1,
         "countries"             => 1,
         "opengraph_image"       => 0,
         "lang"                  => 0,
-        "event_manager"         => 0,
+        "event_manager"         => 1,
+   //     "marketing_person"      => 0,
         "invitation_template"   => 0
     ];
 
@@ -109,6 +110,7 @@ class CompanyData {
 
 
     public function status(Company $company) {
+        
         $this->make($company);
 
         $presentDataFields = $this->toArray($company);
