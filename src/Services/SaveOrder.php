@@ -2,6 +2,7 @@
 
 namespace Eventjuicer\Services;
 
+use Illuminate\Http\Request;
 
 use Laravel\Lumen\Routing\ProvidesConvenienceMethods;
 
@@ -20,6 +21,7 @@ use Eventjuicer\Models\PurchaseTicket;
 use Eventjuicer\Models\ParticipantFields;
 use Eventjuicer\Models\Purchase;
 use Eventjuicer\Models\Input;
+use Eventjuicer\Models\Ticket;
 
 
 
@@ -32,7 +34,7 @@ class SaveOrder {
 
 	use ProvidesConvenienceMethods;
 
-
+	protected $request;
 	protected $participant;
 	protected $purchase;
 
@@ -44,13 +46,30 @@ class SaveOrder {
 	protected $discount = "";
 	protected $discount_code_id = 0;
 
+	protected $defaultLocale = "pl";
+	protected $locale = "pl";
 
 	protected $organizer_id, $group_id, $event_id = 0;
 
-	function __construct(ParticipantRepository $participant, PurchaseRepository $purchase)
+
+	function __construct(Request $request)
 	{
-		$this->participant = $participant;
-		$this->purchase = $purchase;
+		$this->request = $request;
+	}
+
+	function setLocale(string $locale){
+
+		$this->locale = $locale;
+	}
+
+	function getParticipant()
+	{
+		return $this->participant;
+	}
+
+	function getPurchase()
+	{
+		return $this->purchase;
 	}
 
 
@@ -107,23 +126,22 @@ class SaveOrder {
 		}
 
 
-		if(empty($participant_id))
+		if(! intval($participant_id) > 0)
 		{
 			//create new participant!
 
-			if(empty($fields["email"]))
+			if(empty($fields["email"]) || strpos($fields["email"], "@")===false)
 			{
-				throw new \Exception("Email must be provided");
+				throw new \Exception("Valid email must be provided");
 			}	
 
 			$participant = new Participant;
 
-			$participant->event_id 		= $this->event_id;
-			$participant->group_id 		= $this->group_id;
-			$participant->organizer_id 	= $this->organizer_id;
+			$participant->event_id 		= intval($this->event_id);
+			$participant->group_id 		= intval($this->group_id);
+			$participant->organizer_id 	= intval($this->organizer_id);
+			$participant->parent_id 	= intval($parent_id);
 
-
-			$participant->parent_id 	= $parent_id;
 			$participant->company_id 	= $parent_id ? Participant::find($parent_id)->company_id : 0;
 			
 
@@ -131,30 +149,47 @@ class SaveOrder {
 			$participant->createdon 	= Carbon::now();
 			$participant->email 		= $fields["email"];
 			$participant->confirmed 	= 1;
-			$participant->lang 			= "pl";
+			$participant->lang 			= $this->locale;
 
 			$participant->save();
-
-			$this->saveTickets($participant->id, $tickets);
-			
-			$this->saveFields($participant->id, $fields);
 
 			$this->participant = $participant;
 
 			//event(new UserWasRegistered());
 		}
+		else
+		{
+			$this->participant = Participant::find($participant_id);
+		}
+
 		
+		$this->saveTickets($this->participant->id, $tickets);
+			
+		$this->saveFields($this->participant->id, $fields);
+
+
 	}
 
 
-	function getParticipant()
-	{
-		return $this->participant;
-	}
+
 
 	function saveTickets($participant_id, $tickets)
 	{
 
+		//count AMOUNT!
+
+		foreach($tickets as $ticket_id => $quantity){
+
+			$ticket = Ticket::find($ticket_id);
+
+			if(!$ticket){
+				throw new \Exception("no ticket found!");
+			}
+
+			$localeAmount = intval( array_get($ticket->price, $this->locale, $ticket->price["pl"]) );
+
+			$this->amount += $localeAmount * $quantity;
+		}
 
 		//save Purchase
 
@@ -165,16 +200,17 @@ class SaveOrder {
 		$purchase->group_id 		= $this->group_id;
 		$purchase->organizer_id 	= $this->organizer_id;
 		$purchase->participant_id 	= $participant_id;
-		$purchase->amount 			= 0;
+		$purchase->amount 			= $this->amount;
 		$purchase->discount 		= 0;
 		$purchase->discount_code_id = 0;
-		$purchase->paid 			= 1;
-		$purchase->status 			= "ok";
-		$purchase->status_source 	= "";
+		$purchase->paid 			= $this->amount === 0 ? 1 : 0;
+		$purchase->status 			= $this->amount === 0 ? "ok" : "new";
+		$purchase->status_source 	= $this->amount === 0 ? "auto" : "manual";
 		$purchase->createdon		= time();
 		$purchase->updatedon		= Carbon::now();
 		$purchase->save();
 
+		$this->purchase = $purchase;
 
 		foreach($tickets as $ticket_id => $quantity)
 		{	
