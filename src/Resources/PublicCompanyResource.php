@@ -69,7 +69,9 @@ class PublicCompanyResource extends Resource
             "featured" => $this->featured,
 
             "debut" => $this->debut,
-          	 
+
+            "promo" => $this->promo,
+
             "profile"   =>  $this->when(!self::$skipProfile, 
 
                 $this->data->whereIn("name", self::$presenterFields)->mapWithKeys(function($item)
