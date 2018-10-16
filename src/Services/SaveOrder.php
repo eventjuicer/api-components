@@ -4,7 +4,7 @@ namespace Eventjuicer\Services;
 
 use Illuminate\Http\Request;
 
-use Laravel\Lumen\Routing\ProvidesConvenienceMethods;
+//use Laravel\Lumen\Routing\ProvidesConvenienceMethods;
 
 use Eventjuicer\Repositories\ParticipantRepository;
 use Eventjuicer\Repositories\PurchaseRepository;
@@ -32,7 +32,7 @@ use Carbon\Carbon;
 
 class SaveOrder {
 
-	use ProvidesConvenienceMethods;
+//	use ProvidesConvenienceMethods;
 
 	protected $request;
 	protected $participant;

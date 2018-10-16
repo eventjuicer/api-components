@@ -4,6 +4,7 @@ namespace Eventjuicer\Services;
 
 use Eventjuicer\Models\Host;
 use Eventjuicer\Models\Group;
+use Eventjuicer\Models\Event;
 
 
 class Resolver {
@@ -40,6 +41,24 @@ class Resolver {
 	public function getOrganizerId()
 	{
 		return $this->organizer_id;
+	}
+
+
+	public function previousEvent()
+	{
+		$allEvents = Event::where("group_id", $this->getGroupId())->orderBy("id", "desc")->get()->pluck("id")->all();
+
+		$prev = 0;
+
+        foreach($allEvents as $event){
+            if( $event == $this->getEventId() ){
+                $prev = next($allEvents);
+                break;
+            }
+        }
+
+        return $prev;
+
 	}
 
 	public function getEventId()
