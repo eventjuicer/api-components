@@ -279,7 +279,7 @@ class SaveOrder {
 
 			if(empty($field_id)) {
 
-				continue;
+//				continue;
 			}	
 
 			$user->fields()->updateExistingPivot($field_id, [

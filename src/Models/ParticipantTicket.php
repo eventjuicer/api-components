@@ -21,6 +21,8 @@ class ParticipantTicket extends Model
 
     protected $dates = ["updatedon"];
 
+    public $timestamps = false;
+
 
 
     // public function purchasesNotCancelled()
