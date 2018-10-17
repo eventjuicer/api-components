@@ -273,19 +273,29 @@ class SaveOrder {
 
 			//this is senseless... array should be checked..!
 
-			$input = Input::where("name", $field_name)->first();
+			$field = Input::where("name", $field_name)->first();
 
-			$field_id = $input ? $input->id : 0;
-
-			if(empty($field_id)) {
-
-//				continue;
+			if(is_null($field)) {
+				continue;
 			}	
 
-			$user->fields()->updateExistingPivot($field_id, [
-				"field_value" 	=> $field_value,
-				"updatedon" 	=> Carbon::now()
-			]);
+			$data = [
+					"field_value" 	=> $field_value,
+					"updatedon" 	=> Carbon::now(),
+					"archive"		=> ""
+			];
+
+
+			$exists = $user->fields()->where("field_id", $field->id)->exists();
+
+			if($exists){
+
+				$user->fields()->updateExistingPivot($field->id, $data);
+
+			}else{
+
+				$user->fields()->attach($field->id, $data);
+			}
 
 		}
 
