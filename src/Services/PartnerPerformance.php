@@ -86,7 +86,7 @@ class PartnerPerformance {
    	}
 
 
-   	public function getStatsForCompanies($eventId)
+   	public function getStatsForCompanies($eventId, $period = 90)
 	{	
 
 		$data = $this->getParticipantsWithRole("exhibitor", $eventId, ['company.data']);
@@ -99,7 +99,7 @@ class PartnerPerformance {
 			return $value != null;
 		});
 
-		$ga = $this->getAnalyticsForSource("company_");
+		$ga = $this->getAnalyticsForSource("company_", $period);
 
 		//we used glue company_id when we matched with participants.. => plucking companies!
 		return $this->merge($companies, $ga, "stats", "id");
