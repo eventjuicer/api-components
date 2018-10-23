@@ -99,7 +99,7 @@ class PartnerPerformance {
 			return $value != null;
 		});
 
-		$ga = $this->getAnalyticsForSource("company_", $period);
+		$ga = $this->getAnalyticsForSource("th3rCMiM_", $period);
 
 		//we used glue company_id when we matched with participants.. => plucking companies!
 		return $this->merge($companies, $ga, "stats", "id");
