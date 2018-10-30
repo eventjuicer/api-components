@@ -77,6 +77,7 @@ class MeetupRepository extends Repository
 
         $data["organizer_id"] = $user->company()->organizer_id;
         $data["group_id"] = $user->company()->group_id;
+        $data["event_id"] = $user->activeEventId();
         $data["company_id"] = $user->company()->id;
         $data["participant_id"] = $participant_id;
         $data["user_id"] = $user->user()->id;
