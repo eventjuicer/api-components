@@ -6,6 +6,7 @@ use Eventjuicer\Services\ApiUser;
 use Eventjuicer\Repositories\CompanyRepository;
 use Bosnadev\Repositories\Eloquent\Repository;
 use Eventjuicer\Repositories\Criteria\BelongsToCompany;
+use Eventjuicer\Repositories\Criteria\BelongsToEvent;
 
 class ApiUserLimits {
 
@@ -73,9 +74,15 @@ class ApiUserLimits {
 
 		if(isset($params[0]) && $params[0] instanceof Repository)
 		{
-			$used = $params[0]->pushCriteria(
+			$params[0]->pushCriteria(
 				new BelongsToCompany($this->user->company()->id)
-			)->all()->count();
+			);
+
+			$params[0]->pushCriteria(
+				new BelongsToEvent($this->user->activeEventId() )
+			);
+
+			$used = $params[0]->all()->count();
 		}
 
 		switch($name)
