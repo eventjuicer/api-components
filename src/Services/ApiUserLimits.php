@@ -91,8 +91,8 @@ class ApiUserLimits {
 
 				$base = 5;
 
-				if($this->user->company()->id == 1155){
-					$base = $base + 30;
+				if($this->user->company()->id == 1260){
+					$base = $base + 15;
 				}
 
 				if($this->points() > 19){
