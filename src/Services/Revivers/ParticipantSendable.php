@@ -42,9 +42,9 @@ class ParticipantSendable {
 		$this->setMuteTime();
 	}
 
-	public function setMuteTime($muteTime = 16)
+	public function setMuteTime($muteTime = 120)
 	{
-		$this->then 	= Carbon::now("UTC")->subHours( (int) $muteTime);
+		$this->then 	= Carbon::now("UTC")->subMinutes( (int) $muteTime);
 	}
 
 	public function checkUniqueness(bool $val)
