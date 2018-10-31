@@ -54,6 +54,8 @@ class GeneralExhibitorMessageJob extends Job // implements ShouldQueue
             return;
         }
 
+        $sendable->setMuteTime(20); //minutes!!!!
+
         // double check !
 
         if(! $sendable->filter( collect([])->push( $this->participant ), $this->eventId)->count() )
