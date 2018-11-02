@@ -101,9 +101,28 @@ class PdfTicket
 			$pagecount 	= $this->pdf->setSourceFile($template); 
 			$tplidx 	= $this->pdf->importPage(1, '/MediaBox');
 		
+		//	$tmplSize = $this->pdf->getTemplateSize($tplidx);
+
+/*
+
+array(5) {
+  ["width"]=>
+  float(210.25555555556)
+  ["height"]=>
+  float(297.03888888889)
+  [0]=>
+  float(210.25555555556)
+  [1]=>
+  float(297.03888888889)
+  ["orientation"]=>
+  string(1) "P"
+}
+
+*/
+
 			//$this->pdf->useTemplate($tplidx, null, null, 0, 0, true);
 
-			$this->pdf->useTemplate($tplidx, null, null, 0, 0, true);
+			$this->pdf->useTemplate($tplidx, 0, 0, null, null, true);
 		}
 
 		return $this;
