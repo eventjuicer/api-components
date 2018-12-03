@@ -23,6 +23,8 @@ use Eventjuicer\Repositories\Criteria\BelongsToGroup;
 
 use Eventjuicer\Services\ApiUser;
 
+use Carbon\Carbon;
+
 class PartnerPerformance {
 	
 
@@ -160,7 +162,10 @@ class PartnerPerformance {
 
         //	$dt = Period::days($period);
 
-        	$dt = Period::create("2018-10-15", "2018-11-06 23:59:59");
+        	$dt = Period::create(
+        		Carbon::createFromDate(2018,10,15), 
+        		Carbon::create(2018, 11, 06, 23, 59, 59)
+        	);
 
 			$response = $this->analytics->performQuery(
 
