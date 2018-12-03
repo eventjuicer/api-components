@@ -158,9 +158,13 @@ class PartnerPerformance {
 		$query = function() use ($search, $period)
         {
 
+        //	$dt = Period::days($period);
+
+        	$dt = Period::create("2018-10-15", "2018-11-06 23:59:59");
+
 			$response = $this->analytics->performQuery(
 
-				Period::days($period), 
+				$dt, 
 
 				"ga:sessions",  
 				[
