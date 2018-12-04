@@ -19,6 +19,8 @@ use Eventjuicer\Services\Personalizer;
 
 class ApiUser {
 	
+	protected $eventId;
+
 	protected $request, $json, $participants, $token, $user, $company, $representative;
 	
 	static $tokenRegExp = "/[a-z0-9]{32,40}/";
@@ -37,8 +39,28 @@ class ApiUser {
 			$request->input("x-token", null)
 		);
 
+		$eventId = (int) $request->header("x-event-id", 
+			$request->input("x-event-id", null)
+		);
+
 		$this->setToken($token);
 
+		$this->setEventId($eventId);	
+		
+
+	}
+
+	public function setEventId($eventId){
+
+		if($eventId > 0){
+
+			//validate if token belongs to this group
+
+
+			$this->eventId = $eventId;
+		}
+
+		
 	}
 
 	public function getToken()
@@ -79,7 +101,7 @@ class ApiUser {
 
 	public function trackingLink($medium = "banner", $ad = "")
 	{
-         return sprintf("?utm_source=th3rCMiM_%d&utm_medium=%s&utm_campaign=teh15c&utm_content=%s", $this->company()->id, $medium, $ad);
+         return sprintf("?utm_source=th3rCMiM_%d&utm_medium=%s&utm_campaign=teh16c&utm_content=%s", $this->company()->id, $medium, $ad);
 	}
 
 
@@ -245,6 +267,12 @@ class ApiUser {
 
 	public function activeEventId($strict = false)
 	{	
+
+		if($this->eventId){
+
+			return $this->eventId;
+		
+		}
 
 		if($this->company)
 		{
