@@ -22,15 +22,24 @@ class CompanyData {
         "expo"                  => 0, 
         "keywords"              => 1,
         "website"               => 1,
+
+
         "facebook"              => 0,
         "twitter"               => 0,
         "linkedin"              => 0,
+        "xing"                  => 0,
+
+
         "logotype"              => 1,
         "countries"             => 1,
         "opengraph_image"       => 0,
         "lang"                  => 0,
+
         "event_manager"         => 0,
-   //     "marketing_person"      => 0,
+        "pr_manager"            => 0,
+        "sales_manager"         => 0,
+   
+        //"marketing_person"      => 0,
         "invitation_template"   => 0
     ];
 
@@ -42,10 +51,15 @@ class CompanyData {
 
     protected $mappings = [
 
-        "name"      => "cname2",
-        "about"     => "company_description",
-        "website"   => "company_website",
-        "logotype"  => "logotype"
+        "name"          => "cname2",
+        "about"         => "company_description",
+        "website"       => "company_website",
+        "logotype"      => "logotype",
+        "linkedin"      => "profile_linkedin",
+        //ecommerceberlin....
+        "xing"          => "xing_profile",
+        "sales_manager" => "marketing",
+        "pr_manager"    => "email3"
     ];
 
 
@@ -65,7 +79,8 @@ class CompanyData {
 	}
 
 
-    public function migrate(Participant $participant) {
+    public function migrate(Participant $participant, $force = false) {
+
         $company = $participant->company;
 
         if(is_null($company))
@@ -80,8 +95,8 @@ class CompanyData {
         foreach($this->make($company) AS $data)
         {
             //check if value exhists...if not.. try to find in participants profile...
-
-           if($data->value)
+           
+           if(mb_strlen(trim($data->value)) && !$force)
            {
                 continue;
            }
