@@ -26,7 +26,7 @@ class CompanyData {
 
         "facebook"              => 0,
         "twitter"               => 0,
-        "linkedin"              => 0,
+        "linkedin"              => 1,
         "xing"                  => 0,
 
 
@@ -35,9 +35,9 @@ class CompanyData {
         "opengraph_image"       => 0,
         "lang"                  => 0,
 
-        "event_manager"         => 0,
-        "pr_manager"            => 0,
-        "sales_manager"         => 0,
+        "event_manager"         => 1,
+        "pr_manager"            => 1,
+        "sales_manager"         => 1,
    
         //"marketing_person"      => 0,
         "invitation_template"   => 0
@@ -45,7 +45,8 @@ class CompanyData {
 
     protected $namesInternal = [
         "logotype_cdn",
-        "opengraph_image_cdn" 
+        "opengraph_image_cdn",
+        "password"
     ];
 
 
@@ -95,24 +96,31 @@ class CompanyData {
         foreach($this->make($company) AS $data)
         {
             //check if value exhists...if not.. try to find in participants profile...
-           
-           if(mb_strlen(trim($data->value)) && !$force)
-           {
-                continue;
-           }
 
            if(!isset($this->mappings[$data->name]))
            {
                 continue;
            }
 
+           $current_value = trim($data->value);
 
            $replacement = trim( array_get($profile, $this->mappings[$data->name]) );
 
-           // if(mb_strlen($replacement))
-           // {
-           //      continue;
-           // }
+           if(mb_strlen($replacement) === 0)
+           {
+                continue;
+           }
+
+           if(mb_strlen($replacement) ===  mb_strlen($current_value) )
+           {
+                continue;
+           }
+
+            //if there is a value and we only add new....
+            if(mb_strlen($current_value) && !$force ){
+
+                continue;
+            }
 
             $data->value = $replacement;
             $data->save();
@@ -151,6 +159,7 @@ class CompanyData {
                 case "facebook":
                 case "twitter":
                 case "linkedin":
+                case "xing":
                 case "logotype":
 
                     if(!trim($value))
@@ -166,6 +175,24 @@ class CompanyData {
 
                    
                 break;
+
+                case "event_manager":
+                case "pr_manager":
+                case "sales_manager":
+
+                    if(!trim($value))
+                    {
+                        $errors[$name] = "empty";
+
+                    }else{
+                        
+                        if(strpos($value, "@")===false) {
+                             $errors[$name] = "badformat";
+                        }
+                    }
+
+                break;
+
                 case "about":
                 case "products":
                 case "expo":
