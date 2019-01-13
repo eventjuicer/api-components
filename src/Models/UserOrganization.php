@@ -13,12 +13,12 @@ class UserOrganization extends Model
 
     public function organizer()
     {
-        return $this->belongsTo("Models\Organizer");
+        return $this->belongsTo(Organizer::class);
     }
 
     public function user()
     {
-        return $this->belongsTo("Models\User");
+        return $this->belongsTo(User::class);
     }
 
 

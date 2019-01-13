@@ -5,6 +5,7 @@ namespace Eventjuicer\Resources;
 use Illuminate\Http\Resources\Json\Resource;
  
 
+
 class AdminCompanyResource extends Resource
 {
 
@@ -62,6 +63,9 @@ class AdminCompanyResource extends Resource
             
             "position" =>   $this->position,
 
+            "admin_id" => $this->admin_id,
+
+            //"admin"  => new AdminAdminResource( $this->admin),
 
             "profile"   =>  $this->data->whereIn("access", "company")->mapWithKeys(function($item)
             {     

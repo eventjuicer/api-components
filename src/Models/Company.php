@@ -9,7 +9,7 @@ class Company extends Model
 {
 
 
-    protected $fillable = ['featured','promo'];
+    protected $fillable = ['featured','promo','admin_id'];
 
     protected $table = "eventjuicer_companies";
     
@@ -51,6 +51,11 @@ class Company extends Model
     public function group()
     {
         return $this->belongsTo(Group::class, "id", "owner_id");
+    }
+
+    public function admin()
+    {
+        return $this->belongsTo(User::class, "admin_id");
     }
 
     public function scans()

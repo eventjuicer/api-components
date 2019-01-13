@@ -5,6 +5,7 @@ namespace Eventjuicer\Services;
 use Illuminate\Http\Request;
 use Eventjuicer\Repositories\EventRepository;
 use Eventjuicer\Repositories\GroupRepository;
+use Eventjuicer\Repositories\OrganizerRepository;
 
 
 use Eventjuicer\Repositories\Criteria\BelongsToEvent;
@@ -18,12 +19,20 @@ use Illuminate\Support\Facades\Auth;
 
 class AdminUser {
 
-	protected $request, $events, $user, $group_ids;
+	protected $request, $events, $groups, $organizers, $user, $group_ids;
 
-	function __construct(Request $request, EventRepository $events){
+	function __construct(
+		Request $request, 
+		EventRepository $events,
+		GroupRepository $groups,
+		OrganizerRepository $organizers
+	){
 
 		$this->request = $request;
 		$this->events = $events;
+		$this->groups = $groups;
+		$this->organizers = $organizers;
+
 		$this->user = Auth::user();
 
 		//we will for an authorization and scope...
@@ -100,6 +109,17 @@ class AdminUser {
 
 	}
 
+	public function active_organizer(){
+
+		$active_event_id = $this->active_event_id();
+
+		if($active_event_id){
+			return $this->events->find($active_event_id)->organizer_id;
+		}
+
+	}
+
+
 
 	public function organizations(){
 
@@ -117,6 +137,11 @@ class AdminUser {
 	public function event_ids(){
 		
 		return $this->events()->pluck("id")->all();
+	}
+
+	public function admins(){
+
+		return $this->organizers->find($this->active_organizer())->users;
 	}
 
 	public function groups(){
