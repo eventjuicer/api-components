@@ -12,7 +12,8 @@ use App\User as BaseUser;
 class User extends BaseUser
 {
    
-    use HasApiTokens, Traits\AbleTrait;
+    //use HasApiTokens;
+    use Traits\AbleTrait;
     
     //use EntrustUserTrait;
     //use \SammyK\LaravelFacebookSdk\SyncableGraphNodeTrait;
