@@ -37,7 +37,7 @@ class CompanyData {
 
         "event_manager"         => 1,
         "pr_manager"            => 1,
-        "sales_manager"         => 1,
+        "sales_manager"         => 0,
    
         //"marketing_person"      => 0,
         "invitation_template"   => 0
