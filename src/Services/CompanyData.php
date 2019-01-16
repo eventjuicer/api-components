@@ -26,7 +26,7 @@ class CompanyData {
 
         "facebook"              => 0,
         "twitter"               => 0,
-        "linkedin"              => 1,
+        "linkedin"              => 0,
         "xing"                  => 0,
 
 
@@ -203,7 +203,7 @@ class CompanyData {
 
                     }else{
                         
-                        if($value == strip_tags($value)) {
+                        if(strlen($value) > 300 && $value == strip_tags($value)) {
                             $errors[$name] = "nohtml";
                         }
                     }
