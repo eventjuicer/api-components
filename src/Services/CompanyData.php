@@ -220,7 +220,7 @@ class CompanyData {
                 }
                 else
                 {
-                    if(strlen($value) < 5)
+                    if(strlen($value) < 3)
                     {
                         $errors[$name] = "empty";
                     }
