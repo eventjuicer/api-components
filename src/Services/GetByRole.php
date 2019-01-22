@@ -27,11 +27,11 @@ class GetByRole {
 		$this->participantsRepo = $participantsRepo;
 	}
 
-	public function get(int $eventId, string $role, $withRels = [])
+	public function get(int $eventId, string $role, $withRels = [], $ticketColumn="role")
 	{
 			//GET IDS OF TICKETS FROM CURRENT EVENT, FILTERED BY EXHIBITOR ROLE
     	$this->ticketsRepo->pushCriteria( new BelongsToEvent( $eventId ));
-    	$this->ticketsRepo->pushCriteria( new FlagEquals( "role", $role ));
+    	$this->ticketsRepo->pushCriteria( new FlagEquals( $ticketColumn, $role ));
     	$ticketIds = $this->ticketsRepo->all()->pluck("id")->all();
 
     	if(empty($ticketIds))
