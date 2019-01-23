@@ -138,7 +138,7 @@ class ApiUser {
 		return $this->company;
 	}
 
-	public function companyData($access = "company")
+	public function companyData(array $access = ["company"])
 	{
 
 		if( empty( $this->company() ) || empty( $this->company()->id ) )
@@ -146,7 +146,7 @@ class ApiUser {
 			return [];
 		}
 
-		return $this->company()->data->where("access", $access)->mapWithKeys(function($_item){
+		return $this->company()->data->whereIn("access", $access)->mapWithKeys(function($_item){
                 
                 return [$_item->name => $_item->value];
 
@@ -174,11 +174,11 @@ class ApiUser {
 			})->pluck("formdata")->all();
 	}
 
-	public function companyPublicProfile(){
+	public function companyPublicProfile(string $baseHost){
 
 		$name = array_get($this->companyData, "name", $this->company()->slug);
 
-		return 'https://targiehandlu.pl/' . str_slug($name, '-') . ",c," . $this->company()->id;
+		return rtrim($baseHost, "/") . "/" . str_slug($name, '-') . ",c," . $this->company()->id;
 
 	}
 
