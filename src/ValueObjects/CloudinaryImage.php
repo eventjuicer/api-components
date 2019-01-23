@@ -25,7 +25,7 @@ class CloudinaryImage {
 
 		if($this->isValid()){
 
-			return str_replace("/image/upload/v", "/image/upload/w_600,h_600,c_fit/v", $str);
+			return str_replace("/image/upload/v", "/image/upload/w_600,h_300,c_fit/v", $str);
 		}
 
 		return $str;
