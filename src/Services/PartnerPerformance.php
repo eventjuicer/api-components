@@ -32,6 +32,87 @@ class PartnerPerformance {
 	
 	protected $statsDefault = ["sessions" => 0, "conversions" => 0];
 
+
+	protected $ebe_prizes = [
+  		
+		// [	
+		// 		"name" => "badges", 
+		// 		"min" => 1, 
+		// 		"max" => 1, 
+		// 		"level"=> 200
+		// ],
+		[
+				"name" => "presentation", 
+				"min" => 1, 
+				"max" => 1, 
+				"level" => 200
+		],
+
+		// [		
+		// 		"name" => "floor", 
+		// 		"min" => 1, 
+		// 		"max" => 3, 
+		// 		"level" => 50
+		// ],
+
+		[		
+				"name" => "video_interview", 
+				"min" => 1, 
+				"max" => 5,
+				"level" => 50
+		],
+
+		[		
+				"name" => "earlybird", 
+				"min" => 1, 
+				"max" => 30, 
+				"level" => 30
+		],
+
+		[		
+				"name" => "meetups", 
+				"min" => 1, 
+				"max" => 50, 
+				"level" => 20
+		],
+
+		[
+				"name" => "brand_highlight", 
+				"min" => 1, 
+				"max" => 8,  
+				"level" => 40
+		],
+
+		// [
+		// 		"name" => "leaflets", 
+		// 		"min" => 1, 
+		// 		"max" => 10,  
+		// 		"level" => 20
+		// ],
+	
+		// [		
+		// 		"name" => "scanner", 
+		// 		"min" => 1, 
+		// 		"max" => 50, 
+		// 		"level" => 10
+		// ],
+
+		[
+				"name" => "rollups", 
+				"min" => 1, 
+				"max" => 8,  
+				"level" => 20
+		],
+
+		[		
+				"name" => "blog", 
+				"min" => 1, 
+				"max" => 10,
+				"level" => 20
+		],
+
+	];
+
 	protected $prizes = [
   		
 		// [	
@@ -129,8 +210,8 @@ class PartnerPerformance {
 	}
 
 
-	public function getPrizes(){
-		return $this->prizes;
+	public function getPrizes($groupId = 0){
+		return $groupId > 1 ? $this->ebe_prizes : $this->prizes;
 	}
 
 
@@ -244,12 +325,12 @@ class PartnerPerformance {
 		$query = function() use ($search, $period)
         {
 
-        //	$dt = Period::days($period);
+        	$dt = Period::days($period);
 
-        	$dt = Period::create(
-        		Carbon::createFromDate(2018,10,15), 
-        		Carbon::create(2018, 11, 06, 23, 59, 59)
-        	);
+        	// $dt = Period::create(
+        	// 	Carbon::createFromDate(2018,10,15), 
+        	// 	Carbon::create(2018, 11, 06, 23, 59, 59)
+        	// );
 
 			$response = $this->analytics->performQuery(
 

@@ -26,10 +26,15 @@ class ApiUserLimits {
 		$this->companies 	= $companies;
 
 
-		$this->performance->setView(63645499);
-		
-		//BERLIN 112949308
-		//PL 
+		if($this->user->company()->group_id == 1) {
+
+			$this->performance->setView(63645499);
+
+		} else {
+
+			//BERLIN
+			$this->performance->setView(112949308);
+		}
 
 	}
 
