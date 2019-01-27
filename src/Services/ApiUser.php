@@ -153,6 +153,16 @@ class ApiUser {
         })->all();
 	}
 
+
+	public function imageVersion(string $image){
+
+		$test = preg_match("@/image/upload/([v0-9]+/[^\s]+)@i", $image, $img_with_version);
+
+		return $test && !empty($img_with_version[1]) ? $img_with_version[1] : false;
+
+	}
+
+
 	public function setting($name = "lang"){
 
 		$filtered = $this->company()->data->where("name", $name);
