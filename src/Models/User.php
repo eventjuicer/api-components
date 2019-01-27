@@ -5,13 +5,13 @@ namespace Eventjuicer\Models;
 use App\User as BaseUser;
 
 //use Zizaco\Entrust\Traits\EntrustUserTrait;
-use Laravel\Passport\HasApiTokens;
+//use Laravel\Passport\HasApiTokens;
 
 
 class User extends BaseUser
 {
    
-     use HasApiTokens;
+    //use HasApiTokens;
     use Traits\AbleTrait;
     
     //use EntrustUserTrait;
