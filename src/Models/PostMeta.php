@@ -224,7 +224,8 @@ class PostMeta extends Model
 
 		$id = !empty($id) ? $id : $this->id;
 		
-		$ext = $this->find_image_ext($url);
+		//
+		//$ext = $this->find_image_ext($url);
 	
 		if(!$ext){ return false; }
 		

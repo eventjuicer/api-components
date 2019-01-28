@@ -103,7 +103,7 @@ class UrlImage {
 			return sha1($this->safeurl( (string) $this->url )) . "." . $this->url->getExt();
 		}
 
-		return sha1($this->safeurl( (string) $this->url )) . strtolower( $this->find_image_ext( (string) $this->url ) );
+		return sha1($this->safeurl( (string) $this->url )) . strtolower( $this->find_image_ext() );
 		
 	}/*eom*/
 
@@ -154,7 +154,7 @@ class UrlImage {
 
 		$id = !empty($id) ? $id : $this->id;
 		
-		$ext = $this->find_image_ext($url);
+		$ext = $this->find_image_ext();
 	
 		if(!$ext){ return false; }
 		
@@ -188,9 +188,9 @@ class UrlImage {
 	}/*eom*/
 		
 	
-	public function find_image_ext($source )
+	public function find_image_ext( )
 	{
-		if(preg_match_all("@([^\s]+(\.(?i)(jpeg|jpg|png|gif))$)@", (string) $source, $images))
+		if(preg_match_all("@([^\s]+(\.(?i)(jpeg|jpg|png|gif|svg))$)@", (string) $this->url, $images))
 		{
 			return $images[2][0];		
 		}

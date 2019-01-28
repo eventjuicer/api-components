@@ -10,7 +10,10 @@ class CloudinaryImage {
 
 	function __construct(string $path = "")
 	{
+
 		$this->path = new UrlImage( new Url( $path ));
+
+
 	}
 
 	public function isValid(){
@@ -47,7 +50,7 @@ class CloudinaryImage {
 		}
 		//download template.... check dimensions...calculate stuff....
 
-		return 'https://res.cloudinary.com/eventjuicer/image/upload/c_fit,h_270,w_800/u_'.$template.',y_-30/' . $this->version();
+		return 'https://res.cloudinary.com/eventjuicer/image/upload/c_fit,h_270,w_800/u_'.$template.',y_-30/' . str_replace(".svg", ".jpg", $this->version() );
 	}
 
 
