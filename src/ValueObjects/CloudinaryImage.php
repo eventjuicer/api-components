@@ -31,6 +31,26 @@ class CloudinaryImage {
 		return $str;
 	}
 
+	public function version(){
+
+		$test = preg_match("@/image/upload/([v0-9]+/[^\s]+)@i", (string) $this->path , $img_with_version);
+
+		return $test && !empty($img_with_version[1]) ? $img_with_version[1] : false;
+
+	}
+
+	public function wrapped($template = "ebe_template_en")
+	{
+
+		if(!$this->isValid()){
+			return $this->path;
+		}
+		//download template.... check dimensions...calculate stuff....
+
+		return 'https://res.cloudinary.com/eventjuicer/image/upload/c_fit,h_270,w_800/u_'.$template.',y_-30/' . $this->version();
+	}
+
+
 	protected function hasCloudinaryModParams(){
 
 	}

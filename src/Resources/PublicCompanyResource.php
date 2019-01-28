@@ -6,6 +6,8 @@ use Illuminate\Http\Resources\Json\Resource;
  
 use Eventjuicer\Services\Cloudinary; 
 
+use Eventjuicer\ValueObjects\CloudinaryImage;
+
 
 class PublicCompanyResource extends Resource
 {
@@ -60,6 +62,17 @@ class PublicCompanyResource extends Resource
     public function toArray($request)
     {   
 
+
+        $profile = $this->data->whereIn("name", self::$presenterFields)->mapWithKeys(function($item){     
+
+                    return [ $item->name => $item->value ] ;
+
+        })->all();
+
+        //it should be taken from settings....
+        $profile["og_template"] = $this->group_id > 1 ? 'ebe_template' : 'template_4';
+
+
         $data = [
 
             "id" => $this->id,        
@@ -72,15 +85,7 @@ class PublicCompanyResource extends Resource
 
             "promo" => $this->promo,
 
-            "profile"   =>  $this->when(!self::$skipProfile, 
-
-                $this->data->whereIn("name", self::$presenterFields)->mapWithKeys(function($item)
-                {     
-
-                    return [ $item->name => $item->value ] ;
-
-                })->all()
-            ),
+            "profile"   =>  $this->when(!self::$skipProfile, $profile),
 
           	"instances" => $this->when( !self::$skipPurchases, 
                 $this->participants->pluck("ticketpivot")->collapse()->values()
