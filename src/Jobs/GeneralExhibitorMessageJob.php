@@ -27,7 +27,7 @@ class GeneralExhibitorMessageJob extends Job // implements ShouldQueue
      */
 
     protected $participant, $eventId;
-    public $subject, $view, $event_manager, $lang, $domain;
+    public $subject, $view, $event_manager, $viewlang, $lang, $domain;
 
     public function __construct(Participant $participant, int $eventId, array $config)
     {
@@ -36,6 +36,8 @@ class GeneralExhibitorMessageJob extends Job // implements ShouldQueue
         $this->eventId = $eventId;
 
         $this->view = array_get($config, "email");
+        $this->viewlang = array_get($config, "viewlang");
+
         $this->subject = array_get($config, "subject", "Organizacyjnie...");
         $this->event_manager = array_get($config, "event_manager", "");
         $this->lang = array_get($config, "lang", "en");
@@ -69,6 +71,7 @@ class GeneralExhibitorMessageJob extends Job // implements ShouldQueue
                 $this->participant, 
                 $this->subject, 
                 $this->view,
+                $this->viewlang,
                 $this->lang,
                 $this->event_manager,
                 $this->domain
