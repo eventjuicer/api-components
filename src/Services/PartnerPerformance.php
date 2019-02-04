@@ -239,10 +239,18 @@ class PartnerPerformance {
 		$participants->map(function($row) use ($analytics, $glue, $mergeBy)
 		{
 
+			$cd_lookup = $row->data->where("name", "ranking_tweak");
+
+			$tweak_value = $cd_lookup->count() ? intval( $cd_lookup->first()->value ) : 0;
+
 			if(!is_null($row))
 			{
-				$row->{$glue} = $analytics->get($row->$mergeBy, $this->statsDefault);
 
+				$stats = $analytics->get($row->$mergeBy, $this->statsDefault);
+
+				$stats["sessions"] = $stats["sessions"] - $tweak_value;
+
+				$row->{$glue} = $stats;
 			}
 
 
@@ -273,6 +281,8 @@ class PartnerPerformance {
 
 	}
 
+
+	//used by api user limits
 
 	public function getCompanyRankingPosition(ApiUser $apiUser)
 	{
@@ -340,7 +350,7 @@ class PartnerPerformance {
 				[
 				'dimensions' 	=> 'ga:source',
 				'sort' 			=> '-ga:sessions',
-				'filters'		=> 'ga:source=@' . $search
+				'filters'		=> 'ga:source=@' . $search// . '&ga:sessionDuration>'
 				]
 
 			);
@@ -372,8 +382,7 @@ class PartnerPerformance {
 			return $this->role->get($eventId, $role, $withRels);
 		};
 
-
-		return env("USE_CACHE", true) ? $this->cache->remember("xxxxxx" . $role . $eventId, 10, $query) : $query();
+		return env("USE_CACHE", true) ? $this->cache->remember("all_" . $role . "_" . $eventId, 10, $query) : $query();
     
 	}
 

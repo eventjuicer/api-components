@@ -46,7 +46,8 @@ class CompanyData {
     protected $namesInternal = [
         "logotype_cdn",
         "opengraph_image_cdn",
-        "password"
+        "password",
+        "ranking_tweak"
     ];
 
 
