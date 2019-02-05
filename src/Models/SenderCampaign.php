@@ -25,7 +25,8 @@ class SenderCampaign extends Model
     {
     	//return $this->belongsToMany('App\Role', 'user_roles', 'user_id', 'role_id');
 
-    	return $this->belongsToMany('Models\SenderImport', "eventjuicer_sender_campaign_include" , "campaign_id", "import_id")->withTimestamps();
+    	return $this->belongsToMany(SenderImport::class, 
+            "eventjuicer_sender_campaign_include" , "campaign_id", "import_id")->withTimestamps();
 
     }
 
@@ -34,7 +35,8 @@ class SenderCampaign extends Model
     {
         //return $this->belongsToMany('App\Role', 'user_roles', 'user_id', 'role_id');
 
-        return $this->belongsToMany('Models\SenderImport', "eventjuicer_sender_campaign_exclude" , "campaign_id", "import_id")->withTimestamps();
+        return $this->belongsToMany(SenderImport::class, 
+            "eventjuicer_sender_campaign_exclude" , "campaign_id", "import_id")->withTimestamps();
 
     }
 
@@ -43,7 +45,7 @@ class SenderCampaign extends Model
     {
         //return $this->belongsToMany('App\Role', 'user_roles', 'user_id', 'role_id');
 
-        return $this->belongsToMany('Models\SenderImport', "eventjuicer_sender_campaign_include" , "campaign_id", "import_id")->where("started", 1)->withTimestamps();
+        return $this->belongsToMany(SenderImport::class, "eventjuicer_sender_campaign_include" , "campaign_id", "import_id")->where("started", 1)->withTimestamps();
 
     }
 
@@ -51,7 +53,7 @@ class SenderCampaign extends Model
     {
         //return $this->belongsToMany('App\Role', 'user_roles', 'user_id', 'role_id');
 
-        return $this->belongsToMany('Models\SenderImport', "eventjuicer_sender_campaign_exclude" , "campaign_id", "import_id")->where("started", 1)->withTimestamps();
+        return $this->belongsToMany(SenderImport::class, "eventjuicer_sender_campaign_exclude" , "campaign_id", "import_id")->where("started", 1)->withTimestamps();
 
     }
 

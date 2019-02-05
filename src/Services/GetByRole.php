@@ -49,14 +49,19 @@ class GetByRole {
     		return collect([]);
     	}
 
-    	//GET PARTICIPANTS 
-    	$this->participantsRepo->pushCriteria( new WhereIn("id", $participantIds));
-    	if(!empty($withRels) && is_array($withRels))
-    	{
-    		$this->participantsRepo->with($withRels);
-    	}
-    	return $this->participantsRepo->all();
-
+        return $this->getParticipantsByIds($participantIds, $withRels);
 	}
+
+    public function getParticipantsByIds(array $participantIds, $withRels = []){
+
+        //GET PARTICIPANTS 
+        $this->participantsRepo->pushCriteria( new WhereIn("id", $participantIds));
+        if(!empty($withRels) && is_array($withRels))
+        {
+            $this->participantsRepo->with($withRels);
+        }
+        return $this->participantsRepo->all();
+
+    }
 
 }
