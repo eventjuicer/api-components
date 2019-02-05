@@ -69,6 +69,7 @@ class ApiUserLimits {
 
 		$this->stats();
 
+		$tweak = intval( $this->user->setting("invitations_tweak") );
 
 		$name = str_singular($name);
 
@@ -94,11 +95,11 @@ class ApiUserLimits {
 		{
 			case "meetup":
 
-				$base = 5;
+				$base = 15 + $tweak;
 
-				if($this->user->company()->id == 1260){
-					$base = $base + 15;
-				}
+				// if($this->user->company()->id == 1260){
+				// 	$base = $base + 15;
+				// }
 
 				if($this->points() > 19){
 					$earned = $earned + 50;

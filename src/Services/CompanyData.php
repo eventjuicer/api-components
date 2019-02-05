@@ -47,7 +47,8 @@ class CompanyData {
         "logotype_cdn",
         "opengraph_image_cdn",
         "password",
-        "ranking_tweak"
+        "ranking_tweak",
+        "invitations_tweak"
     ];
 
 
