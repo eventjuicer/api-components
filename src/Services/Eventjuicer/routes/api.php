@@ -98,7 +98,7 @@ Route::group(['domain' => '{account}.eventjuicer.com' . $tld, 'middleware' => []
 
 		Route::group(["prefix"=> 'sender'], function()
 		{
-		    // allegro@polak20.pl Biedronka1
+		    
 
 
 			Route::get("/", 							"SenderDashboardController@index");
