@@ -30,22 +30,21 @@ class CompanyRepresentativesJob extends Job // implements ShouldQueue
      * @return void
      */
 
-    protected $participant, $representatives, $eventId, $lang, $event_manager;
+    protected $participant, $representatives, $eventId, $config;
+
 
 
     public function __construct(
         Participant $participant, 
         Collection $representatives,
-        int $eventId, 
-        string $lang="pl",
-        string $event_manager
-    ){
+        int $eventId,
+        array $config){
         
+
         $this->participant   = $participant;
         $this->representatives  = $representatives;
         $this->eventId       = $eventId;
-        $this->lang          = $lang;
-        $this->event_manager = $event_manager;
+        $this->config = $config;
 
     }
 
@@ -74,12 +73,11 @@ class CompanyRepresentativesJob extends Job // implements ShouldQueue
             new Email( 
                 $this->participant, 
                 $this->representatives,
-                $this->lang, 
-                $this->event_manager )
+                $this->config
+            )
         );
 
         //register COMPANY admin message?
-
 
         if(! env("MAIL_TEST", true))
         {
