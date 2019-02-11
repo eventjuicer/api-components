@@ -32,6 +32,11 @@ class PartnerPerformance {
 	
 	protected $statsDefault = ["sessions" => 0, "conversions" => 0];
 
+	
+	protected $startDate;
+	protected $endDate;
+	protected $prefix = "th3rCMiM_";
+
 
 	protected $ebe_prizes = [
   		
@@ -227,6 +232,17 @@ class PartnerPerformance {
 
 	}
 
+	public function setStartDate(DateTime $startDate){
+		$this->startDate = $startDate;
+	}
+
+	public function setEndDate(DateTime $endDate){
+		$this->endDate = $endDate;
+	}
+
+	public function setPrefix(string $prefix){
+		$this->prefix = $prefix;
+	}
 
 	private function merge(Collection $participants, 
 						Collection $analytics, 
@@ -335,12 +351,12 @@ class PartnerPerformance {
 		$query = function() use ($search, $period)
         {
 
-        	$dt = Period::days($period);
+        	//$dt = Period::days($period);
 
-        	// $dt = Period::create(
-        	// 	Carbon::createFromDate(2018,10,15), 
-        	// 	Carbon::create(2018, 11, 06, 23, 59, 59)
-        	// );
+        	$dt = Period::create(
+        		Carbon::createFromDate(2019, 01, 01), 
+        		Carbon::create(2019, 02, 12, 12, 00, 00)
+        	);
 
 			$response = $this->analytics->performQuery(
 
