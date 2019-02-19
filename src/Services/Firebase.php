@@ -20,8 +20,6 @@ class Firebase {
 
 		$this->config = json_decode(fixLocalFileJson(file_get_contents(app()->basePath(".firebase"))));
 
-		return;
-
 		if(is_null($this->config))
 		{
 			throw new \Exception("Error when reading firebase config. " . json_last_error_msg());
