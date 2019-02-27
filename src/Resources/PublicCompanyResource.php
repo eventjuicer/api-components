@@ -48,7 +48,7 @@ class PublicCompanyResource extends Resource
         self::$skipPurchases = false;
     }
 
-      public static function disableProfile()
+    public static function disableProfile()
     {
         self::$skipProfile = true;
     }
@@ -87,16 +87,25 @@ class PublicCompanyResource extends Resource
 
             "profile"   =>  $this->when(!self::$skipProfile, $profile),
 
-          	"instances" => $this->when( !self::$skipPurchases, 
-                $this->participants->pluck("ticketpivot")->collapse()->values()
-            )
+            "instances" =>  !self::$skipPurchases && $this->hasTicketPivot() ? 
+                $this->participants->pluck("ticketpivot")->collapse()->values() : []
             
         ];
 
         
-
-
         return $data;
+    }
+
+
+    protected function hasTicketPivot(){
+
+        $p = $this->relationLoaded("participants");
+
+        if($p){
+            return $this->participants->first()->relationLoaded("ticketpivot");
+        }
+
+        return false;
     }
 }
 
