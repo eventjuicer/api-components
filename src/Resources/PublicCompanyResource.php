@@ -101,7 +101,7 @@ class PublicCompanyResource extends Resource
 
         $p = $this->relationLoaded("participants");
 
-        if($p){
+        if($p && $this->participants->first() ){
             return $this->participants->first()->relationLoaded("ticketpivot");
         }
 
