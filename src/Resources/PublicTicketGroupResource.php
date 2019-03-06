@@ -11,7 +11,7 @@ class PublicTicketGroupResource extends Resource
     public function toArray($request)
     {       
    
-        return [
+        $data = [
 
             "id"                => $this->id,        
             "name"              => $this->name,
@@ -23,6 +23,11 @@ class PublicTicketGroupResource extends Resource
             
             "tickets"           => PublicTicketResource::collection($this->whenLoaded("tickets")),
         ];
+
+        $data["map"]["width"] = isset($data["map"]["width"]) ? intval($data["map"]["width"]) : 0;
+
+        return $data;
+
     }
 }
 
