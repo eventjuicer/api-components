@@ -140,6 +140,7 @@ class SparkPost implements Templated {
 
 		$data = [
 			'content' => [
+				
 			// 'from' => [
 			//     'name' => 'Targi eHandlu',
 			//     'email' => array_get($params, "from")
@@ -169,22 +170,6 @@ class SparkPost implements Templated {
 				    // ],
 				],
 			],
-			// 'cc' => [
-			// [
-			//     'address' => [
-			//         'name' => 'ANOTHER_NAME',
-			//         'email' => 'ANOTHER_EMAIL',
-			//     ],
-			// ],
-			// ],
-			// 'bcc' => [
-			// [
-			//     'address' => [
-			//         'name' => 'AND_ANOTHER_NAME',
-			//         'email' => 'AND_ANOTHER_EMAIL',
-			//     ],
-			// ],
-			// ],
 		];
 
 		if( isset($params["cc"]) && filter_var($params["cc"], FILTER_VALIDATE_EMAIL) ){
@@ -196,6 +181,19 @@ class SparkPost implements Templated {
 			$data["cc"][] = ["address" => [
 				"name" => $params["cc"],
 				"email" => $params["cc"]
+			]];
+ 
+		}
+
+		if( isset($params["bcc"]) && filter_var($params["bcc"], FILTER_VALIDATE_EMAIL) ){
+
+			if(!isset($data["bcc"])){
+				$data["bcc"] = array();
+			}
+
+			$data["bcc"][] = ["address" => [
+				"name" => $params["bcc"],
+				"email" => $params["bcc"]
 			]];
  
 		}
