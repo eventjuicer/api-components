@@ -5,7 +5,7 @@ namespace Eventjuicer\Models;
 use Illuminate\Database\Eloquent\Model;
  
 
-class ParticipanDelivery extends Model
+class ParticipantDelivery extends Model
 {
 
     protected $table = "bob_participant_deliveries";

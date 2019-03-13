@@ -25,7 +25,7 @@ class SparkPost implements Templated {
 		 
 	];
 
-	function __construct(ParticipantDeliveryRepository $deliveries, Request $request)
+	function __construct(Request $request, ParticipantDeliveryRepository $deliveries)
 	{
 
 		$this->deliveries = $deliveries;

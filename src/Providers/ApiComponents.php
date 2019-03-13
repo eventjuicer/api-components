@@ -13,6 +13,10 @@ use Eventjuicer\Services\ParticipantPromoCreatives;
 use Eventjuicer\Repositories\ParticipantRepository;
 use Eventjuicer\Repositories\CreativeRepository;
 use Eventjuicer\Repositories\CreativeTemplateRepository;
+use Eventjuicer\Repositories\ParticipantDeliveryRepository;
+
+
+
 
 use Eventjuicer\Services\SparkPost;
 use Eventjuicer\Contracts\Email\Templated;
@@ -62,8 +66,9 @@ class ApiComponents extends ServiceProvider
 
             return new SparkPost(
 
-                $app["request"]
+                $app["request"],
 
+                $app->make(ParticipantDeliveryRepository::class)
             );
 
         });

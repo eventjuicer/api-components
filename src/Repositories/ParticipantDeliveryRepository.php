@@ -2,7 +2,7 @@
 
 namespace Eventjuicer\Repositories;
 
-use Eventjuicer\Models\ParticipanDelivery;
+use Eventjuicer\Models\ParticipantDelivery;
 use Eventjuicer\Repositories\Repository;
 
 use Carbon\Carbon;
@@ -17,7 +17,7 @@ class ParticipantDeliveryRepository extends Repository
 
     public function model()
     {
-        return ParticipanDelivery::class;
+        return ParticipantDelivery::class;
     }
 
     public function updateAfterSend(string $email, int $eventId)
