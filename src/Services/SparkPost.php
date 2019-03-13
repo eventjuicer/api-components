@@ -7,16 +7,17 @@ use Illuminate\Support\Collection;
 use Eventjuicer\Contracts\Email\Templated;
 
 use SparkPost\SparkPost as SparkPostLib;
-use SparkPost\SparkPostException;
 
 use GuzzleHttp\Client;
 use Http\Adapter\Guzzle6\Client as GuzzleAdapter;
 use Illuminate\Http\Request;
+use Eventjuicer\Repositories\ParticipantDeliveryRepository;
+
 
 class SparkPost implements Templated {
 
 	
-	protected $sparky;
+	protected $sparky, $deliveries;
 
 	protected $defaultParams = [
 
@@ -24,8 +25,11 @@ class SparkPost implements Templated {
 		 
 	];
 
-	function __construct(Request $request)
+	function __construct(ParticipantDeliveryRepository $deliveries, Request $request)
 	{
+
+		$this->deliveries = $deliveries;
+
 		$httpClient = new GuzzleAdapter(new Client());
 		
 		$this->sparky = new SparkPostLib($httpClient, [
@@ -67,14 +71,14 @@ class SparkPost implements Templated {
 	}
 
 
-	public function bulk(Collection $recipients, array $data)
+	public function bulk(Collection $recipients, array $data, $eventId = 0)
 	{
 
 		//check if we have legacy placeholders
 
 		$substitutionData = $this->substitutionData($data["message"] . $data["subject"]);
  
-		$recipients = $recipients->map(function($item) use ($substitutionData) {
+		$mappedRecipients = $recipients->map(function($item) use ($substitutionData) {
 
 				$subdata = $item->filter($substitutionData);
 	
@@ -121,7 +125,7 @@ class SparkPost implements Templated {
 
 			//'substitution_data' => [],
 
-			'recipients' => $recipients, 
+			'recipients' => $mappedRecipients, 
 
 		]);
 
@@ -130,6 +134,15 @@ class SparkPost implements Templated {
 
 			
 			$response = $promise->wait();
+
+
+			if($eventId > 0 && !env("MAIL_TEST", true) )
+	        {
+
+	        	foreach($recipients AS $recipient){
+	        		$this->deliveries->updateAfterSend($recipient->email, $eventId);
+	        	}
+        	}
 			
 			return [
 
@@ -138,14 +151,14 @@ class SparkPost implements Templated {
 
 			];
 
-		} catch (SparkPostException $e) {
+		} catch (\Exception $e) {
 			
 			return [
 
-				"code" 		=> $response->getCode(),
-				"message" 	=> $response->getMessage(),
-				"body"		=> $response->getBody(),
-				"request"	=> $response->getRequest()
+				"code" 		=> $e->getCode(),
+				"message" 	=> $e->getMessage(),
+				"body"		=> $e->getBody(),
+				"request"	=> $e->getRequest()
 
 			];
 
@@ -154,7 +167,7 @@ class SparkPost implements Templated {
 
 	}
 
-	public function send(array $params = [])
+	public function send(array $params = [], $eventId = 0)
 	{
 
 		$params = array_merge($this->defaultParams, $params);
@@ -223,17 +236,27 @@ class SparkPost implements Templated {
 		$promise = $this->sparky->transmissions->post($data);
 
 		try {
+			
+
 			$response = $promise->wait();
+
+
+			if($eventId > 0 && !env("MAIL_TEST", true) )
+	        {
+	        	$this->deliveries->updateAfterSend(array_get($params, "recipient.email", ""), $eventId);
+        	}
+
 			return $response->getStatusCode();
+			
 			//$response->getBody();
-		} catch (SparkPostException $e) {
+		} catch (\Exception $e) {
 			
 			return [
 
-				"code" 		=> $response->getCode(),
-				"message" 	=> $response->getMessage(),
-				"body"		=> $response->getBody(),
-				"request"	=> $response->getRequest()
+				"code" 		=> $e->getCode(),
+				"message" 	=> $e->getMessage(),
+				"body"		=> $e->getBody(),
+				"request"	=> $e->getRequest()
 
 			];
 		}
