@@ -91,7 +91,7 @@ class SparkPost implements Templated {
 		$promise = $this->sparky->transmissions->post([
 
 			"options" => [
-				"open_tracking" => true,
+				"open_tracking" => false,
 				"click_tracking" => false,
 				"transactional" => false,
 				// "sandbox" => false,
@@ -124,7 +124,7 @@ class SparkPost implements Templated {
 		try {
 			$response = $promise->wait();
 		//	return $response->getStatusCode();
-			return $response->getBody();
+			return $response->getBody() . $response->getStatusCode();
 		} catch (\Exception $e) {
 			//return $e->getCode();
 			return $e->getCode() . $e->getMessage();
@@ -140,7 +140,7 @@ class SparkPost implements Templated {
 
 		$data = [
 			'content' => [
-				
+
 			// 'from' => [
 			//     'name' => 'Targi eHandlu',
 			//     'email' => array_get($params, "from")
