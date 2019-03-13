@@ -7,6 +7,8 @@ use Illuminate\Support\Collection;
 use Eventjuicer\Contracts\Email\Templated;
 
 use SparkPost\SparkPost as SparkPostLib;
+use SparkPost\SparkPostException;
+
 use GuzzleHttp\Client;
 use Http\Adapter\Guzzle6\Client as GuzzleAdapter;
 use Illuminate\Http\Request;
@@ -89,9 +91,8 @@ class SparkPost implements Templated {
 
 		})->all();
 
-		try {
 
-			$promise = $this->sparky->transmissions->post([
+		$promise = $this->sparky->transmissions->post([
 
 			"options" => [
 				"open_tracking" => false,
@@ -122,9 +123,22 @@ class SparkPost implements Templated {
 
 			'recipients' => $recipients, 
 
-			]);
+		]);
+
+
+		try {
+
 			
 			$response = $promise->wait();
+			
+			return [
+
+				"code" 		=> $response->getStatusCode(),
+				"body"		=> $response->getBody(),
+
+			];
+
+		} catch (SparkPostException $e) {
 			
 			return [
 
@@ -135,9 +149,6 @@ class SparkPost implements Templated {
 
 			];
 
-		} catch (\Exception $e) {
-			//return $e->getCode();
-			return $e->getCode() . $e->getMessage();
 		}
 
 
@@ -215,9 +226,16 @@ class SparkPost implements Templated {
 			$response = $promise->wait();
 			return $response->getStatusCode();
 			//$response->getBody();
-		} catch (\Exception $e) {
-			return $e->getCode();
-			//$e->getMessage();
+		} catch (SparkPostException $e) {
+			
+			return [
+
+				"code" 		=> $response->getCode(),
+				"message" 	=> $response->getMessage(),
+				"body"		=> $response->getBody(),
+				"request"	=> $response->getRequest()
+
+			];
 		}
 
 
