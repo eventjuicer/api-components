@@ -28,7 +28,9 @@ class SparkPost implements Templated {
 		
 		$this->sparky = new SparkPostLib($httpClient, [
 			'key'=> env("SPARKPOST_SECRET"), 
-			'async' => true ]);
+			'debug' => true,
+			'async' => true
+		]);
 	}
 
 	public function preview($templateId, array $substitution_data = [])
@@ -87,8 +89,9 @@ class SparkPost implements Templated {
 
 		})->all();
 
+		try {
 
-		$promise = $this->sparky->transmissions->post([
+			$promise = $this->sparky->transmissions->post([
 
 			"options" => [
 				"open_tracking" => false,
@@ -115,16 +118,23 @@ class SparkPost implements Templated {
 
 			],
 
-		//	'substitution_data' => [],
+			//'substitution_data' => [],
 
 			'recipients' => $recipients, 
 
-		]);
-
-		try {
+			]);
+			
 			$response = $promise->wait();
-		//	return $response->getStatusCode();
-			return $response->getBody() . $response->getStatusCode();
+			
+			return [
+
+				"code" 		=> $response->getCode(),
+				"message" 	=> $response->getMessage(),
+				"body"		=> $response->getBody(),
+				"request"	=> $response->getRequest()
+
+			];
+
 		} catch (\Exception $e) {
 			//return $e->getCode();
 			return $e->getCode() . $e->getMessage();
