@@ -112,7 +112,7 @@ class SendAdminMessage {
 
 		$all =  $all->filter(function($model) {
 
-			return (bool) $model->ticketpivot->where("sold", 1)->count();
+			return ( $model->ticketpivot->where("sold", 1)->count() > 0 ) ? true : false;
 		});
 
 		// $this->sendable->checkUniqueness( $uniqueCheck);

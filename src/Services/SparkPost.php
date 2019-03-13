@@ -63,7 +63,7 @@ class SparkPost implements Templated {
 	{
 		preg_match_all("@{{(?P<full>(?P<name>[a-zA-Z0-9_\-]+)(\?(?P<options>[a-z0-9=_\-&;]+)|))}}@i", $str, $matches);
 
-		return $matches["name"];
+		return !empty($matches["name"]) ? $matches["name"] : [];
 	}
 
 
@@ -95,11 +95,11 @@ class SparkPost implements Templated {
 		$promise = $this->sparky->transmissions->post([
 
 			"options" => [
-				"open_tracking" => false,
+				"open_tracking" => true,
 				"click_tracking" => false,
 				"transactional" => false,
-				// "sandbox" => false,
-				// "inline_css" => false
+				//"sandbox" => false,
+				//"inline_css" => false
 			], 
    
 			'content' => [

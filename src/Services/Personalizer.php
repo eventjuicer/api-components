@@ -6,8 +6,9 @@ namespace Eventjuicer\Services;
 use Eventjuicer\ValueObjects\EmailAddress;
 use Illuminate\Database\Eloquent\Model;
 use Eventjuicer\Services\Hashids;
+use Illuminate\Contracts\Support\Arrayable;
 
-class Personalizer {
+class Personalizer implements Arrayable {
 
 
 	const VALID_FIELDNAME = "@\[\[(?P<full>(?P<name>[a-zA-Z0-9_\-]+)(\?(?P<options>[a-z0-9=_\-&;]+)|))\]\]@i";
@@ -54,6 +55,10 @@ class Personalizer {
 		
 	}/*eom*/
 
+
+	public function toArray(){
+		return $this->getProfile(true);
+	}
 
 	public function getProfile($enrich = false)
 	{
