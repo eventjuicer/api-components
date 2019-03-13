@@ -138,8 +138,7 @@ class SparkPost implements Templated {
 
 		$params = array_merge($this->defaultParams, $params);
 
-
-		$promise = $this->sparky->transmissions->post([
+		$data = [
 			'content' => [
 			// 'from' => [
 			//     'name' => 'Targi eHandlu',
@@ -186,7 +185,23 @@ class SparkPost implements Templated {
 			//     ],
 			// ],
 			// ],
-		]);
+		];
+
+		if( isset($params["cc"]) && filter_var($params["cc"], FILTER_VALIDATE_EMAIL) ){
+
+			if(!isset($data["cc"])){
+				$data["cc"] = array();
+			}
+
+			$data["cc"][] = ["address" => [
+				"name" => $params["cc"],
+				"email" => $params["cc"]
+			]];
+ 
+		}
+
+
+		$promise = $this->sparky->transmissions->post($data);
 
 		try {
 			$response = $promise->wait();

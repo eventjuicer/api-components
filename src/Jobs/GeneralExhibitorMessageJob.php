@@ -36,9 +36,9 @@ class GeneralExhibitorMessageJob extends Job // implements ShouldQueue
         $this->eventId = $eventId;
 
         $this->view = array_get($config, "email");
-        $this->viewlang = array_get($config, "viewlang");
+        $this->viewlang = array_get($config, "viewlang", "en");
 
-        $this->subject = array_get($config, "subject", "Organizacyjnie...");
+        $this->subject = array_get($config, "subject", "");
         $this->event_manager = array_get($config, "event_manager", "");
         $this->lang = array_get($config, "lang", "en");
         $this->domain = array_get($config, "domain", "");
