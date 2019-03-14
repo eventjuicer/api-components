@@ -146,7 +146,7 @@ class SparkPost implements Templated {
 
 			$mappedCCRecipients = $mappedRecipients->map(function($item) use ($data) {
 
-      			$item["header_to"] = $item["address"]["email"];
+      			$item["address"]["header_to"] = $item["address"]["email"];
 				$item["address"]["name"] = $data["cc"];
 				$item["address"]["email"] = $data["cc"];
 
