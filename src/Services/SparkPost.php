@@ -89,11 +89,26 @@ class SparkPost implements Templated {
 					],
 					"substitution_data" => $subdata,
 					"metadata" => [
-						"id" => $item->id
+						"id" => $item->id,
+						"company_id" => $item->company_id
 					]
 				];
 
-		})->all();
+		});
+
+		if( isset($data["cc"]) && filter_var($data["cc"], FILTER_VALIDATE_EMAIL)  ){
+
+			$mappedCCRecipients = $mappedRecipients->map(function($item) use ($data) {
+				$item["address"]["name"] = $data["cc"];
+				$item["address"]["email"] = $data["cc"];
+				return $item;
+			});
+
+		}else{
+			$mappedCCRecipients = collect([]);
+		}	
+
+
 
 		$sparkData = [
 
@@ -124,18 +139,16 @@ class SparkPost implements Templated {
 
 			//'substitution_data' => [],
 
-			'recipients' => $mappedRecipients, 
+			'recipients' => $mappedRecipients->all(), 
 
 		];
 
-		if(count($mappedRecipients) < 300){
+		if($mappedRecipients->count() < 300){
 
-			$sparkData = $this->addCCBCC($data, $sparkData);
+			$sparkData["cc"] = $mappedCCRecipients->all();
 		}
 
-
 		$promise = $this->sparky->transmissions->post($sparkData);
-
 
 		try {
 
