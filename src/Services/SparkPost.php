@@ -96,18 +96,7 @@ class SparkPost implements Templated {
 
 		});
 
-		if( isset($data["cc"]) && filter_var($data["cc"], FILTER_VALIDATE_EMAIL)  ){
-
-			$mappedCCRecipients = $mappedRecipients->map(function($item) use ($data) {
-				$item["address"]["name"] = $data["cc"];
-				$item["address"]["email"] = $data["cc"];
-				return $item;
-			});
-
-		}else{
-			$mappedCCRecipients = collect([]);
-		}	
-
+	
 
 
 		$sparkData = [
@@ -143,9 +132,30 @@ class SparkPost implements Templated {
 
 		];
 
-		if($mappedRecipients->count() < 300){
 
-			$sparkData["cc"] = $mappedCCRecipients->all();
+
+
+		if( $mappedRecipients->count() < 300 && isset($data["cc"]) && filter_var($data["cc"], FILTER_VALIDATE_EMAIL)  ){
+
+
+			if(!isset($sparkData["content"]["headers"])){
+				$sparkData["content"]["headers"] = array();
+			}
+
+			$sparkData["content"]["headers"]["CC"] = $data["cc"];
+
+			$mappedCCRecipients = $mappedRecipients->map(function($item) use ($data) {
+
+
+      			$item["header_to"] = $item["address"]["email"];
+				$item["address"]["name"] = $data["cc"];
+				$item["address"]["email"] = $data["cc"];
+
+				return $item;
+			});
+
+			$sparkData["recipients"] = array_merge($sparkData["recipients"], $mappedCCRecipients->all() );
+
 		}
 
 		$promise = $this->sparky->transmissions->post($sparkData);
