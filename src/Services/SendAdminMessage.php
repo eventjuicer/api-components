@@ -74,7 +74,7 @@ class SendAdminMessage {
             $errors[] = "sender.empty";
         }
 
-        if(!empty($data["appendlink"]) && (empty($data["accesslink"]) || empty($data["accesslink"]["href"]) ))
+        if(!empty($data["appendlink"]) && empty($data["accesslink"]) )
         {
             $errors[] = "sender.empty";
         }
@@ -90,12 +90,12 @@ class SendAdminMessage {
 
 		if(isset($data["accesslink"]))
 		{
-			$data["accesslink"]["href"] = str_replace(["[[", "]]"], ["{{", "}}"], array_get($data, "accesslink.href", ""));
+			$data["accesslink"] = str_replace(["[[", "]]"], ["{{", "}}"], $data["accesslink"]);
 		}
 
 		if(!empty($data["appendlink"]))
 		{
-			$data["message"] = $data["message"] . PHP_EOL . $data["accesslink"]["href"];
+			$data["message"] = $data["message"] . PHP_EOL . $data["accesslink"];
 		}
 
 		return $data;
@@ -122,7 +122,7 @@ class SendAdminMessage {
 		// }
 
 		$this->sendable->setMuteTime(15);
-		
+
 		$this->sendable->checkUniqueness( $uniqueCheck );
 	
 		//check if we do not spam too much....
