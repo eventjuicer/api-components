@@ -121,7 +121,7 @@ class SendAdminMessage {
 		// 	$all = $all->keyBy("email")->values();
 		// }
 
-		$this->sendable->setMuteTime(60);
+		$this->sendable->setMuteTime(30);
 		$this->sendable->checkUniqueness( $uniqueCheck );
 	
 		//check if we do not spam too much....

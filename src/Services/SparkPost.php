@@ -95,8 +95,7 @@ class SparkPost implements Templated {
 
 		})->all();
 
-
-		$promise = $this->sparky->transmissions->post([
+		$sparkData = [
 
 			"options" => [
 				"open_tracking" => true,
@@ -127,7 +126,15 @@ class SparkPost implements Templated {
 
 			'recipients' => $mappedRecipients, 
 
-		]);
+		];
+
+		if(count($mappedRecipients) < 300){
+
+			$sparkData = $this->addCCBCC($data, $sparkData);
+		}
+
+
+		$promise = $this->sparky->transmissions->post($sparkData);
 
 
 		try {
@@ -172,7 +179,7 @@ class SparkPost implements Templated {
 
 		$params = array_merge($this->defaultParams, $params);
 
-		$data = [
+		$sparkData = [
 			'content' => [
 
 			// 'from' => [
@@ -206,34 +213,10 @@ class SparkPost implements Templated {
 			],
 		];
 
-		if( isset($params["cc"]) && filter_var($params["cc"], FILTER_VALIDATE_EMAIL) ){
-
-			if(!isset($data["cc"])){
-				$data["cc"] = array();
-			}
-
-			$data["cc"][] = ["address" => [
-				"name" => $params["cc"],
-				"email" => $params["cc"]
-			]];
- 
-		}
-
-		if( isset($params["bcc"]) && filter_var($params["bcc"], FILTER_VALIDATE_EMAIL) ){
-
-			if(!isset($data["bcc"])){
-				$data["bcc"] = array();
-			}
-
-			$data["bcc"][] = ["address" => [
-				"name" => $params["bcc"],
-				"email" => $params["bcc"]
-			]];
- 
-		}
+		$sparkData = $this->addCCBCC($params, $sparkData);
 
 
-		$promise = $this->sparky->transmissions->post($data);
+		$promise = $this->sparky->transmissions->post($sparkData);
 
 		try {
 			
@@ -263,6 +246,38 @@ class SparkPost implements Templated {
 
 
 
+	}
+
+
+	protected function addCCBCC(array $params, array $data){
+
+		if( isset($params["cc"]) && filter_var($params["cc"], FILTER_VALIDATE_EMAIL) ){
+
+			if(!isset($data["cc"])){
+				$data["cc"] = array();
+			}
+
+			$data["cc"][] = ["address" => [
+				"name" => $params["cc"],
+				"email" => $params["cc"]
+			]];
+ 
+		}
+
+		if( isset($params["bcc"]) && filter_var($params["bcc"], FILTER_VALIDATE_EMAIL) ){
+
+			if(!isset($data["bcc"])){
+				$data["bcc"] = array();
+			}
+
+			$data["bcc"][] = ["address" => [
+				"name" => $params["bcc"],
+				"email" => $params["bcc"]
+			]];
+ 
+		}
+
+		return $data;
 	}
 
 }
