@@ -19,12 +19,20 @@ class CompanyUpgradeResource extends Resource
         $data["event_id"] = $this->event_id;
         $data["names"] = $this->names;
         $data["price"] = $this->price;
-        $data["limit"] = $this->limit;
-        $data["max_quantity"] = $this->max;
+       
+        // $data["limit"] = $this->limit;
+        // $data["max_quantity"] = $this->max;
+        
         $data["role"] = $this->role;
+        
         $data["start"] = (string)  $this->start;
         $data["end"] = (string) $this->end;
+        $data["change"] = (string) $this->change;
+
+        $data["changeable"] = $this->changeable;
+
         $data["in_dates"] = $this->in_dates;
+
         $data["remaining"] = $this->remaining;
         $data["bookable"] = $this->bookable;
         $data["booked"] = $this->booked;
