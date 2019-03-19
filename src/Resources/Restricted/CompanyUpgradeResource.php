@@ -42,6 +42,8 @@ class CompanyUpgradeResource extends Resource
         $data["thumbnail"] = $this->thumbnail;
         $data["image"] = $this->image;
 
+        $data["purchase_ids"] = $this->transactions->pluck("purchase_id");
+
         $data["transactions"] = CompanyUpgradePurchaseResource::collection($this->transactions);
         
         return $data;
