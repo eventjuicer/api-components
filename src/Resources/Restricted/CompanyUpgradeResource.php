@@ -3,7 +3,7 @@
 namespace Eventjuicer\Resources\Restricted;
 
 use Illuminate\Http\Resources\Json\Resource;
-
+use Eventjuicer\Resources\PurchaseResource;
 
 
 class CompanyUpgradeResource extends Resource
@@ -19,11 +19,12 @@ class CompanyUpgradeResource extends Resource
         $data["event_id"] = $this->event_id;
         $data["names"] = $this->names;
         $data["price"] = $this->price;
-       
+        
+        //these are bare ticket info so we do not actually need it!
         // $data["limit"] = $this->limit;
         // $data["max_quantity"] = $this->max;
         
-        $data["role"] = $this->role;
+        $data["role"] = (string) $this->role;
         
         $data["start"] = (string)  $this->start;
         $data["end"] = (string) $this->end;
@@ -36,9 +37,12 @@ class CompanyUpgradeResource extends Resource
         $data["remaining"] = $this->remaining;
         $data["bookable"] = $this->bookable;
         $data["booked"] = $this->booked;
-        
+        $data["unpaid"] = $this->unpaid;
+
         $data["thumbnail"] = $this->thumbnail;
         $data["image"] = $this->image;
+
+        $data["transactions"] = CompanyUpgradePurchaseResource::collection($this->transactions);
         
         return $data;
 
