@@ -38,6 +38,18 @@ class ChangeOrderStatus {
 		return $participant->fresh();
 	}
 
+	public function owner(int $id, array $owners){
+
+		$purchase = Purchase::find($id);
+
+
+		if(!in_array($purchase->participant_id, $owners)){
+			throw new \Exception("Access denied!");
+		}
+
+		return $this->purchase($id, "cancelled");
+	}
+
 	public function purchase(int $id, string $newStatus){
 
 
@@ -53,7 +65,7 @@ class ChangeOrderStatus {
 		}
 
 		if($purchase->status === $newStatus){
-		//	return $purchase; //nothing to do!
+			return $purchase; //nothing to do!
 		}
 
 		$purchase->status = $newStatus;
