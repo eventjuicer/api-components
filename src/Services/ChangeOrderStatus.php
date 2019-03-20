@@ -38,13 +38,16 @@ class ChangeOrderStatus {
 		return $participant->fresh();
 	}
 
-	public function owner(int $id, array $owners){
+	public function owner(int $id, array $owners, array $currentStatuses=["new"]){
 
 		$purchase = Purchase::find($id);
 
-
 		if(!in_array($purchase->participant_id, $owners)){
 			throw new \Exception("Access denied!");
+		}
+
+		if(!in_array($purchase->status, $currentStatuses)){
+			throw new \Exception("Cannot change purchase with current status!");
 		}
 
 		return $this->purchase($id, "cancelled");
