@@ -45,6 +45,12 @@ class Purchase extends Model
     	return $this->hasMany(Field::class);
     }
 
+    public function ticketpivot()
+    {
+        return $this->hasMany(ParticipantTicket::class, "purchase_id");
+    }
+
+
     // public function tickets()
     // {
     //     //return $this->hasMany("Models\PurchaseTickets");

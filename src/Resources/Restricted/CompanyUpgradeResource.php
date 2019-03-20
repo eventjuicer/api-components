@@ -15,7 +15,10 @@ class CompanyUpgradeResource extends Resource
     {       
 
         $data = [];
+        
         $data["id"] = $this->id;
+        $data["ticket_id"] = $this->id;
+
         $data["event_id"] = $this->event_id;
         $data["names"] = $this->names;
         $data["price"] = $this->price;
@@ -44,7 +47,7 @@ class CompanyUpgradeResource extends Resource
 
         $data["purchase_ids"] = $this->transactions->pluck("purchase_id");
 
-        $data["transactions"] = CompanyUpgradePurchaseResource::collection($this->transactions);
+      //  $data["transactions"] = CompanyUpgradePurchaseResource::collection($this->transactions);
         
         return $data;
 
