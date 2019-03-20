@@ -29,7 +29,7 @@ class CompanyPurchaseResource extends Resource
 
 
         $data["status"]     = $this->status;
-        $data["amount"]     = $this->amount;
+        $data["amount"]     = number_format($this->amount - $this->discount, 2);
 
         $data["finalized"]  = $this->paid;
         $data["ts"]         = (string) $this->updatedon;
