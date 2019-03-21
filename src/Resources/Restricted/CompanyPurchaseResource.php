@@ -23,13 +23,15 @@ class CompanyPurchaseResource extends Resource
 
         $data["tickets"]    = CompanyTicketPivotResource::collection($this->ticketpivot);
 
-        $data["buyer_id"]  = $this->participant_id;
+        $data["buyer_id"]   = $this->participant_id;
         $data["buyer_email"] = $this->participant->email;
         $data["company_id"]  = $this->participant->company_id;
 
 
         $data["status"]     = $this->status;
         $data["amount"]     = max(0, intval($this->amount) - intval($this->discount) );
+
+        $data["locale"]     = $this->locale; 
 
         $data["finalized"]  = $this->paid;
         $data["ts"]         = (string) $this->updatedon;
