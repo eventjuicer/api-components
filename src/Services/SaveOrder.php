@@ -316,16 +316,14 @@ class SaveOrder {
 	}
 
 
-	public function updateFields($participant_id, array $fields = [])
+	public function updateFields()
 	{
 
-		$user = Participant::find( $participant_id );
-
-		if(empty($user->id)){
-			throw new \Exception("No such user!");
+		if(empty($this->participant_id)){
+			throw new \Exception("No participant defined!");
 		}
 
-		foreach($fields as $field_name => $field_value)
+		foreach($this->fields as $field_name => $field_value)
 		{
 
 			//this is senseless... array should be checked..!
@@ -343,18 +341,20 @@ class SaveOrder {
 			];
 
 
-			$exists = $user->fields()->where("field_id", $field->id)->exists();
+			$exists = $this->participant->fields()->where("field_id", $field->id)->exists();
 
 			if($exists){
 
-				$user->fields()->updateExistingPivot($field->id, $data);
+				$this->participant->fields()->updateExistingPivot($field->id, $data);
 
 			}else{
 
-				$user->fields()->attach($field->id, $data);
+				$this->participant->fields()->attach($field->id, $data);
 			}
 
 		}
+
+		$this->participant = $this->participant->fresh();
 
 	}
 
