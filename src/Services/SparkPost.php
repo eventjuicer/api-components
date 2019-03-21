@@ -273,29 +273,33 @@ class SparkPost implements Templated {
 
 	protected function addCCBCC(array $params, array $data){
 
+		if(count($data["recipients"]) > 1 || !array_get( $data["recipients"][0], "address.email", false) ){
+			return $data;
+		}
+
 		if( isset($params["cc"]) && filter_var($params["cc"], FILTER_VALIDATE_EMAIL) ){
 
-			if(!isset($data["cc"])){
-				$data["cc"] = array();
-			}
+			$data["content"]["headers"]["CC"] = $params["cc"];
 
-			$data["cc"][] = ["address" => [
-				"name" => $params["cc"],
-				"email" => $params["cc"]
-			]];
- 
+			$data["recipients"][] = [
+				"address" => [
+					"header_to" => 	$data["recipients"][0]["address"]["email"],
+					"email" => $params["cc"]
+				]
+			];
+
 		}
 
 		if( isset($params["bcc"]) && filter_var($params["bcc"], FILTER_VALIDATE_EMAIL) ){
 
-			if(!isset($data["bcc"])){
-				$data["bcc"] = array();
-			}
+			$data["content"]["headers"]["BCC"] = $params["bcc"];
 
-			$data["bcc"][] = ["address" => [
-				"name" => $params["bcc"],
-				"email" => $params["bcc"]
-			]];
+			$data["recipients"][] = [
+				"address" => [
+					"header_to" => 	$data["recipients"][0]["address"]["email"],
+					"email" => $params["bcc"]
+				]
+			];
  
 		}
 
