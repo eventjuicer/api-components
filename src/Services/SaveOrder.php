@@ -22,34 +22,37 @@ use Eventjuicer\Models\ParticipantFields;
 use Eventjuicer\Models\Purchase;
 use Eventjuicer\Models\Input;
 use Eventjuicer\Models\Ticket;
-
-
+use Illuminate\Database\Eloquent\Model;
 
 use Uuid;
 use Carbon\Carbon;
-
-
 
 class SaveOrder {
 
 //	use ProvidesConvenienceMethods;
 
 	protected $request;
-	protected $participant;
 	protected $purchase;
 
-
-	protected $tickets = [];
-	protected $fields = [];
 	protected $amount = 0;
 	protected $currency = "PLN";
 	protected $discount = "";
 	protected $discount_code_id = 0;
-
+	
 	protected $defaultLocale = "pl";
 	protected $locale = "pl";
 
-	protected $organizer_id, $group_id, $event_id = 0;
+	protected $tickets = [];
+	protected $fields = [];
+	protected $parent_id = 0;
+	protected $parent = null;
+	protected $company_id = 0;
+	protected $participant_id = 0;
+	protected $participant = null;
+	protected $organizer_id = 0;
+	protected $group_id = 0;
+	protected $event_id = 0;
+	protected $validate = true;
 
 
 	function __construct(Request $request)
@@ -57,10 +60,79 @@ class SaveOrder {
 		$this->request = $request;
 	}
 
-	function setLocale(string $locale){
+	/* SETTERS */
 
-		$this->locale = $locale;
+	public function setLocale(string $locale){
+
+		if(strlen($locale) === 2){
+			$this->locale = $locale;
+		}
 	}
+
+	public function setFields(array $fields){
+		$this->fields 	= $fields;
+	}
+
+	public function setTickets(array $tickets){
+		$this->tickets 	= $tickets;
+	}
+
+	public function setParticipantId(int $participant_id){
+
+		$participant = Participant::find($participant_id);
+
+		if($participant_id > 0 && $participant){
+			$this->participant_id = $participant_id;
+			$this->participant = $participant;
+		}
+	}
+
+	public function setParticipant(Model $model){
+		$this->participant_id = $model->id;
+		$this->participant = $model;
+	}
+
+	public function setParentId(int $parent_id){
+		
+		$parent = Participant::find($parent_id);
+
+		if($parent_id > 0 && $parent){
+
+			$this->parent_id = $parent_id;
+
+			if($parent->company_id){
+				$this->company_id = $parent->company_id;
+			}
+		}
+	}
+
+	public function setParent(Model $model){
+		$this->parent_id = $model->id;
+		$this->parent = $model;
+
+		if($model->company_id){
+			$this->company_id = $model->company_id;
+		}
+	}
+
+	public function skipValidation(bool $skip = true){
+		$this->validate = !$skip;
+	}
+
+	public function setEvent(int $event_id){
+		//generally it should be taken from tickets! :)
+
+		$event = Event::find($event_id);
+
+		if($event_id > 0 && $event){
+			$this->event_id 		= $event_id;
+			$this->group_id 		= $event->group_id;
+			$this->organizer_id 	= $event->organizer_id;
+		}
+
+	}
+
+	/* GETTERS */
 
 	function getParticipant()
 	{
@@ -72,30 +144,15 @@ class SaveOrder {
 		return $this->purchase;
 	}
 
-
-	function configure($event_id){
-
-
-		$event = Event::find($event_id);
-
-		$this->event_id 		= $event_id;
-		$this->group_id 		= $event->group_id;
-		$this->organizer_id 	= $event->organizer_id;
-
-	}
-
-
 	function make(
 							$event_id = 0, 
 							$participant_id = 0, 
 							array $tickets, 
 							array $fields, 
 							$skipValidation = false, 
-							$parent_id = 0
+							$parent_id = 0,
+							$locale = ""
 	) {
-
-		$this->tickets 	= $tickets;
-		$this->fields 	= $fields;
 
 
 		if(! (int) $event_id && ! (int) $participant_id)
@@ -104,21 +161,26 @@ class SaveOrder {
 		}
 
 
+		$this->setLocale($locale);
+		$this->setTickets($tickets);
+		$this->setFields($fields);
+		$this->setEvent($event_id);
+		$this->setParentId($parent_id);
+		$this->setParticipantId($participant_id);
+		$this->skipValidation($skipValidation);
 
-		$this->configure( $event_id );
 
-		
 
-		if( ! $skipValidation )
+		if( ! $this->validate )
 		{
 
-			if( ! $this->validateFields($fields))
+			if( ! $this->validateFields())
 			{
 				throw new \Exception("Problem with fields");
 			}
 
 
-			if( ! $this->validateTickets($tickets))
+			if( ! $this->validateTickets())
 			{
 				throw new \Exception("Problem with tickets");
 			}
@@ -126,59 +188,49 @@ class SaveOrder {
 		}
 
 
-		if(! intval($participant_id) > 0)
+		if(! $this->participant_id )
 		{
 			//create new participant!
 
-			if(empty($fields["email"]) || strpos($fields["email"], "@")===false)
+			if(empty($this->fields["email"]) || strpos($this->fields["email"], "@")===false)
 			{
 				throw new \Exception("Valid email must be provided");
 			}	
 
 			$participant = new Participant;
 
-			$participant->event_id 		= intval($this->event_id);
-			$participant->group_id 		= intval($this->group_id);
-			$participant->organizer_id 	= intval($this->organizer_id);
-			$participant->parent_id 	= intval($parent_id);
-
-			$participant->company_id 	= $parent_id ? Participant::find($parent_id)->company_id : 0;
+			$participant->event_id 		= $this->event_id;
+			$participant->group_id 		= $this->group_id;
+			$participant->organizer_id 	= $this->organizer_id;
+			$participant->parent_id 	= $this->parent_id;
+			$participant->company_id 	= $this->company_id;
 			
-
 			$participant->token 		= sha1(Uuid::generate(4));
 			$participant->createdon 	= Carbon::now();
-			$participant->email 		= $fields["email"];
+			$participant->email 		= $this->fields["email"];
 			$participant->confirmed 	= 1;
 			$participant->lang 			= $this->locale;
 
 			$participant->save();
 
-			$this->participant = $participant;
+			$this->setParticipant($participant);
 
 			//event(new UserWasRegistered());
 		}
-		else
-		{
-			$this->participant = Participant::find($participant_id);
-		}
-
 		
-		$this->saveTickets($this->participant->id, $tickets);
+		$this->saveTickets();
 			
-		$this->saveFields($this->participant->id, $fields);
-
+		$this->saveFields();
 
 	}
 
 
-
-
-	function saveTickets($participant_id, $tickets)
+	protected function saveTickets()
 	{
 
 		//count AMOUNT!
 
-		foreach($tickets as $ticket_id => $quantity){
+		foreach($this->tickets as $ticket_id => $quantity){
 
 			$ticket = Ticket::find($ticket_id);
 
@@ -186,9 +238,13 @@ class SaveOrder {
 				throw new \Exception("no ticket found!");
 			}
 
-			$localeAmount = intval( array_get($ticket->price, $this->locale, $ticket->price["pl"]) );
+			$localPrice = array_get( $ticket->price, $this->locale);
 
-			$this->amount += $localeAmount * $quantity;
+			if(! is_numeric( $localPrice )) {
+				throw new \Exception("no price for this locale!");
+			}
+
+			$this->amount += intval($localPrice) * $quantity;
 		}
 
 		//save Purchase
@@ -199,8 +255,9 @@ class SaveOrder {
 		$purchase->event_id 		= $this->event_id;
 		$purchase->group_id 		= $this->group_id;
 		$purchase->organizer_id 	= $this->organizer_id;
-		$purchase->participant_id 	= $participant_id;
+		$purchase->participant_id 	= $this->participant_id;
 		$purchase->amount 			= $this->amount;
+		$purchase->locale 			= $this->locale;
 		$purchase->discount 		= 0;
 		$purchase->discount_code_id = 0;
 		$purchase->paid 			= $this->amount === 0 ? 1 : 0;
@@ -212,11 +269,11 @@ class SaveOrder {
 
 		$this->purchase = $purchase;
 
-		foreach($tickets as $ticket_id => $quantity)
+		foreach($this->tickets as $ticket_id => $quantity)
 		{	
 			$t 					= new PurchaseTicket;
 			$t->ticket_id 		= $ticket_id;
-			$t->participant_id 	= $participant_id;
+			$t->participant_id 	= $this->participant_id;
 			$t->purchase_id 	= $purchase->id;
 			$t->event_id 		= $this->event_id;
 			$t->formdata		= "";
@@ -226,10 +283,10 @@ class SaveOrder {
 		}
 	}
 
-	protected function saveFields($participant_id, $fields)
+	protected function saveFields()
 	{
 
-		foreach($fields as $field_name => $field_value)
+		foreach($this->fields as $field_name => $field_value)
 		{
 
 			//this is senseless... array should be checked..!
@@ -244,7 +301,7 @@ class SaveOrder {
 			}
 
 			$pf = new ParticipantFields;
-			$pf->participant_id = $participant_id;
+			$pf->participant_id = $this->participant_id;
 			$pf->organizer_id 	= $this->organizer_id;
 			$pf->group_id 		= $this->group_id;
 			$pf->event_id 		= $this->event_id;
@@ -302,7 +359,7 @@ class SaveOrder {
 	}
 
 	
-	protected function validateTickets(array $tickets)
+	protected function validateTickets( )
 	{
 		foreach($this->tickets as $ticket)
 		{
@@ -312,9 +369,9 @@ class SaveOrder {
 		return true;
 	}
 
-	protected function validateFields(array $fields)
+	protected function validateFields( )
 	{
-		return Validator::make($fields, 
+		return Validator::make($this->fields, 
 		[
 				"fname" 	=> "required", 
 				"lname" 	=> "required",
