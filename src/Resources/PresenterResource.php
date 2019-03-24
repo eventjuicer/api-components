@@ -16,6 +16,7 @@ class PresenterResource extends Resource
 
         "fname", 
         "lname", 
+        "presenter",
         "cname2", 
         "position", 
         "presentation_title", 
@@ -31,22 +32,17 @@ class PresenterResource extends Resource
     public function toArray($request)
     {
 
+        $profile = $this->fields->whereIn("name", $this->presenterFields)->mapWithKeys(function($item)
+        {     
+            return [ $item->name => $item->pivot->field_value ] ;
 
+        })->all();
 
+        $data = array_merge(array_fill_keys($this->presenterFields, ""), $profile);
 
-            $profile = $this->fields->whereIn("name", $this->presenterFields)->mapWithKeys(function($item)
-            {     
-                return [ $item->name => $item->pivot->field_value ] ;
+        $data["id"] = (int) $this->id;
 
-            })->all();
-
-            $data = array_merge(array_fill_keys($this->presenterFields, ""), $profile);
-
-            $data["id"] = (int) $this->id;
-            $data["ns"] = "presenter";
-            
-    
-           return $data;
+       return $data;
     }
 }
 
