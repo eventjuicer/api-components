@@ -25,8 +25,8 @@ class CompanyData {
 
 
         "facebook"              => 1,
-        "twitter"               => 1,
-        "linkedin"              => 1,
+        "twitter"               => 0,
+        "linkedin"              => 0,
         "xing"                  => 0,
 
 
@@ -36,8 +36,8 @@ class CompanyData {
         "lang"                  => 0,
 
         "event_manager"         => 1,
-        "pr_manager"            => 1,
-        "sales_manager"         => 1,
+        "pr_manager"            => 0,
+        "sales_manager"         => 0,
    
         //"marketing_person"      => 0,
         "invitation_template"   => 0
