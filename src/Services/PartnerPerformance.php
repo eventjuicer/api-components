@@ -35,7 +35,7 @@ class PartnerPerformance {
 	
 	protected $startDate;
 	protected $endDate;
-	protected $prefix = "th3rCMiM_";
+	protected $prefix = "th4wOPiy_"; //"th3rCMiM_";
 
 
 	protected $ebe_prizes = [
@@ -126,12 +126,12 @@ class PartnerPerformance {
 		// 		"max" => 1, 
 		// 		"level"=> 200
 		// ],
-		[
-				"name" => "presentation", 
-				"min" => 1, 
-				"max" => 2, 
-				"level" => 200
-		],
+		// [
+		// 		"name" => "presentation", 
+		// 		"min" => 1, 
+		// 		"max" => 2, 
+		// 		"level" => 200
+		// ],
 
 		// [		
 		// 		"name" => "floor", 
@@ -189,12 +189,12 @@ class PartnerPerformance {
 				"level" => 20
 		],
 
-		[		
-				"name" => "blog", 
-				"min" => 1, 
-				"max" => 10,
-				"level" => 20
-		],
+		// [		
+		// 		"name" => "blog", 
+		// 		"min" => 1, 
+		// 		"max" => 10,
+		// 		"level" => 20
+		// ],
 
 	];
 
@@ -290,7 +290,9 @@ class PartnerPerformance {
 			return $value != null;
 		});
 
-		$ga = $this->getAnalyticsForSource("th3rCMiM_", $period);
+		//$ga = $this->getAnalyticsForSource("th3rCMiM_", $period);
+		$ga = $this->getAnalyticsForSource("th4wOPiy_", $period);
+
 
 		//we used glue company_id when we matched with participants.. => plucking companies!
 		return $this->merge($companies, $ga, "stats", "id");
@@ -353,9 +355,14 @@ class PartnerPerformance {
 
         	//$dt = Period::days($period);
 
+        	// $dt = Period::create(
+        	// 	Carbon::createFromDate(2019, 01, 01), 
+        	// 	Carbon::create(2019, 02, 12, 00, 01, 00)
+        	// );
+
         	$dt = Period::create(
-        		Carbon::createFromDate(2019, 01, 01), 
-        		Carbon::create(2019, 02, 12, 00, 01, 00)
+        		Carbon::createFromDate(2019, 04, 01), 
+        		Carbon::create(2019, 04, 16, 12, 00, 00)
         	);
 
 			$response = $this->analytics->performQuery(
