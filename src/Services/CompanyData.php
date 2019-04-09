@@ -24,7 +24,7 @@ class CompanyData {
         "website"               => 1,
 
 
-        "facebook"              => 1,
+        "facebook"              => 0,
         "twitter"               => 0,
         "linkedin"              => 0,
         "xing"                  => 0,
@@ -33,11 +33,11 @@ class CompanyData {
         "logotype"              => 1,
         "countries"             => 1,
         "opengraph_image"       => 0,
-        "lang"                  => 0,
+        "lang"                  => 1,
 
         "event_manager"         => 1,
-        "pr_manager"            => 0,
-        "sales_manager"         => 0,
+        "pr_manager"            => 1,
+        "sales_manager"         => 1,
    
         //"marketing_person"      => 0,
         "invitation_template"   => 0
