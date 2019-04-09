@@ -132,14 +132,20 @@ class PartnerPerformance {
 		// 		"max" => 2, 
 		// 		"level" => 200
 		// ],
-
 		// [		
 		// 		"name" => "floor", 
 		// 		"min" => 1, 
 		// 		"max" => 3, 
 		// 		"level" => 50
 		// ],
-
+		// [
+		// 		"name" => "leaflets", 
+		// 		"min" => 1, 
+		// 		"max" => 10,  
+		// 		"level" => 20
+		// ],
+	
+	
 		[		
 				"name" => "video_interview", 
 				"min" => 1, 
@@ -168,12 +174,6 @@ class PartnerPerformance {
 				"level" => 40
 		],
 
-		[
-				"name" => "leaflets", 
-				"min" => 1, 
-				"max" => 10,  
-				"level" => 20
-		],
 	
 		[		
 				"name" => "scanner", 

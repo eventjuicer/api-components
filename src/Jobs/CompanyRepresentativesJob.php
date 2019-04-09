@@ -56,6 +56,10 @@ class CompanyRepresentativesJob extends Job // implements ShouldQueue
 
         //do we have company assigned?
 
+
+        $sendable->setMuteTime(20); //minutes!!!!
+
+
         if(!$this->participant->company_id)
         {
             return;
