@@ -316,8 +316,12 @@ class SaveOrder {
 	}
 
 
-	public function updateFields()
+	public function updateFields($data = [])
 	{
+
+		if(!empty($data) && is_array($data)){
+			$this->setFields($data);
+		}
 
 		if(empty($this->participant_id)){
 			throw new \Exception("No participant defined!");
