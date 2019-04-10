@@ -31,6 +31,9 @@ class GetByRole {
     public function getByGroup(int $groupId, string $role, $withRels = [], $ticketColumn= "role")
     {
             //GET IDS OF TICKETS FROM CURRENT EVENT, FILTERED BY EXHIBITOR ROLE
+
+        $this->ticketsRepo->makeModel();
+
         $this->ticketsRepo->pushCriteria( new BelongsToGroup( $groupId ));
         $this->ticketsRepo->pushCriteria( new FlagEquals( $ticketColumn, $role ));
         $ticketIds = $this->ticketsRepo->all()->pluck("id")->all();
@@ -53,6 +56,9 @@ class GetByRole {
 
 	public function get(int $eventId, string $role, $withRels = [], $ticketColumn="role")
 	{
+
+         $this->ticketsRepo->makeModel();
+         
 			//GET IDS OF TICKETS FROM CURRENT EVENT, FILTERED BY EXHIBITOR ROLE
     	$this->ticketsRepo->pushCriteria( new BelongsToEvent( $eventId ));
     	$this->ticketsRepo->pushCriteria( new FlagEquals( $ticketColumn, $role ));
