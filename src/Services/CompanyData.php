@@ -48,7 +48,8 @@ class CompanyData {
         "opengraph_image_cdn",
         "password",
         "ranking_tweak",
-        "invitations_tweak"
+        "invitations_tweak",
+        "contributor"
     ];
 
 
