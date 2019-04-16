@@ -29,6 +29,7 @@ class CompanyData {
         "linkedin"              => 0,
         "xing"                  => 0,
 
+        "password"              => 0,
 
         "logotype"              => 1,
         "countries"             => 1,
@@ -46,7 +47,6 @@ class CompanyData {
     protected $namesInternal = [
         "logotype_cdn",
         "opengraph_image_cdn",
-        "password",
         "ranking_tweak",
         "invitations_tweak",
         "contributor"
