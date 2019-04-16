@@ -29,8 +29,6 @@ class CompanyData {
         "linkedin"              => 0,
         "xing"                  => 0,
 
-        "password"              => 0,
-
         "logotype"              => 1,
         "countries"             => 1,
         "opengraph_image"       => 0,
@@ -49,7 +47,8 @@ class CompanyData {
         "opengraph_image_cdn",
         "ranking_tweak",
         "invitations_tweak",
-        "contributor"
+        "contributor",
+        "password" 
     ];
 
 
