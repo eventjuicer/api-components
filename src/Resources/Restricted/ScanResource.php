@@ -26,11 +26,11 @@ class ScanResource extends Resource
 
         $data["id"] = $this->id;
 
-		$data["profile"] = $this->participant->fields->whereIn("name", $this->presenterFields)->mapWithKeys(function($item)
+		$data["profile"] = $this->participant ? $this->participant->fields->whereIn("name", $this->presenterFields)->mapWithKeys(function($item)
         {     
             return [ $item->name => $item->pivot->field_value] ;
 
-        })->all();
+        })->all() : [];
 
         $data["profile"]["email"] = $this->participant->email;
 
