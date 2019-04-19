@@ -32,7 +32,7 @@ class ScanResource extends Resource
 
         })->all() : [];
 
-        $data["profile"]["email"] = $this->participant->email;
+        $data["profile"]["email"] = $this->participant ? $this->participant->email : "";
 
         $data["commented"] = $this->comments->count();
   
