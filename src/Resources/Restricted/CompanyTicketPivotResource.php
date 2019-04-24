@@ -23,6 +23,7 @@ class CompanyTicketPivotResource extends Resource
         $data["price"] = $this->ticket ? $this->ticket->price : [];
         $data["start"] = $this->ticket? (string)  $this->ticket->start : "";
         $data["end"] = $this->ticket ? (string) $this->ticket->end : "";
+        $data["role"] = $this->ticket ? (string) $this->ticket->role : "";
 
         return $data;
 
