@@ -55,6 +55,9 @@ class PublicTicketResource extends Resource
  		$data["start"] 		= (string) $this->start;
  		$data["end"] 		= (string) $this->end;
 
+    $data["thumbnail"]    = (string) $this->thumbnail;
+    $data["image"]    = (string) $this->image;
+
  		$data["agg"] = [
  				"customers" => $this->ticketpivot->count(),
  				"sold" 		=> $this->ticketpivot->sum("quantity")			
