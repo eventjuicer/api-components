@@ -92,7 +92,10 @@ class Post extends Model
 
 
 
-
+    public function images()
+    {
+        return $this->morphMany(PostImage::class, 'imageable');
+    }
 
 
 
@@ -107,6 +110,10 @@ class Post extends Model
     }
 
 
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
 
     public function author()
     {

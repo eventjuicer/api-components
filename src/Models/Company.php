@@ -47,6 +47,11 @@ class Company extends Model
         
         return $this->hasMany(CompanyRepresentative::class);
     }
+
+    public function posts() {
+        
+        return $this->hasMany(Post::class);
+    }
     
     public function group()
     {

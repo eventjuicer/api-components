@@ -6,6 +6,10 @@ use Illuminate\Http\Resources\Json\Resource;
 
 class PublicPostResource extends Resource
 {
+
+
+  
+
     /**
      * Transform the resource into an array.
      *
@@ -14,6 +18,14 @@ class PublicPostResource extends Resource
      */
     public function toArray($request)
     {
+
+
+        //find cover image!
+
+        $_cover = $this->images->where("is_cover", 1)->first();
+        $cover = $_cover ? $_cover->path : $this->images->first()->path;
+
+
        return [
 
             "id"        => (int) $this->id,
@@ -29,15 +41,9 @@ class PublicPostResource extends Resource
             "updated_at" => (string) $this->updated_at,
             "published_at" => (string) $this->published_at,
 
-
-            "headline" => (string) $this->meta->headline,
-            "quote_parsed" => (string) $this->meta->quote_parsed,
-            "body_parsed" => (string) $this->meta->body_parsed,
-
-            "guestauthor" => (string) $this->meta->guestauthor,
-            "metatitle" => (string) $this->meta->metatitle,
-            "metadescription" => (string) $this->meta->metadescription,
-
+            "company" => new PublicPostCompanyResource($this->company),
+            "meta" => new PublicPostMetaResource($this->meta),
+            "cover" => $cover
 
         ];
     }
