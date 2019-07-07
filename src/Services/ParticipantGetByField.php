@@ -8,6 +8,8 @@ use Eventjuicer\Repositories\Criteria\BelongsToEvent;
 use Eventjuicer\Repositories\Criteria\BelongsToGroup;
 use Eventjuicer\Repositories\Criteria\FlagEquals;
 use Eventjuicer\Repositories\Criteria\ColumnNotEmpty;
+use Eventjuicer\Repositories\Criteria\ColumnMatches;
+
 
 
 class ParticipantGetByField {
@@ -36,7 +38,7 @@ class ParticipantGetByField {
         $this->fieldsRepo->pushCriteria( new BelongsToGroup( $groupId ));
 
         $this->fieldsRepo->pushCriteria( new FlagEquals( "field_id", $searchColumn ));
-        $this->fieldsRepo->pushCriteria( new FlagEquals( "field_value", 1));
+        $this->fieldsRepo->pushCriteria( new ColumnMatches( "field_value", 1));
 
         $this->fieldsRepo->with($withRels);
 
