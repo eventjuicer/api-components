@@ -25,10 +25,10 @@ class PartnerResource extends Resource
 
                 "id"            => $this->id,
                 "kind"          => $this->kind,
-                "name"          => $this->name,
+                "cname2"          => $this->name,
                 "description"   => $this->description,
-                "link"          => $this->link,
-                "avatar"        => $this->avatar,
+                "website"          => $this->link,
+                "logotype"        => $this->avatar,
                 "scopes(deprecated)" => self::$groups->map(function($item, $key){
 
                     if(in_array($this->id, $item)){
