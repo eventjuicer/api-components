@@ -3,19 +3,22 @@
 namespace Eventjuicer\Models;
 
 use Illuminate\Database\Eloquent\Model;
-
 use Eventjuicer\Models\Traits\AbleTrait;
-
 use Eventjuicer\Models\Traits\Elasticsearch;
-
 use Eventjuicer\Repositories\ParticipantRepository;
+use Eventjuicer\Resources\PublicExhibitorResource;
+
+
+//use Laravel\Scout\Searchable;
+
 
 class Participant extends Model
 {
 
 
     use AbleTrait;
-    use Elasticsearch;
+   // use Elasticsearch;
+   // use Searchable;
 
 
     protected $table = "bob_participants";
@@ -27,7 +30,23 @@ class Participant extends Model
 
     public $timestamps = false;
 
-    
+
+    public function searchableIndexes() {
+        return [
+            "public" => PublicExhibitorResource::class,
+            "admin" => PublicExhibitorResource::class
+        ];
+    }
+
+    /**
+    test
+    **/
+    public function searchableAs()
+    {
+        return 'participants';
+    }
+
+
     public function getRepository()
     {
         return ParticipantRepository::class;
@@ -123,6 +142,16 @@ class Participant extends Model
 
     }
 
+    public function featured()
+    {
+        return $this->hasMany(ParticipantFields::class, "participant_id")->where("field_id", 250)->where("field_value", "like", 1);
+    }
+
+    public function fieldpivot()
+    {
+        return $this->hasMany(ParticipantFields::class, "participant_id");
+    }
+
 
     /**NEW OR CHECKED**/
 
@@ -152,6 +181,12 @@ class Participant extends Model
 
     
  
+    public function roleVisitor()
+    {
+        
+        return $this->belongsToMany(Ticket::class, 'bob_participant_ticket', 'participant_id', 'ticket_id')->where("role", "visitor");
+
+    }
 
 
 
@@ -171,11 +206,6 @@ class Participant extends Model
 
 
  
-
-        public function ssfields()
-    {
-     return $this->hasMany(ParticipantFields::class, "participant_id");
-    }
 
 
 
