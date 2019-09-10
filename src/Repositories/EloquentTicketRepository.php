@@ -50,7 +50,7 @@ class EloquentTicketRepository extends Repository implements TicketRepositoryInt
 
             $this->with([
                 "participantsNotCancelled", 
-             //  "participantsNotCancelled.fields", 
+           //    "participantsNotCancelled.fieldpivot", 
                 //"participantsNotCancelled.tickets"
             ]);
 

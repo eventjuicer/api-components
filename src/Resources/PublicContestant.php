@@ -29,7 +29,7 @@ class PublicContestant extends Resource
         $data["id"] = (int) $this->id;
         $data["ns"] = "participant";
 
-        $data["thumbnail"] = "//static-".rand(1,9).".fp20.org/data/".$this->id."/logotype_medium.png?" . date("YmdHi");
+        $data["logotype_cdn"] = "";
            
         $data["tickets"] = $this->tickets->filter(function($item)
         {
