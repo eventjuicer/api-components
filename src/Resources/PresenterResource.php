@@ -26,7 +26,8 @@ class PresenterResource extends Resource
         "avatar"                    => 14,
         "logotype"                  => 55,
         "bio"                       => 23,
-        "featured"                  => 250
+        "featured"                  => 250,
+        "custom_admin_1"            => 90
     ];
 
 
