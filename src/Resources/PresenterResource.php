@@ -25,6 +25,8 @@ class PresenterResource extends Resource
         "presentation_time"         => 59,
         "avatar"                    => 14,
         "logotype"                  => 55,
+        "avatar_cdn"                => 254, //14,
+        "logotype_cdn"              => 255, //55,
         "bio"                       => 23,
         "featured"                  => 250,
         "custom_admin_1"            => 90

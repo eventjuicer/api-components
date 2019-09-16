@@ -41,10 +41,6 @@ class SocialLinkedin extends Model
 
 /*
 
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
-START TRANSACTION;
-SET time_zone = "+00:00";
 
 CREATE TABLE `eventjuicer_social_linkedin` (
   `id` int(10) UNSIGNED NOT NULL,
@@ -73,6 +69,6 @@ ALTER TABLE `eventjuicer_social_linkedin`
 
 ALTER TABLE `eventjuicer_social_linkedin`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-COMMIT;
+
 
 */
