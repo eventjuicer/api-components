@@ -23,13 +23,16 @@ class PresenterResource extends Resource
         "presentation_description"  => 58,
         "presentation_venue"        => 98,
         "presentation_time"         => 59,
+        "presentation_category"     => 253,
         "avatar"                    => 14,
         "logotype"                  => 55,
         "avatar_cdn"                => 254, //14,
         "logotype_cdn"              => 255, //55,
         "bio"                       => 23,
         "featured"                  => 250,
-        "custom_admin_1"            => 90
+        "custom_admin_1"            => 90,
+        "cfp_category"              => 226
+       
     ];
 
 
