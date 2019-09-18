@@ -20,6 +20,11 @@ class SignInRequestService {
 		return $query;
 	}
 
+	public function release($uuid){
+		return $this->retrieve($uuid)->delete();
+	}
+
+
 	function setService($service){
 		$this->service =$service;
 	}
@@ -61,11 +66,12 @@ class SignInRequestService {
     	}
 
     	if(!empty($errors)){
-    		throw new \Exception(implode(", ", $errors)." parameter(s) missing");
+    		throw new \Exception(implode(", ", $errors)." parameter(s) error");
     	}
 
     	return true;
 	}
+
 
 
 }
