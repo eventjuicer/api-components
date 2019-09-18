@@ -18,6 +18,7 @@ class ParticipantFields extends Model
 
     public $timestamps = false;
 
+    protected $guarded = array();
 
     public function participant()
     {
