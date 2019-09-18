@@ -67,6 +67,11 @@ class SendParticipantImageToCloudinaryJob extends Job //implements ShouldQueue
 
             $response = $image->upload($url, $pubName);
 
+            if(!empty($response)){
+
+                dd($response);
+            }
+            
 
         }
         
