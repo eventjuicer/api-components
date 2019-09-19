@@ -51,6 +51,7 @@ class SocialVoteParticipantResource extends Resource
 
 
         $data["id"] = (int) $this->id;
+        $data["participant_id"] = (int) $this->id;
 
         return $data;
 
