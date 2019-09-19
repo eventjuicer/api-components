@@ -32,6 +32,7 @@ class SocialVoteResource extends Resource
 
         $data = new SocialVoteParticipantResource($this->participant);
         $data["created_at"] = (string) $this->created_at;
-       return $data;
+        $data["participant_id"] = $this->participant_id;
+        return $data;
     }
 }
