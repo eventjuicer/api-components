@@ -29,11 +29,9 @@ class SocialVoteResource extends Resource
      */
     public function toArray($request)
     {
-       return [
-            "id"                => $this->id,
-            "participant_id"    => (int) $this->participant_id,
-            "participant"       => new SocialVoteParticipantResource($this->participant),
-            "created_at"        => (string) $this->created_at
-        ];
+
+        $data = new SocialVoteParticipantResource($this->participant);
+        $data["created_at"] = (string) $this->created_at;
+       return $data;
     }
 }
