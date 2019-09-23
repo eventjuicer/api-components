@@ -10,6 +10,7 @@ class SocialLinkedin extends Model
     protected $table = "eventjuicer_social_linkedin";
     protected $fillable = [
       "linkedin_id", 
+      "locale",
       "fname", 
       "lname", 
       "email", 
