@@ -12,12 +12,15 @@ use Eventjuicer\Services\Hashids;
 class PublicVisitor extends Resource
 {
 
-    protected $presenterFields = ["fname", "lname", "cname2", "position"];
+    protected $presenterFields = ["fname", "cname2"];
 
 
     public function toArray($request)
     {
 
+            if(!$this->fields){
+                return [];
+            }
 
             $profile = $this->fields->whereIn("name", $this->presenterFields)->mapWithKeys(function($item)
             {     
