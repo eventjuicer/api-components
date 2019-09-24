@@ -39,7 +39,7 @@ class Personalizer implements Arrayable {
 
 		$this->replacements = (array) $replacements;
 		
-
+		//TODO check which fields or fieldpivot is loaded...
 
 		$this->profile = $this->model->fields->mapWithKeys(function($_item){
                 

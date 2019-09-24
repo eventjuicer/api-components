@@ -46,13 +46,17 @@ class Cloudinary {
 
 	function __construct()
 	{
-		 CloudinaryBase::config([
+		$this->configure();
+	}
+
+	function configure(){
+
+		CloudinaryBase::config([
                 "cloud_name" => "eventjuicer", 
                 "api_key" => env("CLOUDINARY_KEY"),
                 "api_secret" => env("CLOUDINARY_SECRET") 
         ]);
 	}
-
 
 	public function upload($path, $name = "", array $options = [])
 	{
