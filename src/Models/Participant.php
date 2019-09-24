@@ -83,7 +83,10 @@ class Participant extends Model
 
     /**NEW OR CHECKED**/
  
-    
+    public function votes()
+    {
+        return $this->hasMany(SocialVote:: class);
+    }
 
     public function ticketdownloads()
     {

@@ -30,7 +30,9 @@ class PublicContestant extends Resource
         $data["ns"] = "participant";
 
         $data["logotype_cdn"] = "";
-           
+
+        $data["votes"] = $this->relationLoaded("votes") ? $this->votes->count() : 0;
+   
         $data["tickets"] = $this->tickets->filter(function($item)
         {
          return $item->pivot->sold == 1;

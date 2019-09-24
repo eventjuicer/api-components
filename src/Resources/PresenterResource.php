@@ -64,6 +64,9 @@ class PresenterResource extends Resource
 
         $data = array_merge(array_fill_keys(array_keys($this->presenterFields), ""), $profile);
 
+    
+          
+        $data["votes"] = $this->relationLoaded("votes") ? $this->votes->count() : 0;
 
         $data["id"] = (int) $this->id;
 
