@@ -54,7 +54,7 @@ class Cloudinary {
 	}
 
 
-	public function upload($path, $name = "", $expect = "")
+	public function upload($path, $name = "", array $options = [])
 	{
 
 		$url = new UrlImage(new URl($path));
@@ -63,8 +63,6 @@ class Cloudinary {
 		{
 			return [];
 		}
-
-		$options = [];
 
 		$name = env("APP_ENV", "local") === "local" ? 'test_' . $name : $name;
 
