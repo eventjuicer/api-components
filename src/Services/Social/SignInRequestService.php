@@ -4,10 +4,13 @@ namespace Eventjuicer\Services\Social;
 
 use Eventjuicer\Models\SocialSignInRequest;
 use Eventjuicer\Models\Group;
+use Eventjuicer\Models\Organizer;
+
 use Uuid; //https://github.com/webpatser/laravel-uuid
 
 class SignInRequestService {
 
+	protected $state;
 	protected $redirect, $service, $project;
 	protected $services = ["linkedin"];
 
@@ -15,15 +18,24 @@ class SignInRequestService {
 
 	}
 
-	public function retrieve($uuid){
-		$query = SocialSignInRequest::where("uuid", $uuid)->first();
+	public function retrieve(){
+
+		if(empty($this->state)){
+			return null;
+		}
+		
+		$query = SocialSignInRequest::where("uuid", $this->state)->first();
 		return $query;
 	}
 
-	public function release($uuid){
-		return $this->retrieve($uuid)->delete();
+	public function release(){
+		$row = $this->retrieve();
+		return $row ? $row->delete() : null;
 	}
 
+	function setState($state){
+		$this->state = $state;
+	}
 
 	function setService($service){
 		$this->service =$service;
@@ -35,6 +47,17 @@ class SignInRequestService {
 
 	function setProject($project){
 		$this->project = $project;
+	}
+
+	function getOrganizer(){
+
+		$row = $this->retrieve();
+		return $row ? $row->organizer_id : 0;
+	}
+
+	function getGroup(){
+		$row = $this->retrieve();
+		return $row ? $row->group_id : 0;
 	}
 
 	function make(){
@@ -71,6 +94,21 @@ class SignInRequestService {
 
     	return true;
 	}
+
+	public function getSetting(string $name){
+
+		if(empty($this->state)){
+			return null;
+		}
+
+        $organizer = Organizer::findOrFail( $this->getOrganizer() );
+
+        if($organizer && $organizer->settings){
+          $setting = $organizer->settings->where("name", $name)->first();
+          return $setting ? json_decode($setting->data, true) : null;
+        }
+        return null;
+    }
 
 
 
