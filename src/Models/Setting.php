@@ -12,20 +12,17 @@ class Setting extends Model
      *
      * @var string
      */
-    protected $table = 'bob_settings';
+    protected $table = 'eventjuicer_settings';
 
-    protected $fillable = ['name', 'data' ];
+    protected $fillable = ['name', 'data'];
 
-    protected $dates = ['updatedon'];
+    // protected $dates = ['updatedon'];
 
-    public $timestamps = false;
-
-    //protected $dates = ['updatedon'];
-
-
-    // public function settingable()
-    // {
-    //     return $this->morphTo();
-    // }
+    // public $timestamps = false;
+    
+    public function settingable()
+    {
+        return $this->morphTo();
+    }
 
 }
