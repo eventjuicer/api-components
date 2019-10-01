@@ -4,12 +4,7 @@
 namespace Eventjuicer\Services\Cascaded;
 
 use Illuminate\Support\Collection;
-
-use Illuminate\Database\Eloquent\Model;
-
-use Eventjuicer\Models\Setting as Eloquent;
 use Eventjuicer\Models\Event;
-
 use Exception;
 
 class Setting
@@ -29,15 +24,15 @@ class Setting
         $event = Event::findOrFail($eventId);
 
         $organizer = $this->transform(
-            Eloquent::where("organizer_id", $event->organizer_id)->get()
+            $event->organizer->settings
         );
 
         $group = $this->transform(
-            Eloquent::where("group_id", $event->group_id)->get()
+            $event->group->settings
         );
 
         $event = $this->transform(
-            Eloquent::where("event_id", $eventId)->get()
+            $event->settings
         );
 
        $merged = array_replace( $organizer, $group, $event );
