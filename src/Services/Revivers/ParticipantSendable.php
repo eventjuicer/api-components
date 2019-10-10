@@ -128,7 +128,8 @@ class ParticipantSendable {
 	{
 		if($eventId)
 		{
-			$this->mutes->pushCriteria( new BelongsToEvent($eventId) );
+	//		temporary skip all mutes!!!
+	//		$this->mutes->pushCriteria( new BelongsToEvent($eventId) );
 		}
 
 		return $this->mutes->all()->pluck("email")->all();	
