@@ -27,7 +27,8 @@ class ParticipantDeliveryRepository extends Repository
 
     	$model = $this->makeModel();
 
-    	$model->email = $email;
+    	$model->email = trim(strtolower($email));
+
     	$model->event_id = $eventId;
         $model->group_id = $event->group_id;
         $model->organizer_id = $event->organizer_id;

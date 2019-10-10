@@ -24,7 +24,8 @@ class ParticipantSendable {
 
 	protected $checkUniqueness = true;
 	protected $checkDeliveries = true;
-	
+	protected $checkMutes = true;
+
 	protected $validateEmails = false;
 
 	protected $unique = [];
@@ -40,6 +41,7 @@ class ParticipantSendable {
 		$this->resolver = function($item){return $item->email; };
 
 		$this->setMuteTime();
+
 	}
 
 	public function setMuteTime($muteTime = 120)
@@ -57,6 +59,10 @@ class ParticipantSendable {
 		$this->checkDeliveries = $val;
 	}
 
+	public function checkMutes(bool $val)
+	{
+		$this->checkMutes = $val;
+	}
 
 	public function validateEmails(bool $val)
 	{
@@ -77,20 +83,28 @@ class ParticipantSendable {
 		$filtered = $dataset->filter(function($item) use ($deliveries, $mutes, $excludes) 
 		{ 
 
-			$email = $this->resolver->__invoke($item);
+			$email = $this->resolver->__invoke($item) ;
 
+			//normalize
+
+			$email = trim( strtolower($email) );
 
 			if($this->checkUniqueness && in_array($email, $this->unique))
 			{
 				return false;
 			}
 
-			if(!empty($excludes) && in_array($email, $excludes))
+			if(!empty($excludes) && in_array($email, $excludes) )
 			{
 				return false;
 			}
 
-			if($this->checkDeliveries && ( in_array($email, $deliveries) || in_array($email, $mutes) ))
+			if($this->checkDeliveries && in_array($email, $deliveries) )
+			{
+				return false;
+			}
+
+			if($this->checkMutes && in_array($email, $mutes) )
 			{
 				return false;
 			}
