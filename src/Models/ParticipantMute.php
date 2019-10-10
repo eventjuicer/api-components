@@ -11,6 +11,8 @@ class ParticipantMute extends Model
 
     protected $table = "bob_participant_mutes";
 
+    protected $fillable = ["email", "event_id", "group_id", "organizer_id", "level"];
+
 
     public function organizer()
     {
