@@ -32,6 +32,7 @@ class ParticipantSendable {
 	protected $then = "";
 
 	protected $resolver;
+	protected $actions = [];
 
 	function __construct(ParticipantDeliveryRepository $deliveries, ParticipantMuteRepository $mutes)
 	{
@@ -62,6 +63,13 @@ class ParticipantSendable {
 	public function checkMutes(bool $val)
 	{
 		$this->checkMutes = $val;
+	}
+
+	public function howManyMuted(){
+
+		$mutes =  $this->getMutes();
+
+		return $mutes ? count($mutes) : 0;
 	}
 
 	public function validateEmails(bool $val)
