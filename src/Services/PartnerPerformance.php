@@ -35,7 +35,7 @@ class PartnerPerformance {
 	
 	protected $startDate;
 	protected $endDate;
-	protected $prefix = "th4wOPiy_"; //"th3rCMiM_";
+	protected $prefix = "th4xyOsiy_"; //"th3rCMiM_";
 
 
 	protected $ebe_prizes = [
@@ -175,12 +175,12 @@ class PartnerPerformance {
 		],
 
 	
-		[		
-				"name" => "scanner", 
-				"min" => 1, 
-				"max" => 50, 
-				"level" => 10
-		],
+		// [		
+		// 		"name" => "scanner", 
+		// 		"min" => 1, 
+		// 		"max" => 50, 
+		// 		"level" => 10
+		// ],
 
 		[
 				"name" => "rollups", 
@@ -353,17 +353,19 @@ class PartnerPerformance {
 		$query = function() use ($search, $period)
         {
 
-        	//$dt = Period::days($period);
+        	$dt = Period::days($period);
+
+
+        	//teh17
+        	$dt = Period::create(
+        		Carbon::createFromDate(2019, 10, 01), 
+        		Carbon::create(2019, 10, 21, 23, 59, 59)
+        	);
 
         	// $dt = Period::create(
-        	// 	Carbon::createFromDate(2019, 01, 01), 
-        	// 	Carbon::create(2019, 02, 12, 00, 01, 00)
+        	// 	Carbon::createFromDate(2019, 04, 01), 
+        	// 	Carbon::create(2019, 04, 16, 12, 00, 00)
         	// );
-
-        	$dt = Period::create(
-        		Carbon::createFromDate(2019, 04, 01), 
-        		Carbon::create(2019, 04, 16, 12, 00, 00)
-        	);
 
 			$response = $this->analytics->performQuery(
 
