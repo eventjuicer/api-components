@@ -30,7 +30,7 @@ class CompanyRepository extends Repository
     	}
 
     	if(! is_null($company->stats_updated_at) && 
-    		Carbon::now()->diffInHours( $company->stats_updated_at ) < 3
+    		Carbon::now()->diffInMinutes( $company->stats_updated_at ) < 15
     	)
     	{
     		return $company->only( ["position", "points"] );
