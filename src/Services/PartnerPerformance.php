@@ -290,8 +290,7 @@ class PartnerPerformance {
 			return $value != null;
 		});
 
-		//$ga = $this->getAnalyticsForSource("th3rCMiM_", $period);
-		$ga = $this->getAnalyticsForSource("th4xyOsiy_", $period);
+		$ga = $this->getAnalyticsForSource($this->prefix, $period);
 
 
 		//we used glue company_id when we matched with participants.. => plucking companies!
@@ -392,7 +391,7 @@ class PartnerPerformance {
 
 
 		return env("USE_CACHE", true) ? 
-			$this->cache->remember($this->gaView . $search, 10, $query) : 
+			$this->cache->remember($this->gaView . $search . "new", 10, $query) : 
 			$query();
 
 	}
