@@ -36,6 +36,7 @@ class PartnerPerformance {
 	protected $startDate;
 	protected $endDate;
 	protected $prefix = "th4wOPiy_"; //"th3rCMiM_";
+	protected $tempPrefix = "th4xyOsiy_"; //fuckup raw link vs creatives!
 
 	protected $ebe_prizes = [
   		
@@ -378,10 +379,64 @@ class PartnerPerformance {
 
 			);
 
-			return collect($response['rows'] ?? [])->map(function (array $pageRow, $position) use ($search) {
+
+			/*
+
+dd($response['rows']);
+
+array(26) {
+  [0]=>
+  array(2) {
+    [0]=>
+    string(13) "th4wOPiy_1132"
+    [1]=>
+    string(3) "129"
+
+*/
+
+
+			$mapped = [];
+
+			foreach($response['rows'] as $item){
+				$company_id = (int) str_replace($search, "", $item[0]);
+				$mapped[$company_id] = (int) $item[1];
+			}
+
+
+
+			$responseTEMP = $this->analytics->performQuery(
+
+				$dt, 
+
+				"ga:sessions",  
+				[
+				'dimensions' 	=> 'ga:source',
+				'sort' 			=> '-ga:sessions',
+				'filters'		=> 'ga:source=@' . $this->tempPrefix// . '&ga:sessionDuration>'
+				]
+
+			);
+
+			foreach($responseTEMP['rows'] as $item){
+
+				$company_id = (int) str_replace($this->tempPrefix, "", $item[0]);
+
+				if(isset( $mapped[$company_id] )){
+					//lets sum up!
+					$mapped[$company_id] = $mapped[$company_id] + (int) $item[1];
+				}
+				else{
+					//expand $mapped
+					$mapped[$company_id] = (int) $item[1];
+				}
+
+			}
+
+			return collect($mapped ?? [])->map(function ($points, $company_id){
+
 				return [
-					'id' 			=> (int) str_replace($search, "", $pageRow[0]),
-					'sessions' 		=> (int) $pageRow[1],
+					'id' 			=> $company_id,
+					'sessions' 		=> $points,
 					'conversions' 	=> 0
 				];
 			});
