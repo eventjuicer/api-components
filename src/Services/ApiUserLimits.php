@@ -95,7 +95,7 @@ class ApiUserLimits {
 		{
 			case "meetup":
 
-				$base = 15 + $tweak;
+				$base = 30 + $tweak;
 
 				// if($this->user->company()->id == 1260){
 				// 	$base = $base + 15;
