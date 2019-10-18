@@ -291,7 +291,7 @@ class PartnerPerformance {
 		});
 
 		//$ga = $this->getAnalyticsForSource("th3rCMiM_", $period);
-		$ga = $this->getAnalyticsForSource("th4wOPiy_", $period);
+		$ga = $this->getAnalyticsForSource("th4xyOsiy_", $period);
 
 
 		//we used glue company_id when we matched with participants.. => plucking companies!
