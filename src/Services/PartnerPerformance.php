@@ -35,8 +35,7 @@ class PartnerPerformance {
 	
 	protected $startDate;
 	protected $endDate;
-	protected $prefix = "th4xyOsiy_"; //"th3rCMiM_";
-
+	protected $prefix = "th4wOPiy_"; //"th3rCMiM_";
 
 	protected $ebe_prizes = [
   		
