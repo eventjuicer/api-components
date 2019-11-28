@@ -9,40 +9,35 @@ use Eventjuicer\ValueObjects\EmailAddress;
 use Eventjuicer\Services\Hashids;
 use Eventjuicer\Services\Traits\Fields;
 
-
-class PresenterResource extends Resource
-{   
-
+class PublicContestantCompany extends Resource
+{
 
     use Fields;
 
     protected $showable = array(
-        "fname",
-        "lname",
-        "presenter",
+
         "cname2",
-        "position",
-        "presentation_title",
-        "presentation_description",
-        "presentation_venue",
-        "presentation_time",
-        "presentation_category",
-        "avatar",
+        "awards_category",
+        "product_name",
+        "product_description",
+        "project_description",
+        "company_description",
+        "company_website",
         "logotype",
-        "avatar_cdn",
         "logotype_cdn",
-        "bio",
-        "featured",
-        "custom_admin_1",
-        "cfp_category"
-    ); 
+        "avatar",
+        "avatar_cdn",
+        "video",
+        "difference"
+
+    );
 
 
     //votes_override = 213!!!
 
     public function toArray($request)
     {
-
+    
         if( ! $this->relationLoaded("fieldpivot") ){
           
             throw new \Exception("Use fieldpivot");
