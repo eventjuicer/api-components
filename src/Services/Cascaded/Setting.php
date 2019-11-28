@@ -7,6 +7,7 @@ use Illuminate\Support\Collection;
 use Eventjuicer\Models\Event;
 use Exception;
 
+
 class Setting
 {
 
@@ -37,12 +38,36 @@ class Setting
 
        $merged = array_replace( $organizer, $group, $event );
 
-       return array_filter($merged, function($key) use ($namespace){
+       return $namespace ? array_filter($merged, function($key) use ($namespace){
             return strpos($key, $namespace)===0;
-       }, ARRAY_FILTER_USE_KEY);
+       }, ARRAY_FILTER_USE_KEY) : $merged;
 
     }
 
+
+   public function makeMultiDimensional(array $items, $delimiter = '.'){
+        $new = array();
+        foreach ($items as $key => $value) {
+            if (strpos($key, $delimiter) === false) {
+                $new[$key] = is_array($value) ? $this->makeMultiDimensional($value, $delimiter) : $value;
+                continue;
+            }
+
+            $segments = explode($delimiter, $key);
+            $last = &$new[$segments[0]];
+            if (!is_null($last) && !is_array($last)) {
+                throw new \LogicException(sprintf("The '%s' key has already been defined as being '%s'", $segments[0], gettype($last)));
+            }
+
+            foreach ($segments as $k => $segment) {
+                if ($k != 0) {
+                    $last = &$last[$segment];
+                }
+            }
+            $last = is_array($value) ? $this->makeMultiDimensional($value, $delimiter) : $value;
+        }
+        return $new;
+    }
 
     protected function transform(Collection $collection, $backend = false)
     {
