@@ -73,7 +73,7 @@ class Setting
     {
 
         return $collection->mapWithKeys(function($item){
-                return [$item["name"] => $item["data"]];
+                return [$item["name"] => json_decode($item["data"], true)];
             })->all(); 
 
     }
