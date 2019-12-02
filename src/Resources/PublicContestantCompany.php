@@ -28,7 +28,8 @@ class PublicContestantCompany extends Resource
         "avatar",
         "avatar_cdn",
         "video",
-        "difference"
+        "difference",
+        "innovation"
 
     );
 
