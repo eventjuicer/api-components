@@ -17,19 +17,25 @@ class PublicContestantCompany extends Resource
     protected $showable = array(
 
         "cname2",
-        "awards_category",
-        "product_name",
-        "product_description",
-        "project_description",
         "company_description",
         "company_website",
+
         "logotype",
         "logotype_cdn",
         "avatar",
         "avatar_cdn",
+
+        "awards_category",
+      
+        "product_name",
+        "product_description",
+      
+        "project_name",
+        "project_description",
+      
         "video",
         "difference",
-        "innovation"
+        "innovations"
 
     );
 
