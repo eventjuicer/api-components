@@ -34,7 +34,7 @@ class CompanyData {
         "opengraph_image"       => 0,
         "lang"                  => 0,
 
-        "event_manager"         => 1,
+        "event_manager"         => 0,
         "pr_manager"            => 1,
         "sales_manager"         => 0,
    
