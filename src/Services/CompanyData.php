@@ -189,7 +189,7 @@ class CompanyData {
                     }else{
                         
                         if(strpos($value, "@")===false) {
-                             $errors[$name] = "badformat";
+                             $errors[$name] = "noemail";
                         }
                     }
 
