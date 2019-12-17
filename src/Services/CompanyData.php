@@ -30,12 +30,12 @@ class CompanyData {
         "xing"                  => 0,
 
         "logotype"              => 1,
-        "countries"             => 1,
+        "countries"             => 0,
         "opengraph_image"       => 0,
         "lang"                  => 0,
 
-        "event_manager"         => 0,
-        "pr_manager"            => 0,
+        "event_manager"         => 1,
+        "pr_manager"            => 1,
         "sales_manager"         => 0,
    
         //"marketing_person"      => 0,
