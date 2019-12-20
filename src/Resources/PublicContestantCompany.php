@@ -25,6 +25,8 @@ class PublicContestantCompany extends Resource
         "avatar",
         "avatar_cdn",
 
+        "featured",
+
         "awards_category",
       
         "product_name",
