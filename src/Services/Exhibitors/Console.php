@@ -66,15 +66,13 @@ class Console {
 
 	}
 
-	public function withCompanies(){
-		return $this->getDataset()->unique("company_id");
-	}
+	public function getDataset($unique=false, $enrich=true){
 
-	public function getDataset($enrich=true){
+		$res = $unique ? $this->dataset->unique("company_id") : $this->dataset;
 
 		CompanyData::setEventId($this->getEventId());
 
-		return $enrich ? $this->dataset->mapInto(CompanyData::class) : $this->dataset;
+		return $enrich ? $res->mapInto(CompanyData::class) : $res;
 
 	}
 

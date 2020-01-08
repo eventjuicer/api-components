@@ -15,7 +15,7 @@ use Eventjuicer\Repositories\Criteria\BelongsToEvent;
 use Eventjuicer\Repositories\Criteria\BelongsToCompany;
 
 
-class CompanyData extends Model {
+class CompanyData {
 
 	static $eventId;
 	protected $model;
@@ -68,6 +68,10 @@ class CompanyData extends Model {
         $all = $reps->all();
 
 		$all = $all->filter(function($item){
+
+			if(!$item->purchases->first()){
+				return false;
+			}
 
 			return $item->purchases->first()->status !== "cancelled";
 		});
