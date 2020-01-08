@@ -4,9 +4,12 @@ namespace Eventjuicer\Services\Exhibitors;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Illuminate\Support\MessageBag;
+//
 use Eventjuicer\ValueObjects\EmailAddress;
 use Eventjuicer\Services\Personalizer;
 use Eventjuicer\Models\Participant;
+//
+use Eventjuicer\Repositories\CompanyRepresentativeRepository;
 use Eventjuicer\Repositories\Criteria\ColumnGreaterThanZero;
 use Eventjuicer\Repositories\Criteria\BelongsToEvent;
 use Eventjuicer\Repositories\Criteria\BelongsToCompany;
