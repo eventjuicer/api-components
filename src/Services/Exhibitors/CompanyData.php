@@ -65,14 +65,14 @@ class CompanyData extends Model {
 		$reps->pushCriteria( new BelongsToEvent(self::$eventId));
         $reps->pushCriteria( new ColumnGreaterThanZero("parent_id") );
         $reps->with(["fields", "purchases"]);
-        $reps = $this->reps->all();
+        $all = $reps->all();
 
-		$reps = $reps->filter(function($item){
+		$all = $all->filter(function($item){
 
 			return $item->purchases->first()->status !== "cancelled";
 		});
 
-		return $reps->mapInto(Personalizer::class);
+		return $all->mapInto(Personalizer::class);
 	}
 
 	public function getLang(){
