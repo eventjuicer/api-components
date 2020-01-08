@@ -53,7 +53,7 @@ class CompanyData extends Model {
 
 	public function getReps(){
 
-		if(!$this->model->company_id || !$eventId){
+		if(!$this->model->company_id || !self::$eventId){
 			return collect([]);
 		}
 
