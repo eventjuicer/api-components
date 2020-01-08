@@ -58,17 +58,17 @@ class Console {
 		return $this->eventId;
 	}
 
-	public function getSendable(){
+	public function getSendable($uniqueCompanies=true){
 
-        $filtered = $this->sendable->filter($this->getDataset(), $this->getEventId());
+        $filtered = $this->sendable->filter($this->getDataset($uniqueCompanies), $this->getEventId());
 
         return $filtered;
 
 	}
 
-	public function getDataset($unique=false, $enrich=true){
+	public function getDataset($uniqueCompanies=true, $enrich=true){
 
-		$res = $unique ? $this->dataset->unique("company_id") : $this->dataset;
+		$res = $uniqueCompanies ? $this->dataset->unique("company_id") : $this->dataset;
 
 		CompanyData::setEventId($this->getEventId());
 
