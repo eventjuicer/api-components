@@ -95,6 +95,9 @@ class CompanyData {
 		return $this->getFname() . " " . $this->getLname();
 	}
 
+	public function hasAccountManager(){
+		return  ($this->model->company->admin_id > 0);
+	}
 
 	function __get($name){
 		return $this->model->{$name};
