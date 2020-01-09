@@ -16,13 +16,14 @@ class Email {
 	function getAdmin(){
 		
 		if($this->model->company->admin_id){
-			return $this->model->company->admin->toArray();
+	//		return $this->model->company->admin->toArray();
 		}
 
 		//PIVOT!!!!
 
-		return $this->model->organizer->users->filter(function(){
+		return $this->model->organizer->users->filter(function($item){
 
+			dd( $item->toArray() );
 
 		})->first()->toArray();
 
