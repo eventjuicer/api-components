@@ -21,13 +21,16 @@ class Email {
 
 		//PIVOT!!!!
 
-		return $this->model->organizer->users->filter(function($item){
+		$defaultUser = $this->model->organizer->users->filter(function($item){
 
-			dd( $item->toArray() );
+			return $item->pivot->is_default == 1;
 
-		})->first()->toArray();
+		})->first();
 
-		//get default admin for an organizer!
+		dd( $defaultUser->toArray() );
+
+		return $defaultUser ? $defaultUser->toArray() : [];
+
 
 	}
 
