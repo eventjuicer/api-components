@@ -16,12 +16,15 @@ class Email {
 	function getAdmin(){
 		
 		if($this->model->company->admin_id){
-			return $this->model->company->admin->all();
+			return $this->model->company->admin->toArray();
 		}
 
 		//PIVOT!!!!
 
-		return $this->model->organizer->users->where("pivot.is_default", 1)->first()->all();
+		return $this->model->organizer->users->filter(function(){
+
+
+		})->first()->toArray();
 
 		//get default admin for an organizer!
 
