@@ -19,7 +19,9 @@ class Email {
 			return $this->model->company->admin->all();
 		}
 
-		return $this->model->organizer->users->where("is_default", 1)->first()->all();
+		//PIVOT!!!!
+
+		return $this->model->organizer->users->wherePivot("is_default", 1)->first()->all();
 
 		//get default admin for an organizer!
 
