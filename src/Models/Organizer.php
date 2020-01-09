@@ -39,7 +39,7 @@ class Organizer extends Model
 
       public function users()
       {
-         return $this->belongsToMany(User::class, "eventjuicer_user_organizations", "organizer_id", "user_id")->withPivot('is_default','roles','is_admin','theme');
+         return $this->belongsToMany(CompanyAdmin::class, "eventjuicer_user_organizations", "organizer_id", "user_id")->withPivot('is_default','roles','is_admin','theme');
       }
 
 
