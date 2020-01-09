@@ -16,18 +16,16 @@ class Email {
 	function getAdmin(){
 		
 		if($this->model->company->admin_id){
-	//		return $this->model->company->admin->toArray();
+			return $this->model->company->admin->toArray();
 		}
 
-		//PIVOT!!!!
+		//lookup for default admin
 
 		$defaultUser = $this->model->organizer->users->filter(function($item){
 
 			return $item->pivot->is_default == 1;
 
 		})->first();
-
-		dd( $defaultUser->toArray() );
 
 		return $defaultUser ? $defaultUser->toArray() : [];
 
