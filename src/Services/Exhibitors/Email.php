@@ -29,7 +29,7 @@ class Email {
 
 		$admin = $this->getAdmin();
 
-		return $admin->fname . " " . $admin->lname;
+		return array_get($admin, "fname") . " " . array_get($admin, "lname");
 	}
 
 	function getFooter(){
