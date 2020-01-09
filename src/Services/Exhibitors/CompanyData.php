@@ -48,6 +48,10 @@ class CompanyData {
         }) : [];
 	}
 
+	public function getModel(){
+		return $this->model;
+	}
+
 	public function companyData(){
 		return $this->model->company ? $this->model->company->data->mapWithKeys(function($item){
                 	return [$item->name => $item->value];
