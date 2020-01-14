@@ -43,7 +43,11 @@ class Console {
 
 	}
 
-	public function run(string $domain, array $rels = ["fields", "company.data", "company.participants"]){
+	public function run(string $domain = "", array $rels = ["fields", "company.data", "company.participants"]){
+
+		if(empty($domain) && !empty($this->params["domain"])){
+			$domain = $this->params["domain"];
+		}
 
         $route = new Resolver( $domain );
 
