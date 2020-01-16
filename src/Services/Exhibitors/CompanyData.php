@@ -45,7 +45,7 @@ class CompanyData {
 		return $this->model->fields ? $this->model->fields->mapWithKeys(function($item){
                 
                 return [$item->name => $item->pivot->field_value];
-        }) : [];
+        })->all() : [];
 	}
 
 	public function getModel(){
@@ -58,13 +58,18 @@ class CompanyData {
 			})->all() : [];
 	}
 
+	public function getPurchases(){
+
+		//
+	}
+
 	public function getReps(){
 
 		if(!$this->model->company_id || !self::$eventId){
 			return collect([]);
 		}
 
-		$reps = resolve(CompanyRepresentativeRepository::class);
+		$reps = app(CompanyRepresentativeRepository::class);
 		$reps->pushCriteria( new BelongsToCompany($this->model->company_id));
 		$reps->pushCriteria( new BelongsToEvent(self::$eventId));
         $reps->pushCriteria( new ColumnGreaterThanZero("parent_id") );
