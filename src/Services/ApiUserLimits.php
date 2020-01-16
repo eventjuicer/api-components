@@ -101,11 +101,23 @@ class ApiUserLimits {
 				// 	$base = $base + 15;
 				// }
 
-				if($this->points() > 19){
-					$earned = $earned + 50;
+				// if($this->points() > 29){
+				// 	$earned = $earned + 50;
+				// }
+
+				//liczmy ile mamy "50" w naszych punktach w przyblizeniu do liczby całkowitej
+				
+				$howMany50 = intval($this->points() / 50);
+
+				//za kazde "50" dajemy 50.... 
+				$earned = $howMany50 * 50;
+
+				//jesli łączna suma zapek (start+nagrody) przekracza 200 to przycinamy te z nagrod do takiego poziomu by suma = 200
+				if($base + $earned > 200){
+					$earned = 170;
 				}
 
-				$earned = $earned + intval($this->points() / 5);
+				// $earned = $earned + intval($this->points() / 5);
 
 
 			break;

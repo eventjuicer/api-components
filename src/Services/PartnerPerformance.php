@@ -35,7 +35,7 @@ class PartnerPerformance {
 	
 	protected $startDate;
 	protected $endDate;
-	protected $prefix = "th4wOPiy_"; //"th3rCMiM_";
+	protected $prefix = "th4x90iy_"; //"th3rCMiM_";
  
 
 	protected $ebe_prizes = [
@@ -79,7 +79,7 @@ class PartnerPerformance {
 				"name" => "meetups", 
 				"min" => 1, 
 				"max" => 50, 
-				"level" => 30
+				"level" => 50
 		],
 
 		[
