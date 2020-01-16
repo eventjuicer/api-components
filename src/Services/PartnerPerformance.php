@@ -40,17 +40,18 @@ class PartnerPerformance {
 
 	protected $ebe_prizes = [
   		
-		// [	
-		// 		"name" => "badges", 
-		// 		"min" => 1, 
-		// 		"max" => 1, 
-		// 		"level"=> 200
-		// ],
+		[	
+				"name" => "badges", 
+				"min" => 1, 
+				"max" => 1, 
+				"level"=> 500
+		],
+
 		[
 				"name" => "presentation", 
 				"min" => 1, 
-				"max" => 1, 
-				"level" => 200
+				"max" => 3, 
+				"level" => 250
 		],
 
 		// [		
@@ -64,7 +65,7 @@ class PartnerPerformance {
 				"name" => "video_interview", 
 				"min" => 1, 
 				"max" => 5,
-				"level" => 50
+				"level" => 150
 		],
 
 		[		
@@ -78,35 +79,35 @@ class PartnerPerformance {
 				"name" => "meetups", 
 				"min" => 1, 
 				"max" => 50, 
-				"level" => 20
+				"level" => 30
 		],
 
 		[
 				"name" => "brand_highlight", 
 				"min" => 1, 
-				"max" => 8,  
-				"level" => 40
+				"max" => 4,  
+				"level" => 100
 		],
 
-		// [
-		// 		"name" => "leaflets", 
-		// 		"min" => 1, 
-		// 		"max" => 10,  
-		// 		"level" => 20
-		// ],
+		[
+				"name" => "leaflets", 
+				"min" => 1, 
+				"max" => 15,  
+				"level" => 30
+		],
 	
 		// [		
 		// 		"name" => "scanner", 
 		// 		"min" => 1, 
-		// 		"max" => 50, 
-		// 		"level" => 10
+		// 		"max" => 30, 
+		// 		"level" => 30
 		// ],
 
 		[
 				"name" => "rollups", 
 				"min" => 1, 
 				"max" => 8,  
-				"level" => 20
+				"level" => 50
 		],
 
 		[		
