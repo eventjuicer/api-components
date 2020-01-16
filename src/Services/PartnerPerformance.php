@@ -36,7 +36,7 @@ class PartnerPerformance {
 	protected $startDate;
 	protected $endDate;
 	protected $prefix = "th4wOPiy_"; //"th3rCMiM_";
-	protected $tempPrefix = "th4xyOsiy_"; //fuckup raw link vs creatives!
+ 
 
 	protected $ebe_prizes = [
   		
@@ -244,6 +244,10 @@ class PartnerPerformance {
 		$this->prefix = $prefix;
 	}
 
+	public function getPrefix(){
+		return $this->prefix;
+	}
+
 	private function merge(Collection $participants, 
 						Collection $analytics, 
 						string $glue = "stats", 
@@ -352,91 +356,27 @@ class PartnerPerformance {
 		$query = function() use ($search, $period)
         {
 
-        	$dt = Period::days($period);
+        	//$dt = Period::days($period);
 
-
-        	//teh17
+        	//ebe5
         	$dt = Period::create(
-        		Carbon::createFromDate(2019, 10, 01), 
-        		Carbon::create(2019, 10, 21, 23, 59, 59)
+        		Carbon::createFromDate(2020, 01, 15), 
+        		Carbon::create(2020, 02, 04, 23, 59, 59)
         	);
 
-        	// $dt = Period::create(
-        	// 	Carbon::createFromDate(2019, 04, 01), 
-        	// 	Carbon::create(2019, 04, 16, 12, 00, 00)
-        	// );
-
 			$response = $this->analytics->performQuery(
-
 				$dt, 
-
 				"ga:sessions",  
 				[
 				'dimensions' 	=> 'ga:source',
 				'sort' 			=> '-ga:sessions',
 				'filters'		=> 'ga:source=@' . $search// . '&ga:sessionDuration>'
 				]
-
 			);
-
-
-			/*
-
-dd($response['rows']);
-
-array(26) {
-  [0]=>
-  array(2) {
-    [0]=>
-    string(13) "th4wOPiy_1132"
-    [1]=>
-    string(3) "129"
-
-*/
-
-
-			$mapped = [];
-
-			foreach($response['rows'] as $item){
-				$company_id = (int) str_replace($search, "", $item[0]);
-				$mapped[$company_id] = (int) $item[1];
-			}
-
-
-
-			$responseTEMP = $this->analytics->performQuery(
-
-				$dt, 
-
-				"ga:sessions",  
-				[
-				'dimensions' 	=> 'ga:source',
-				'sort' 			=> '-ga:sessions',
-				'filters'		=> 'ga:source=@' . $this->tempPrefix// . '&ga:sessionDuration>'
-				]
-
-			);
-
-			foreach($responseTEMP['rows'] as $item){
-
-				$company_id = (int) str_replace($this->tempPrefix, "", $item[0]);
-
-				if(isset( $mapped[$company_id] )){
-					//lets sum up!
-					$mapped[$company_id] = $mapped[$company_id] + (int) $item[1];
-				}
-				else{
-					//expand $mapped
-					$mapped[$company_id] = (int) $item[1];
-				}
-
-			}
-
-			return collect($mapped ?? [])->map(function ($points, $company_id){
-
+			return collect($response['rows'] ?? [])->map(function (array $pageRow, $position) use ($search) {
 				return [
-					'id' 			=> $company_id,
-					'sessions' 		=> $points,
+					'id' 			=> (int) str_replace($search, "", $pageRow[0]),
+					'sessions' 		=> (int) $pageRow[1],
 					'conversions' 	=> 0
 				];
 			});
@@ -444,7 +384,7 @@ array(26) {
 		};
 
 
-		return env("USE_CACHE", true) ? 
+		return env("USE_CACHE", false) ? 
 			$this->cache->remember($this->gaView . $search . "new", 10, $query) : 
 			$query();
 
