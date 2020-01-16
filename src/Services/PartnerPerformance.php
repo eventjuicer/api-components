@@ -375,8 +375,6 @@ class PartnerPerformance {
 				]
 			);
 
-			dd($response['rows']);
-			
 			return collect($response['rows'] ?? [])->map(function (array $pageRow, $position) use ($search) {
 				return [
 					'id' 			=> (int) str_replace($search, "", $pageRow[0]),
