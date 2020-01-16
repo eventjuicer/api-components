@@ -374,6 +374,9 @@ class PartnerPerformance {
 				'filters'		=> 'ga:source=@' . $search// . '&ga:sessionDuration>'
 				]
 			);
+
+			dd($response['rows']);
+			
 			return collect($response['rows'] ?? [])->map(function (array $pageRow, $position) use ($search) {
 				return [
 					'id' 			=> (int) str_replace($search, "", $pageRow[0]),
