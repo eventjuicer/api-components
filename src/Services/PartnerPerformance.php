@@ -114,7 +114,7 @@ class PartnerPerformance {
 				"name" => "blog", 
 				"min" => 1, 
 				"max" => 10,
-				"level" => 20
+				"level" => 50
 		],
 
 	];
