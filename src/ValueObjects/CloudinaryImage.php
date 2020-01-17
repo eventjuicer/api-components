@@ -42,7 +42,7 @@ class CloudinaryImage {
 
 	}
 
-	public function wrapped($template = "ebe_template_en")
+	public function wrapped($template = "ebe5_template_en")
 	{
 
 		if(!$this->isValid()){
@@ -50,7 +50,7 @@ class CloudinaryImage {
 		}
 		//download template.... check dimensions...calculate stuff....
 
-		return 'https://res.cloudinary.com/eventjuicer/image/upload/c_fit,h_270,w_800/u_'.$template.',y_-30/' . str_replace(".svg", ".jpg", $this->version() );
+		return 'https://res.cloudinary.com/eventjuicer/image/upload/c_fit,h_220,w_800/u_'.$template.',y_12/' . str_replace(".svg", ".jpg", $this->version() );
 	}
 
 
