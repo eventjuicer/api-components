@@ -70,7 +70,7 @@ class PublicCompanyResource extends Resource
         })->all();
 
         //it should be taken from settings....
-        $profile["og_template"] = $this->group_id > 1 ? 'ebe_template' : 'template_4';
+        $profile["og_template"] = $this->group_id > 1 ? 'ebe5_template' : 'template_4';
 
 
         $data = [
