@@ -204,6 +204,8 @@ class SaveOrder {
 			$participant->organizer_id 	= $this->organizer_id;
 			$participant->parent_id 	= $this->parent_id;
 			$participant->company_id 	= $this->company_id;
+
+			$participant->important 	= isset( $this->fields["important"] )? intval( $this->fields["important"] ) : 0;
 			
 			$participant->token 		= sha1(Uuid::generate(4));
 			$participant->createdon 	= Carbon::now();
