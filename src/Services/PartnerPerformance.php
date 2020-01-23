@@ -413,16 +413,28 @@ class PartnerPerformance {
 				]
 			);
 
-			return collect($response['rows'] ?? [])->map(function (array $pageRow, $position) use ($search) {
+			$sorted = collect($response['rows'] ?? [])->map(function (array $pageRow, $position) use ($search) {
 				return [
 					'id' 			=> (int) str_replace($search, "", $pageRow[0]),
 					'sessions' 		=> (int) $pageRow[1],
 					'conversions' 	=> 0
 				];
-			});
+			})->sortByDesc("sessions");
 
+			$position = 1;
+
+			return $sorted->transform(function($item) use (&$position) {
+
+				$item["position"] = $position;
+
+				$position++;
+
+				return $item;
+
+			})->values();
 		};
 
+		return $query();
 
 		return env("USE_CACHE", false) ? 
 			$this->cache->remember($this->gaView . $search . "new", 10, $query) : 
