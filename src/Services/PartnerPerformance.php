@@ -273,7 +273,9 @@ class PartnerPerformance {
 
 				$stats = $analytics->get($row->$mergeBy, $this->statsDefault);
 
-				$stats["sessions"] = $stats["sessions"] + $tweak_value;
+				$tweakedSessions = $stats["sessions"] + $tweak_value;
+
+				$stats["sessions"] = $tweakedSessions? $tweakedSessions : 0;
 
 				$row->{$glue} = $stats;
 			}
@@ -304,7 +306,9 @@ class PartnerPerformance {
 	
 				$stats = $analytics->get($row->$mergeBy, $this->statsDefault);
 
-				$stats["sessions"] = $stats["sessions"] + $tweak_value;
+				$tweakedSessions = $stats["sessions"] + $tweak_value;
+
+				$stats["sessions"] = $tweakedSessions > 0 ? $tweakedSessions : 0;
 
 				$row->company->{$glue} = $stats;
 			
