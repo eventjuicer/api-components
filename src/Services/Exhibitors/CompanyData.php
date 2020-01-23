@@ -27,6 +27,10 @@ class CompanyData {
 
 		$this->model = $model;
 		$this->messagebag = new MessageBag;
+
+		if(!isset($this->model->company_id)){
+			throw new \Exception("Bad argument provided");
+		}
 	}
 
 	public static function setEventId($eventId){

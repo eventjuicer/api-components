@@ -249,7 +249,11 @@ class PartnerPerformance {
 		return $this->prefix;
 	}
 
-	private function merge(Collection $participants, 
+	public function getDefaultStats(){
+		return $this->statsDefault;
+	}
+
+	public function merge(Collection $participants, 
 						Collection $analytics, 
 						string $glue = "stats", 
 						string $mergeBy = "company_id")
@@ -281,6 +285,36 @@ class PartnerPerformance {
 
    	}
 
+   	public function mergeExhibitors(Collection $participants, 
+						Collection $analytics, 
+						string $glue = "stats", 
+						string $mergeBy = "company_id")
+	{
+
+		$analytics = $analytics->keyBy("id");
+
+		$participants->map(function($row) use ($analytics, $glue, $mergeBy)
+		{
+
+			if($row->company_id && $row->company){
+				
+				$cd_lookup = $row->company->data->where("name", "ranking_tweak");
+
+				$tweak_value = $cd_lookup->count() ? intval( $cd_lookup->first()->value ) : 0;
+	
+				$stats = $analytics->get($row->$mergeBy, $this->statsDefault);
+
+				$stats["sessions"] = $stats["sessions"] + $tweak_value;
+
+				$row->company->{$glue} = $stats;
+			
+			}
+			
+		});
+
+		return $participants;
+
+   	}
 
    	public function getStatsForCompanies($eventId, $period = 90)
 	{	
@@ -345,7 +379,7 @@ class PartnerPerformance {
 
 	*/
 
-	private function getAnalyticsForSource($search="", $period = 90) : Collection
+	public function getAnalyticsForSource($search="", $period = 90) : Collection
 	{
 
 		if(!$this->analytics)
