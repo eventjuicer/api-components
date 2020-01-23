@@ -14,13 +14,15 @@ class PublicPartnerPerformanceResource extends Resource
 
         $cd = new CompanyData($this->resource);
 
+        $logotype = $cd->getLogotypeCdn();
+
         $data = [];
 
         $data["id"] = $this->id;
 
 		$data["company_id"] = $this->company_id;
         $data["name"] = $cd->getName() ?? $this->company->slug;
-        $data["logotype"] = (new CloudinaryImage($cd->getLogotypeCdn()))->thumb();
+        $data["logotype"] = $logotype ? (new CloudinaryImage($logotype))->thumb() : "";
 	    $data["stats"] = isset($this->company->stats) ? $this->company->stats : [];
 
 		return $data;
