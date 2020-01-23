@@ -30,7 +30,7 @@ class PartnerPerformance {
 
 	protected $repo, $participants, $companies, $role, $cache, $gaView, $analytics;
 	
-	protected $statsDefault = ["sessions" => 0, "conversions" => 0];
+	protected $statsDefault = ["sessions" => 0, "conversions" => 0, "position" => 0];
 
 	
 	protected $startDate;
@@ -313,12 +313,75 @@ class PartnerPerformance {
 				$row->company->{$glue} = $stats;
 			
 			}
+
+			return $row;
 			
 		});
 
 		return $participants;
 
    	}
+
+
+   	public function getExhibitorRankingPosition($active_event_id){
+
+		$ga = $this->getAnalyticsForSource($this->getPrefix(), 90);
+
+		$participants = $this->role->get($active_event_id, "exhibitor", ["company.data"]);
+
+		//filter...we only need exhbitors with company assigned!
+
+		$participants = $participants->filter(function($item){
+			return $item->company != null;
+		});
+
+		//filter...we must only have unique companies....
+
+		$participants = $participants->unique("company_id");
+
+		//enrich with GA data....
+		$mapped = $this->mergeExhibitors($participants, $ga);
+
+		$sorted = $mapped->sortByDesc("company.stats.sessions")->values();
+
+		$position = 1;
+
+		return $sorted->map(function($exh) use (&$position) {
+
+			$stats = isset($exh->company->stats) ? $exh->company->stats: $this->getDefaultStats();
+			$stats["position"] = $stats["sessions"] > 0 ? $position : 0;
+			
+
+			$prizes = $this->getPrizes($exh->group_id); 
+
+			//check what prizes ...
+
+			$stats["prizes"] = collect($prizes)->filter(function($prize) use ($stats) {
+				
+				if($stats["position"] < $prize["min"] || $stats["position"] > $prize["max"]){
+					return false;
+				}
+
+				if($stats["sessions"] < $prize["level"]){
+					return false;
+				}
+
+				return true;
+
+			})->map(function($item){ return $item["name"]; });
+
+			$exh->company->stats = $stats;
+			
+			//update position!
+			$position++;
+
+			return $exh;
+
+		});
+
+	}
+
+
 
    	public function getStatsForCompanies($eventId, $period = 90)
 	{	
@@ -342,6 +405,9 @@ class PartnerPerformance {
 	}
 
 
+
+
+	//IT SHOULD make use of getExhibitorRankingPosition
 	//used by api user limits
 
 	public function getCompanyRankingPosition(ApiUser $apiUser)
@@ -413,28 +479,14 @@ class PartnerPerformance {
 				]
 			);
 
-			$sorted = collect($response['rows'] ?? [])->map(function (array $pageRow, $position) use ($search) {
+			return collect($response['rows'] ?? [])->map(function (array $pageRow, $position) use ($search) {
 				return [
 					'id' 			=> (int) str_replace($search, "", $pageRow[0]),
 					'sessions' 		=> (int) $pageRow[1],
 					'conversions' 	=> 0
 				];
-			})->sortByDesc("sessions");
-
-			$position = 1;
-
-			return $sorted->transform(function($item) use (&$position) {
-
-				$item["position"] = $position;
-
-				$position++;
-
-				return $item;
-
-			})->values();
+			});
 		};
-
-		return $query();
 
 		return env("USE_CACHE", false) ? 
 			$this->cache->remember($this->gaView . $search . "new", 10, $query) : 
