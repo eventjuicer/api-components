@@ -368,7 +368,7 @@ class PartnerPerformance {
 
 				return true;
 
-			})->map(function($item){ return $item["name"]; });
+			})->map(function($item){ return $item["name"]; })->values();
 
 			$exh->company->stats = $stats;
 			

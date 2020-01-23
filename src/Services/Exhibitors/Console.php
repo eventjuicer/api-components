@@ -79,7 +79,7 @@ class Console {
 
         $route = new Resolver( $domain );
 
-        $this->eventId = $previous === false ? $route->previousEvent() : $route->getEventId();
+        $this->eventId = $previous ? $route->previousEvent() : $route->getEventId();
         $this->groupId = $route->getGroupId();
         $this->dataset = $this->repo->get($this->eventId, "exhibitor", $this->additionalRels);
 
