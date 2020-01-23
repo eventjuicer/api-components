@@ -18,6 +18,7 @@ class Console {
 	protected $params, $requirements = [];
 	protected $messagebag;
 	protected $performance;
+	protected $additionalRels = ["fields", "company.data", "company.participants"];
 
 	function __construct(
 		GetByRole $repo, 
@@ -77,7 +78,7 @@ class Console {
      
 	}
 
-	public function run(string $domain = "", array $rels = ["fields", "company.data", "company.participants"]){
+	public function run(string $domain = "", $previous = false){
 
 		if(empty($domain) && !empty($this->params["domain"])){
 			$domain = $this->params["domain"];
@@ -85,9 +86,9 @@ class Console {
 
         $route = new Resolver( $domain );
 
-        $this->eventId = $route->getEventId();
+        $this->eventId = $previous === false ? $route->previousEvent() : $route->getEventId();
         $this->groupId = $route->getGroupId();
-        $this->dataset = $this->repo->get($this->eventId, "exhibitor", $rels);
+        $this->dataset = $this->repo->get($this->eventId, "exhibitor", $this->additionalRels);
 
 	}
 
