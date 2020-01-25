@@ -26,8 +26,8 @@ class Creatives {
         return [
 
             "facebook" => "https://www.facebook.com/sharer/sharer.php?u=".$url,
-            "linkedin" => "https://www.linkedin.com/shareArticle?mini=true&url=".$url,
-            "twitter" => "https://twitter.com/home?status=" . $url
+            "linkedin" => "https://www.linkedin.com/sharing/share-offsite/?url=".$url,
+            "twitter" => "https://twitter.com/intent/tweet?text=" . $url
         ];
     }
 
