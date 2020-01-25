@@ -18,6 +18,7 @@ use Eventjuicer\Repositories\CompanyRepresentativeRepository;
 use Eventjuicer\Repositories\Criteria\ColumnGreaterThanZero;
 use Eventjuicer\Repositories\Criteria\BelongsToEvent;
 use Eventjuicer\Repositories\Criteria\BelongsToCompany;
+use Eventjuicer\Repositories\Criteria\SortByDesc;
 
 
 class CompanyData {
@@ -128,7 +129,28 @@ class CompanyData {
         return $logotype;
 	}
 
-	public function getReps(){
+	/*
+	ticketpivot
+
+
+	["participant_id"]=>
+	int(55681)
+	["purchase_id"]=>
+	int(56814)
+	["ticket_id"]=>
+	int(1138)
+	["event_id"]=>
+	int(76)
+	["quantity"]=>
+	int(1)
+	["formdata"]=>
+	string(0) ""
+	["sold"]=>
+	int(0)
+
+      */
+
+	public function getReps($role = "representative", $enhanced = true){
 
 		if(!$this->model->company_id || !self::$eventId){
 			return collect([]);
@@ -138,19 +160,22 @@ class CompanyData {
 		$reps->pushCriteria( new BelongsToCompany($this->model->company_id));
 		$reps->pushCriteria( new BelongsToEvent(self::$eventId));
         $reps->pushCriteria( new ColumnGreaterThanZero("parent_id") );
-        $reps->with(["fields", "purchases"]);
+        $reps->pushCriteria( new SortByDesc("id") );
+        $reps->with(["fields", "ticketpivot.ticket"]);
+
         $all = $reps->all();
 
-		$all = $all->filter(function($item){
+		$all = $all->filter(function($item) use ($role) {
 
-			if(!$item->purchases->first()){
-				return false;
-			}
+			$soldTicketsWithRole = $item->ticketpivot->where("sold", 1)->filter(function($ticketpivot) use ($role) {
+				return $ticketpivot->ticket->role === $role;
+			})->count();
 
-			return $item->purchases->first()->status !== "cancelled";
-		});
+			return $soldTicketsWithRole > 0;
 
-		return $all->mapInto(Personalizer::class);
+		})->values();
+
+		return $enhanced ? $all->mapInto(Personalizer::class) : $all;
 	}
 
 	public function getLang(){
