@@ -12,9 +12,6 @@ class Host extends Model
 
     protected $table = "eventjuicer_hosts";
 
-    protected $primaryKey = 'host';
-
-
     //  return $this->belongsTo('App\User', 'foreign_key', 'other_key');
 
 
