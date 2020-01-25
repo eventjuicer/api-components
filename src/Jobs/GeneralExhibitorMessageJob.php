@@ -26,20 +26,14 @@ class GeneralExhibitorMessageJob extends Job // implements ShouldQueue
      * @return void
      */
 
-    protected $participant, $eventId;
-    public $subject, $view, $event_manager, $lang;
+    public $participant, $eventId, $config;
 
     public function __construct(Participant $participant, int $eventId, array $config)
     {
         
-        $this->participant = $participant;
-        $this->eventId = $eventId;
-
-        $this->view = array_get($config, "email");
-
-        $this->subject = array_get($config, "subject", "");
-        $this->event_manager = array_get($config, "event_manager", "");
-        $this->lang = array_get($config, "lang");
+        $this->participant      = $participant;
+        $this->eventId          = $eventId;
+        $this->config           = $config;
        
     }
 
@@ -68,10 +62,7 @@ class GeneralExhibitorMessageJob extends Job // implements ShouldQueue
 
         Mail::send( new Email( 
                 $this->participant, 
-                $this->subject, 
-                $this->view,
-                $this->lang,
-                $this->event_manager
+                $this->config, 
         ));
 
 
