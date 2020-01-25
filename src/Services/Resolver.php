@@ -14,12 +14,29 @@ class Resolver {
 	protected $organizer_id = 0, $groupId = 0, $activeEventId = 0;
 
 
-	function __construct(string $host)
+	function __construct(string $host = "")
 	{
+		if(!empty($host)){
+			$this->setHost($host);
+		}
+	}
+
+	public function setHost(string $host){
+
 		$this->host = strtolower(trim($host));
 
 		$this->resolve();
 	}
+
+	public function fromGroupId($group_id){
+		
+		$host = Host::where('group_id', $group_id )->firstOrFail()->host;
+
+		$this->setHost($host);
+
+		return $host;
+	}
+
 
 	protected function resolve()
 	{
