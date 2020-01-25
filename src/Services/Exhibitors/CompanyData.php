@@ -4,10 +4,15 @@ namespace Eventjuicer\Services\Exhibitors;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Illuminate\Support\MessageBag;
+
+
+use Eventjuicer\Models\Participant;
 //
 use Eventjuicer\ValueObjects\EmailAddress;
+use Eventjuicer\ValueObjects\CloudinaryImage;
+//
 use Eventjuicer\Services\Personalizer;
-use Eventjuicer\Models\Participant;
+use Eventjuicer\Services\Resolver;
 //
 use Eventjuicer\Repositories\CompanyRepresentativeRepository;
 use Eventjuicer\Repositories\Criteria\ColumnGreaterThanZero;
@@ -22,6 +27,8 @@ class CompanyData {
 	protected $defaultLang = "en";
 	protected $messagebag;
 	
+	protected $prefix = "th4x90iy_";
+    protected $campaign = "promoninja";
 
 	function __construct(Model $model){
 
@@ -32,6 +39,39 @@ class CompanyData {
 			throw new \Exception("Bad argument provided");
 		}
 	}
+
+	public function getHostFromGroupId(){
+
+		return (new Resolver())->fromGroupId( $this->getModel()->group_id );
+	}
+
+	public function profileUrl(){
+
+		$name = $this->getName() ?? $this->getCompany()->slug;
+
+        return "https://".$this->getHostFromGroupId()."/" .  str_slug(trim($name), "-") .  ",c,". $this->getCompany()->id;
+
+    }
+
+    public function accountUrl(){
+    	return "https://account.".$this->getHostFromGroupId()."/#/login?token=" . $this->getModel()->token;
+    }
+
+	public function trackingLink($medium = "banner", $ad = "")
+	{
+
+		return $this->profileUrl() . sprintf("?utm_source=".$this->prefix."%d&utm_medium=%s&utm_campaign=".$this->campaign."&utm_content=%s", $this->getCompany()->id, $medium, $ad);
+	}
+
+	//moved from ApiUser
+	// public function companyPublicProfile(string $baseHost){
+
+	// 	$name = array_get($this->companyData, "name", $this->company()->slug);
+
+	// 	return rtrim($baseHost, "/") . "/" . str_slug($name, '-') . ",c," . $this->company()->id;
+
+	// }
+
 
 	public static function setEventId($eventId){
 		self::$eventId = $eventId;
@@ -56,8 +96,12 @@ class CompanyData {
 		return $this->model;
 	}
 
+	public function getCompany(){
+		return $this->model->company;
+	}
+
 	public function companyData(){
-		return $this->model->company ? $this->model->company->data->mapWithKeys(function($item){
+		return $this->getCompany() ? $this->getCompany()->data->mapWithKeys(function($item){
                 	return [$item->name => $item->value];
 			})->all() : [];
 	}
@@ -65,6 +109,17 @@ class CompanyData {
 	public function getPurchases(){
 
 		//
+	}
+
+	public function logotype(){
+
+        $logotype = new CloudinaryImage($this->getLogotypeCdn());
+
+        if(! $logotype->isValid()){
+          $logotype = new CloudinaryImage($this->getLogotype());
+        }
+
+        return $logotype;
 	}
 
 	public function getReps(){
@@ -109,7 +164,7 @@ class CompanyData {
 	}
 
 	public function hasAccountManager(){
-		return  ($this->model->company->admin_id > 0);
+		return  ($this->getCompany()->admin_id > 0);
 	}
 
 	function __get($name){
