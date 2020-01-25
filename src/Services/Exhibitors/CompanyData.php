@@ -60,7 +60,13 @@ class CompanyData {
 	public function trackingLink($medium = "banner", $ad = "")
 	{
 
-		return $this->profileUrl() . sprintf("?utm_source=".$this->prefix."%d&utm_medium=%s&utm_campaign=".$this->campaign."&utm_content=%s", $this->getCompany()->id, $medium, $ad);
+		return sprintf("?utm_source=".$this->prefix."%d&utm_medium=%s&utm_campaign=".$this->campaign."&utm_content=%s", $this->getCompany()->id, $medium, $ad);
+	}
+
+	public function trackedAccountUrl($medium = "banner", $ad = ""){
+
+		return $this->profileUrl() . $this->trackingLink($medium, $ad);
+	
 	}
 
 	//moved from ApiUser
