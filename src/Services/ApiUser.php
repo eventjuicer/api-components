@@ -99,13 +99,6 @@ class ApiUser {
 		return (string) new Personalizer($this->user(), "[[logotype]]");
 	}
 
-	public function trackingLink($medium = "banner", $ad = "")
-	{
-
-		return sprintf("?utm_source=th4x90iy_%d&utm_medium=%s&utm_campaign=promoninja&utm_content=%s", $this->company()->id, $medium, $ad);
-	}
-
-
 
 	public function realUser()
 	{
@@ -177,13 +170,6 @@ class ApiUser {
 			})->pluck("formdata")->all();
 	}
 
-	public function companyPublicProfile(string $baseHost){
-
-		$name = array_get($this->companyData, "name", $this->company()->slug);
-
-		return rtrim($baseHost, "/") . "/" . str_slug($name, '-') . ",c," . $this->company()->id;
-
-	}
 
 
 	public function __get($attr)
