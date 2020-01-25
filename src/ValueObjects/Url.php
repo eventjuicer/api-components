@@ -11,7 +11,7 @@ class Url {
 	protected $headers;
 
 
-	function __construct($url)
+	function __construct($url = "")
 	{
 
 		$url = trim($url);
@@ -37,8 +37,13 @@ class Url {
 		return (string) $this->url;
 	}
 
-
-
+	public function encodeURIComponent($url = "") {
+		if(empty($url)){
+			$url = $this->url;
+		}
+	    $revert = array('%21'=>'!', '%2A'=>'*', '%27'=>"'", '%28'=>'(', '%29'=>')');
+	    return strtr(rawurlencode($url), $revert);
+	}
 
 	public function getMimeType()
 	{
