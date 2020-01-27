@@ -125,6 +125,10 @@ class Console {
 
 	}
 
+	public function setDatasetRels(array $additionalRels){
+		$this->additionalRels = $additionalRels;
+	}
+
 	public function getDataset($uniqueCompanies=true, $enrich=true){
 
 		$dataset = $this->repo->get($this->eventId, "exhibitor", $this->additionalRels);

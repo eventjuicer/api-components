@@ -25,22 +25,23 @@ class ExhibitorReportResource extends Resource
         $data["reps"] = $this->getReps("representative")->count();
         $data["party"] = $this->getReps("party")->count();
         $data["errors"] = $this->getCompanyDataErrors();
-        $data["purchases"] = [];
+        $data["purchases"] = ReportTicketResource::collection($this->getPurchases());
+       // $data["ranking"] = $this->
 
         return $data;
     }
 
 
-    protected function hasTicketPivot(){
+    // protected function hasTicketPivot(){
 
-        $p = $this->relationLoaded("participants");
+    //     $p = $this->relationLoaded("participants");
 
-        if($p && $this->participants->first() ){
-            return $this->participants->first()->relationLoaded("ticketpivot");
-        }
+    //     if($p && $this->participants->first() ){
+    //         return $this->participants->first()->relationLoaded("ticketpivot");
+    //     }
 
-        return false;
-    }
+    //     return false;
+    // }
 }
 
 

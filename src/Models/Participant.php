@@ -127,7 +127,7 @@ class Participant extends Model
     public function tickets()
     {
         
-        return $this->belongsToMany(Ticket::class, 'bob_participant_ticket', 'participant_id', 'ticket_id')->withPivot("purchase_id", "sold");
+        return $this->belongsToMany(Ticket::class, 'bob_participant_ticket', 'participant_id', 'ticket_id')->withPivot("purchase_id", "sold", "quantity");
 
     }
 
@@ -196,7 +196,7 @@ class Participant extends Model
     public function paidTickets()
     {
         
-        return $this->belongsToMany(Ticket::class, 'bob_participant_ticket', 'participant_id', 'ticket_id')->wherePivot("sold", 1)->withPivot("purchase_id");
+        return $this->belongsToMany(Ticket::class, 'bob_participant_ticket', 'participant_id', 'ticket_id')->wherePivot("sold", 1)->withPivot("purchase_id", "sold", "quantity");
 
     }
 

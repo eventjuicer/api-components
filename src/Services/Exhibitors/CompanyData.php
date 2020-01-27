@@ -21,6 +21,7 @@ use Eventjuicer\Repositories\Criteria\BelongsToEvent;
 use Eventjuicer\Repositories\Criteria\BelongsToCompany;
 use Eventjuicer\Repositories\Criteria\SortByDesc;
 use Eventjuicer\Services\Exhibitors\Validator;
+use Eventjuicer\Services\Exhibitors\Purchases;
 
 class CompanyData {
 
@@ -154,7 +155,11 @@ class CompanyData {
 
 	public function getPurchases(){
 
-		//
+		$company = $this->getCompany();
+		
+		$purchases = $company ? (new Purchases($company))->fromEvent(self::$eventId) : collect([]);
+
+		return $purchases;
 	}
 
 	public function logotype(){
