@@ -91,8 +91,19 @@ class Console {
 
         $this->eventId = $previous ? $route->previousEvent() : $route->getEventId();
         $this->groupId = $route->getGroupId();
-        $this->dataset = $this->repo->get($this->eventId, "exhibitor", $this->additionalRels);
 
+	}
+
+	public function setEventId($eventId){
+
+		$this->eventId = $eventId;
+
+		$route = new Resolver();
+		
+		$route->fromEventId($eventId);
+
+		$this->groupId = $route->getGroupId();
+	
 	}
 
 	public function getEventId(){
@@ -115,7 +126,9 @@ class Console {
 
 	public function getDataset($uniqueCompanies=true, $enrich=true){
 
-		$res = $uniqueCompanies ? $this->dataset->unique("company_id") : $this->dataset;
+		$dataset = $this->repo->get($this->eventId, "exhibitor", $this->additionalRels);
+
+		$res = $uniqueCompanies ? $dataset->unique("company_id")->values() : $dataset;
 
 		CompanyData::setEventId($this->getEventId());
 
