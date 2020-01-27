@@ -28,6 +28,15 @@ class Resolver {
 		$this->resolve();
 	}
 
+	public function fromEventId($event_id){
+		
+		$group_id = Event::where('id', $event_id )->firstOrFail()->group_id;
+
+		$host = $this->fromGroupId($group_id);
+
+		return $host;
+	}
+
 	public function fromGroupId($group_id){
 		
 		$host = Host::where('group_id', $group_id )->firstOrFail()->host;
