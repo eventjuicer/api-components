@@ -5,6 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Illuminate\Support\MessageBag;
 
+use Illuminate\Support\Collection;
 
 use Eventjuicer\Models\Participant;
 //
@@ -19,7 +20,7 @@ use Eventjuicer\Repositories\Criteria\ColumnGreaterThanZero;
 use Eventjuicer\Repositories\Criteria\BelongsToEvent;
 use Eventjuicer\Repositories\Criteria\BelongsToCompany;
 use Eventjuicer\Repositories\Criteria\SortByDesc;
-
+use Eventjuicer\Services\Exhibitors\Validator;
 
 class CompanyData {
 
@@ -92,11 +93,27 @@ class CompanyData {
 
 	}
 
-	public function profileData(){
-		return $this->model->fields ? $this->model->fields->mapWithKeys(function($item){
+	protected function filterFields(Collection $collection, array $limitTo = []){
+
+		return empty($limitTo) ? $collection->all() : $collection->filter(function($value, $name) use ($limitTo){
+			return in_array($name, $limitTo);
+
+		})->all();
+
+	}
+
+	public function profileData(array $limitTo = []){
+
+		if(!$this->model->fields){
+			return [];
+		}
+
+		$arr = $this->model->fields->mapWithKeys(function($item){
                 
                 return [$item->name => $item->pivot->field_value];
-        })->all() : [];
+        });
+
+        return $this->filterFields($arr, $limitTo);
 	}
 
 	public function getModel(){
@@ -107,10 +124,22 @@ class CompanyData {
 		return $this->model->company;
 	}
 
-	public function companyData(){
-		return $this->getCompany() ? $this->getCompany()->data->mapWithKeys(function($item){
+	public function companyData(array $limitTo = []){
+
+		if(!$this->getCompany()){
+			return [];
+		}
+
+		$arr = $this->getCompany()->data->mapWithKeys(function($item){
                 	return [$item->name => $item->value];
-			})->all() : [];
+		});
+
+		return $this->filterFields($arr, $limitTo);
+	}
+
+	public function getCompanyDataErrors(){
+		
+		return (new Validator($this))->status();
 	}
 
 	public function getPurchases(){

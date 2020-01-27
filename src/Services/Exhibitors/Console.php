@@ -19,6 +19,7 @@ class Console {
 	protected $messagebag;
 	protected $performance;
 	protected $additionalRels = ["fields", "company.data", "company.participants"];
+	protected $additionalRepRels = ["fields", "company.data"];
 
 	function __construct(
 		GetByRole $repo, 
@@ -133,6 +134,16 @@ class Console {
 		CompanyData::setEventId($this->getEventId());
 
 		return $enrich ? $res->mapInto(CompanyData::class) : $res;
+
+	}
+
+	public function getAllReps($enrich=true){
+
+		$dataset = $this->repo->get($this->eventId, "representative", $this->additionalRepRels);
+
+		CompanyData::setEventId($this->getEventId());
+
+		return $enrich ? $dataset->mapInto(CompanyData::class) : $dataset;
 
 	}
 
