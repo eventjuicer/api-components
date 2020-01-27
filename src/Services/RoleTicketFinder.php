@@ -24,6 +24,13 @@ class RoleTicketFinder {
 		self::$eventId = $eventId;
 	}
 
+	public function getId(string $role){
+
+		$res = $this->getOne($role);
+
+		return $res ? $res->id : null;
+	}
+
 	public function getOne(string $role){
 
 		$res = $this->get($role);
@@ -32,10 +39,14 @@ class RoleTicketFinder {
 			throw new \Exception("Only one ticket with role " . $role . " allowed.");
 		}
 
-		return $res->first() ? $res->first()->id : 0;
+		return $res->first();
 	}
 
 	protected function get(string $role){
+
+		if(empty(self::$eventId)){
+			throw new \Exception("No event id set...");
+		}
 
 		$this->tickets->pushCriteria(new BelongsToEvent(self::$eventId));
 		$this->tickets->pushCriteria(new ColumnMatches("role", $role));
