@@ -62,7 +62,7 @@ class GeneralExhibitorMessageJob extends Job // implements ShouldQueue
 
         Mail::send( new Email( 
                 $this->participant, 
-                $this->config, 
+                $this->config
         ));
 
 
