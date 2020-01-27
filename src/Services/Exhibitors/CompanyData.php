@@ -80,7 +80,6 @@ class CompanyData {
 
 	// }
 
-
 	public static function setEventId($eventId){
 		self::$eventId = $eventId;
 	}
@@ -122,6 +121,17 @@ class CompanyData {
 
 	public function getCompany(){
 		return $this->model->company;
+	}
+
+	public function getCompanyAdminInitials(){
+
+		$company = $this->getCompany();
+
+		if(!$company || !$company->admin){
+			return "--undefined--";
+		}
+
+		return mb_strtoupper( mb_substr($company->admin->fname, 0, 1) . mb_substr($company->admin->lname, 0, 1) );
 	}
 
 	public function companyData(array $limitTo = []){
