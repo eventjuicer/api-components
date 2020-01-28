@@ -32,6 +32,13 @@ class Email {
 
 	}
 
+	function getCalendarUrl(){
+		
+		$admin = $this->getAdmin();
+
+		return array_get($admin, "calendar");
+	}
+
 	function getSender(){
 
 		$admin = $this->getAdmin();

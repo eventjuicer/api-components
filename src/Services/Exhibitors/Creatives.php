@@ -93,7 +93,7 @@ class Creatives {
                 "requires" => ["logotype"],
                 "enabled" => strpos(array_get($cd, "logotype_cdn", ""), "http") !== false,
                 "template" => $logotype_cdn_en,
-                "sharers" => $this->sharer( $this->companydata->trackingLink("link", "logotype,en") )
+                "sharers" => $this->sharer( $this->companydata->trackedProfileUrl("link", "logotype,en") )
             
             ],
 
@@ -108,7 +108,8 @@ class Creatives {
                 "services" => ["facebook"],
                 "requires" => ["logotype"],
                 "enabled" => strpos(array_get($cd, "logotype", ""), "http") !== false,
-                "template" => $logotype_cdn_de
+                "template" => $logotype_cdn_de,
+                "sharers" => $this->sharer( $this->companydata->trackedProfileUrl("link", "logotype,de") )
             
             ],
 
@@ -229,7 +230,7 @@ class Creatives {
                 "requires" => ["logotype"],
                 "enabled" => strpos(array_get($cd, "logotype", ""), "http") !== false,
                 "template" => $logotype_cdn_pl,
-                "sharers" => $this->sharer( $this->companydata->trackingLink("link", "logotype,pl") )
+                "sharers" => $this->sharer( $this->companydata->trackedProfileUrl("link", "logotype,pl") )
                 //"template" => 'https://res.cloudinary.com/eventjuicer/image/upload/c_fit,g_center,h_220,w_600,y_30,l_c_'.$company_id.'_logotype/ebe_template_en.png'
             ],
 
@@ -245,7 +246,7 @@ class Creatives {
                 "requires" => ["logotype"],
                 "enabled" => strpos(array_get($cd, "logotype", ""), "http") !== false,
                 "template" => $logotype_cdn_en,
-                "sharers" => $this->sharer( $this->companydata->trackingLink("link", "logotype,en") )
+                "sharers" => $this->sharer( $this->companydata->trackedProfileUrl("link", "logotype,en") )
                 //"template" => 'https://res.cloudinary.com/eventjuicer/image/upload/c_fit,g_center,h_220,w_600,y_30,l_c_'.$company_id.'_logotype/ebe_template_en.png'
             
             ],

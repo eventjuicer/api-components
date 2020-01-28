@@ -102,7 +102,7 @@ class SparkPost implements Templated {
 		$sparkData = [
 
 			"options" => [
-				"open_tracking" => true,
+				"open_tracking" => false,
 				"click_tracking" => false,
 				"transactional" => false,
 				//"sandbox" => false,
