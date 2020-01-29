@@ -15,8 +15,7 @@ use App\Mail\PingWhenEmptyProfileEmail as Email;
 use Eventjuicer\Models\Participant;
 use Eventjuicer\Repositories\ParticipantDeliveryRepository;
 use Eventjuicer\Services\Revivers\ParticipantSendable;
-
-use Eventjuicer\Services\CompanyData;
+use Eventjuicer\Services\Exhibitors\CompanyData;
 
 
 class PingWhenEmptyProfileJob extends Job // implements ShouldQueue
@@ -50,8 +49,7 @@ class PingWhenEmptyProfileJob extends Job // implements ShouldQueue
 
     public function handle(
         ParticipantDeliveryRepository $deliveries, 
-        ParticipantSendable $sendable, 
-        CompanyData $cd
+        ParticipantSendable $sendable
     ){
 
         //do we have company assigned?
@@ -61,11 +59,13 @@ class PingWhenEmptyProfileJob extends Job // implements ShouldQueue
             return;
         }
 
+        $ex = new CompanyData($this->participant);
+
+        $errors = $ex->getCompanyDataErrors();
      
         //check for companydata fields freshness :)
         //check for required fields
 
-        $errors = $cd->status($this->participant->company);
 
         if(!count($errors))
         {
