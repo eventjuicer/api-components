@@ -7,7 +7,7 @@ use Eventjuicer\Services\Resolver;
 
 class Purchases {
 	
-	protected $skippedRoles = ["representative", "party", "exhibitor"];
+	static protected $skippedRoles = ["representative", "party", "exhibitor"];
     protected $company;
 
 	function __construct(Company $company) {
@@ -17,8 +17,8 @@ class Purchases {
     }
 
 
-	public function skipRoles(string $skippedRoles){
-		$this->skippedRoles = $skippedRoles;
+	static public function skipRoles(array $skippedRoles){
+		self::$skippedRoles = $skippedRoles;
 	}
 
     public function fromEvent(int $eventId = 0) {
@@ -40,7 +40,7 @@ class Purchases {
               
         })->pluck("tickets")->collapse()->filter(function($ticket){
 
-            if(in_array($ticket->role, $this->skippedRoles)){
+            if(in_array($ticket->role, self::$skippedRoles)){
                 return false;
             }
 
