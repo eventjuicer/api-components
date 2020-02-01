@@ -22,6 +22,7 @@ use Eventjuicer\Repositories\Criteria\BelongsToCompany;
 use Eventjuicer\Repositories\Criteria\SortByDesc;
 use Eventjuicer\Services\Exhibitors\Validator;
 use Eventjuicer\Services\Exhibitors\Purchases;
+use Eventjuicer\Services\Exhibitors\CompanyReps;
 
 class CompanyData {
 
@@ -196,30 +197,8 @@ class CompanyData {
 
 	public function getReps($role = "representative", $enhanced = true){
 
-		if(!$this->model->company_id || !self::$eventId){
-			return collect([]);
-		}
-
-		$reps = app(CompanyRepresentativeRepository::class);
-		$reps->pushCriteria( new BelongsToCompany($this->model->company_id));
-		$reps->pushCriteria( new BelongsToEvent(self::$eventId));
-        $reps->pushCriteria( new ColumnGreaterThanZero("parent_id") );
-        $reps->pushCriteria( new SortByDesc("id") );
-        $reps->with(["fields", "ticketpivot.ticket"]);
-
-        $all = $reps->all();
-
-		$all = $all->filter(function($item) use ($role) {
-
-			$soldTicketsWithRole = $item->ticketpivot->where("sold", 1)->filter(function($ticketpivot) use ($role) {
-				return $ticketpivot->ticket->role === $role;
-			})->count();
-
-			return $soldTicketsWithRole > 0;
-
-		})->values();
-
-		return $enhanced ? $all->mapInto(Personalizer::class) : $all;
+		CompanyReps::setEventId(self::$eventId);
+		return (new CompanyReps($this->getCompany()))->get($role, $enhanced);
 	}
 
 	public function getLang(){
