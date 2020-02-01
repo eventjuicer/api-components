@@ -58,6 +58,9 @@ class PublicCompanyResource extends Resource
         self::$skipProfile = false;
     }
 
+    public static function setFields(array $fields){
+        self::$presenterFields = $fields;
+    }
 
     public function toArray($request)
     {   
