@@ -4,27 +4,29 @@ namespace Eventjuicer\Services;
 
 use Illuminate\Http\Request;
 use Eventjuicer\Repositories\ParticipantRepository;
-
-
-
 use Eventjuicer\Repositories\Criteria\ColumnMatches;
+use Eventjuicer\Repositories\Criteria\ColumnMatchesArray;
 use Eventjuicer\Repositories\Criteria\ColumnGreaterThanZero;
 use Eventjuicer\Repositories\Criteria\RelHasNonZeroValue;
+use Eventjuicer\Repositories\Criteria\BelongsToCompany;
+use Eventjuicer\Repositories\CompanyDataRepository;
 
 class ApiUserRestore {
 	
-	protected $request, $json, $participants;
-	
+	protected $request, $json, $participants, $companydata;
 
 	function __construct(
 
 		Request $request, 
-		ParticipantRepository $participants
+		ParticipantRepository $participants,
+		CompanyDataRepository $companydata
 		)
 	{
+		
 		$this->request = $request;
 		$this->participants = $participants;
-	
+		$this->companydata = $companydata;
+
 		$this->json = json_decode($request->getContent(), true);
 
 	}
@@ -37,15 +39,26 @@ class ApiUserRestore {
 	}
 
 	
-
-
 	public function authenticate()
 	{
+		$company_id = $this->postData("company_id");
 		$email = $this->postData("email");
 		$token = $this->postData("token");
 		$password = $this->postData("password");
 
-		if($email)
+		if($company_id && $password){
+			$this->companydata->pushCriteria(new BelongsToCompany($company_id));
+			$this->companydata->pushCriteria(new ColumnMatches("name","password"));
+			$row = $this->companydata->all()->first();
+
+			if($row && $row->value === $password){
+				return true;
+			}
+
+			return false;
+		}
+
+		if($email && $password)
 		{
 			$subaccounts = $this->findSubaccountUser("email", $email);
 			$master = $this->findCompanyUser("email", $email);
@@ -65,9 +78,10 @@ class ApiUserRestore {
 
 
 			}
+
+			return false;
 		}
 		
-
 
 		return null;
 

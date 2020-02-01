@@ -8,14 +8,11 @@ use Bosnadev\Repositories\Contracts\RepositoryInterface as Repository;
 
 class ColumnMatchesArray extends Criteria {
 
-    private $column_name;
-    private $value;
-  
+    private $conditions;
 
-    function __construct($column_name, $value)
+    function __construct(array $conditions)
     {
-        $this->column_name  = $column_name;
-        $this->value        = $value;
+        $this->conditions  = $conditions;
       
     }
 
@@ -27,12 +24,15 @@ class ColumnMatchesArray extends Criteria {
     public function apply($model, Repository $repository)
     {
 
-        if($this->or)
-        {
-             return $model->orwhere($this->column_name, "like", $this->value);
+        foreach($this->conditions as $cond){
+            $parsed = explode(",", $cond);
+            if(count($parsed)==3){
+                $model->where($parsed[0], $parsed[1], $parsed[2]);
+            }else{
+                $model->where($parsed[0], "=", $parsed[1]);
+            }
         }
-
-        return $model->wherein($this->column_name, "like", $this->value);
+        return $model;
 
     }
 }
