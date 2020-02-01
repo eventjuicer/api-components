@@ -75,6 +75,7 @@ class PublicCompanyResource extends Resource
         //it should be taken from settings....
         $profile["og_template"] = $this->group_id > 1 ? 'ebe5_template' : 'template_4';
 
+        $profile["thumbnail"] = !empty($profile["logotype_cdn"]) ? (new CloudinaryImage($profile["logotype_cdn"]))->thumb() : '';
 
         $data = [
 
