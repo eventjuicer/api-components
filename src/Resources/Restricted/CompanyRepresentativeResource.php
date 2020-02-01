@@ -4,6 +4,8 @@ namespace Eventjuicer\Resources\Restricted;
 
 use Illuminate\Http\Resources\Json\Resource;
 use Eventjuicer\Services\Personalizer;
+use Eventjuicer\Services\Hashids;
+
 
 class CompanyRepresentativeResource extends Resource
 {
@@ -11,15 +13,21 @@ class CompanyRepresentativeResource extends Resource
     public function toArray($request)
     {       
 
-          $data = [];
+      $codedId = (new Hashids())->encode($this->id);
+	  $token = substr($this->token, 0, 5);
 
-          $data["id"] = $this->id;
 
-          $data["profile"] = ( new Personalizer($this->resource) )->getProfile();
+      $data = [];
 
-          $data["created_at"] = (string) $this->createdon;
+      $data["id"] = $this->id;
 
-          $data["updated_at"] = (string) $data["created_at"];
+      $data["profile"] = ( new Personalizer($this->resource) )->getProfile();
+
+      $data["mobileappcode"] = $codeId . "@" . $token;
+
+      $data["created_at"] = (string) $this->createdon;
+
+      $data["updated_at"] = (string) $data["created_at"];
 
           return $data;
 
