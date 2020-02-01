@@ -14,7 +14,8 @@ class MobileAppCompanyResource extends Resource
     protected $presenterFields = [
 
         "name",
-        "logotype_cdn"
+        "logotype_cdn",
+        "lang"
 
     ];
 
@@ -24,30 +25,28 @@ class MobileAppCompanyResource extends Resource
 
     public function toArray($request)
     {   
+
+        $profile = $this->data->whereIn("name", $this->presenterFields)->mapWithKeys(function($item){     
+
+                return [ $item->name => $item->value ] ;
+
+        })->all();
         
+        $profile["logotype_cdn"] = !empty($profile["logotype_cdn"]) ? (new CloudinaryImage($profile["logotype_cdn"]))->thumb() : "";
+
+        $profile["name"] = !empty($profile["name"]) ? $profile["name"] : $this->slug;
+
+        $profile["lang"] = !empty($profile["lang"]) ? $profile["lang"] : "en";
 
         return [
 
             "id" => $this->id,
-      
-            "name" => $this->name ?? $this->slug,
-
-            "slug" => $this->slug,
-        
-            "assigned_at" => (string) $this->assigned_at,
             
-            "has_password" => intval( strlen($this->password) === 40),
-
             "reps" => CompanyRepresentativeResource::collection($this->reps),
 
             "purchases" => ReportTicketResource::collection($this->purchases),
 
-            "profile"   =>  $this->data->whereIn("name", $this->presenterFields)->mapWithKeys(function($item)
-            {     
-
-                return [ $item->name => $item->value ] ;
-
-            })->all(),
+            "profile"   =>  $profile,
 
         ];
     }
