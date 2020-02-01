@@ -13,7 +13,7 @@ class CompanyRepresentativeResource extends Resource
     public function toArray($request)
     {       
 
-      $codedId = (new Hashids())->encode($this->id);
+      $codeId = (new Hashids())->encode($this->id);
 	  $token = substr($this->token, 0, 5);
 
 
