@@ -4,12 +4,12 @@ namespace Eventjuicer\Services;
 
 use Illuminate\Http\Request;
 use Eventjuicer\Repositories\ParticipantRepository;
+use Eventjuicer\Repositories\CompanyDataRepository;
 use Eventjuicer\Repositories\Criteria\ColumnMatches;
 use Eventjuicer\Repositories\Criteria\ColumnMatchesArray;
 use Eventjuicer\Repositories\Criteria\ColumnGreaterThanZero;
 use Eventjuicer\Repositories\Criteria\RelHasNonZeroValue;
 use Eventjuicer\Repositories\Criteria\BelongsToCompany;
-use Eventjuicer\Repositories\CompanyDataRepository;
 
 class ApiUserRestore {
 	
@@ -52,7 +52,7 @@ class ApiUserRestore {
 			$row = $this->companydata->all()->first();
 
 			if($row && $row->value === $password){
-				return true;
+				return $row->company;
 			}
 
 			return false;
