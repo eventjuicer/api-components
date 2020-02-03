@@ -201,6 +201,10 @@ class CompanyData {
 		return (new CompanyReps($this->getCompany()))->get($role, $enhanced);
 	}
 
+	public function getMeetups(){
+		return $this->getCompany()->meetups;
+	}
+
 	public function getLang(){
 
 		$lang = array_get($this->companyData(), "lang", "");
