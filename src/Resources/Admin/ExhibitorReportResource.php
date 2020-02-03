@@ -19,8 +19,11 @@ class ExhibitorReportResource extends Resource
     {   
         $data = [];
 
+        $data["id"] = $this->id;
+        $data["company_id"] = $this->company_id;
+
         $data["account"] = $this->getCompanyAdminInitials();
-        $data["profile"] = $this->profileData(["fname","lname","phone","booth"]);
+        $data["profile"] = $this->profileData(["booth"]);
         $data["company"] = $this->companyData(["name", "event_manager", "pr_manager", "keywords", "lang"]);
         $data["reps"] = $this->getReps("representative")->count();
         $data["party"] = $this->getReps("party")->count();
