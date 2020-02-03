@@ -121,6 +121,10 @@ class CompanyData {
 		return $this->model;
 	}
 
+	public function hasCompany(){
+		return !is_null($this->model->company);
+	}
+
 	public function getCompany(){
 		return $this->model->company;
 	}
@@ -156,11 +160,11 @@ class CompanyData {
 
 	public function getPurchases(){
 
-		$company = $this->getCompany();
+		if($this->hasCompany()){
+			return (new Purchases($this->getCompany()))->fromEvent(self::$eventId);
+		}
 		
-		$purchases = $company ? (new Purchases($company))->fromEvent(self::$eventId) : collect([]);
-
-		return $purchases;
+		return collect([]);
 	}
 
 	public function logotype(){
@@ -198,11 +202,20 @@ class CompanyData {
 	public function getReps($role = "representative", $enhanced = true){
 
 		CompanyReps::setEventId(self::$eventId);
-		return (new CompanyReps($this->getCompany()))->get($role, $enhanced);
+
+		if($this->hasCompany()){
+			return (new CompanyReps($this->getCompany()))->get($role, $enhanced);
+		}
+
+		return collect([]);
 	}
 
 	public function getMeetups(){
-		return $this->getCompany()->meetups;
+
+		if($this->hasCompany()){
+			return $this->getCompany()->meetups;
+		}
+		return collect([]);
 	}
 
 	public function getLang(){
@@ -222,7 +235,7 @@ class CompanyData {
 	}
 
 	public function hasAccountManager(){
-		return  ($this->getCompany()->admin_id > 0);
+		return ($this->hasCompany() && $this->getCompany()->admin_id > 0);
 	}
 
 	function __get($name){
