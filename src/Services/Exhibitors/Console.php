@@ -126,7 +126,21 @@ class Console {
 	}
 
 	public function setDatasetRels(array $additionalRels){
-		$this->additionalRels = $additionalRels;
+		foreach($additionalRels as $rel){
+			$this->setDatasetRel($rel);
+		}
+	}
+	
+	public function setDatasetRel(string $additionalRel){
+
+		//check if we are overlapping???
+		// $shouldBeAdded = false;
+		// foreach($this->additionalRels as $rel){
+		// 	if(stripos(haystack, needle)){
+
+		// 	}
+		// }
+		$this->additionalRels[] = $additionalRel;
 	}
 
 	public function getDataset($uniqueCompanies=true, $enrich=true){
