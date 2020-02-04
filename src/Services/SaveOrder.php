@@ -49,6 +49,7 @@ class SaveOrder {
 	protected $company_id = 0;
 	protected $participant_id = 0;
 	protected $participant = null;
+	protected $event = null;
 	protected $organizer_id = 0;
 	protected $group_id = 0;
 	protected $event_id = 0;
@@ -70,105 +71,110 @@ class SaveOrder {
 	}
 
 	public function setFields(array $fields){
-		$this->fields 	= $fields;
+		foreach($fields as $field_name => $field_value){
+			$this->fields[$field_name] 	= $field_value;
+		}
 	}
 
 	public function setTickets(array $tickets){
-		$this->tickets 	= $tickets;
+		foreach($tickets as $ticket_id => $quantity){
+			$this->tickets[$ticket_id] = $quantity;
+		}
 	}
 
 	public function setParticipantId(int $participant_id){
 
-		$participant = Participant::find($participant_id);
-
-		if($participant_id > 0 && $participant){
-			$this->participant_id = $participant_id;
-			$this->participant = $participant;
+		if($participant_id){
+			$this->setParticipant(Participant::findOrFail($participant_id));
 		}
 	}
 
 	public function setParticipant(Model $model){
-		$this->participant_id = $model->id;
+		
 		$this->participant = $model;
+		$this->participant_id = $model->id;
+
+		if(! $this->event ){
+			$this->setEventId($model->event_id);
+		}
 	}
 
 	public function setParentId(int $parent_id){
 		
-		$parent = Participant::find($parent_id);
-
-		if($parent_id > 0 && $parent){
-
-			$this->parent_id = $parent_id;
-
-			if($parent->company_id){
-				$this->company_id = $parent->company_id;
-			}
+		if($parent_id){
+			$this->setParent( Participant::findOrFail($parent_id) );
 		}
 	}
 
 	public function setParent(Model $model){
-		$this->parent_id = $model->id;
-		$this->parent = $model;
 
-		if($model->company_id){
-			$this->company_id = $model->company_id;
-		}
+		$this->parent = $model;
+		$this->parent_id = $model->id;
+		$this->company_id = $model->company_id;
+
 	}
 
 	public function skipValidation(bool $skip = true){
 		$this->validate = !$skip;
 	}
 
+	public function setEventId(int $event_id){
+		$this->setEvent($event_id);
+	}
+
 	public function setEvent(int $event_id){
 		//generally it should be taken from tickets! :)
 
-		$event = Event::find($event_id);
-
-		if($event_id > 0 && $event){
-			$this->event_id 		= $event_id;
+		if($event_id){
+			
+			$event = Event::findOrFail($event_id);
+			$this->event 			= $event;
+			$this->event_id 		= $event->id;
 			$this->group_id 		= $event->group_id;
 			$this->organizer_id 	= $event->organizer_id;
 		}
-
+	
 	}
 
 	/* GETTERS */
 
-	function getParticipant()
+	public function getParticipant()
 	{
 		return $this->participant;
 	}
 
-	function getPurchase()
+	public function getPurchase()
 	{
 		return $this->purchase;
 	}
 
+	public function setPurchase(Purchase $purchase){
+		$this->purchase = $purchase;
+	}
+
 	function make(
-							$event_id = 0, 
-							$participant_id = 0, 
-							array $tickets, 
-							array $fields, 
-							$skipValidation = false, 
-							$parent_id = 0,
-							$locale = ""
-	) {
-
-
-		if(! (int) $event_id && ! (int) $participant_id)
-		{
-			throw new \Exception("Either event id or participant id must be given!");
-		}
+		$event_id = 0, 
+		$participant_id = 0, 
+		array $tickets, 
+		array $fields, 
+		$skipValidation = false, 
+		$parent_id = 0,
+		$locale = ""){
 
 
 		$this->setLocale($locale);
 		$this->setTickets($tickets);
 		$this->setFields($fields);
-		$this->setEvent($event_id);
+		$this->setEventId($event_id);
 		$this->setParentId($parent_id);
 		$this->setParticipantId($participant_id);
 		$this->skipValidation($skipValidation);
 
+
+		if( !$this->event && !$this->participant )
+		{
+			throw new \Exception("Either event or participant must be resolved!");
+		}
 
 
 		if( ! $this->validate )
@@ -187,8 +193,7 @@ class SaveOrder {
 		
 		}
 
-
-		if(! $this->participant_id )
+		if(! $this->participant )
 		{
 			//create new participant!
 
@@ -204,8 +209,6 @@ class SaveOrder {
 			$participant->organizer_id 	= $this->organizer_id;
 			$participant->parent_id 	= $this->parent_id;
 			$participant->company_id 	= $this->company_id;
-
-			$participant->important 	= isset( $this->fields["important"] )? intval( $this->fields["important"] ) : 0;
 			
 			$participant->token 		= sha1(Uuid::generate(4));
 			$participant->createdon 	= Carbon::now();
@@ -213,10 +216,14 @@ class SaveOrder {
 			$participant->confirmed 	= 1;
 			$participant->lang 			= $this->locale;
 
+			if( isset($this->fields["important"]) ){
+				$participant->important = intval($this->fields["important"]);
+			}
+
 			$participant->save();
 
 			$this->setParticipant($participant);
-
+ 	
 			//event(new UserWasRegistered());
 		}
 		
@@ -226,6 +233,21 @@ class SaveOrder {
 
 	}
 
+
+	public function makeVip(string $referral = ""){
+
+		if(!  $this->participant ){
+			throw new \Exception("No participant set!");
+		}
+
+		$this->participant->important = 1;
+		$this->participant->save();
+
+		$this->updateFields(array(
+			"important" => 1,
+			"referral" => $referral
+		));
+	}
 
 	protected function saveTickets()
 	{
@@ -252,7 +274,6 @@ class SaveOrder {
 		//save Purchase
 
 		$purchase = new Purchase();
-
 		
 		$purchase->event_id 		= $this->event_id;
 		$purchase->group_id 		= $this->group_id;
@@ -269,7 +290,7 @@ class SaveOrder {
 		$purchase->updatedon		= Carbon::now();
 		$purchase->save();
 
-		$this->purchase = $purchase;
+		$this->setPurchase( $purchase );
 
 		foreach($this->tickets as $ticket_id => $quantity)
 		{	
@@ -282,6 +303,8 @@ class SaveOrder {
 			$t->quantity 		= $quantity;
 			$t->sold 			= 1;
 			$t->save();
+
+			unset( $this->tickets[$ticket_id] );
 		}
 	}
 
@@ -311,29 +334,28 @@ class SaveOrder {
 			$pf->updatedon  	= Carbon::now();
 			$pf->field_id 		= $field_id;
 			$pf->field_value 	= $field_value;
-			$pf->save();
+			$saved = $pf->save();
 
+			unset( $this->fields[$field_name] );
+			
 		}
-
 	}
 
 
-	public function updateFields($data = [])
+	public function updateFields(array $data = [])
 	{
 
-		if(!empty($data) && is_array($data)){
-			$this->setFields($data);
-		}
+		$this->setFields($data);
 
-		if(empty($this->participant_id)){
+		if(! $this->participant ){
 			throw new \Exception("No participant defined!");
 		}
 
 		foreach($this->fields as $field_name => $field_value)
 		{
 
+			$field_name = strtolower(trim($field_name));
 			//this is senseless... array should be checked..!
-
 			$field = Input::where("name", $field_name)->first();
 
 			if(is_null($field)) {
@@ -354,6 +376,11 @@ class SaveOrder {
 				$this->participant->fields()->updateExistingPivot($field->id, $data);
 
 			}else{
+
+
+				$data["organizer_id"] = $this->organizer_id;
+				$data["group_id"] = $this->group_id;
+				$data["event_id"] = $this->event_id;
 
 				$this->participant->fields()->attach($field->id, $data);
 			}
