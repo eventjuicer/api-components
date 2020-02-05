@@ -152,77 +152,30 @@ class SaveOrder {
 		$this->purchase = $purchase;
 	}
 
-	function make(
-		$event_id = 0, 
-		$participant_id = 0, 
-		array $tickets = [], 
-		array $fields = [], 
-		$skipValidation = false, 
-		$parent_id = 0,
-		$locale = ""){
-
-		$this->setLocale($locale);
-		$this->setTickets($tickets);
-		$this->setFields($fields);
-		$this->setEventId($event_id);
-		$this->setParentId($parent_id);
-		$this->setParticipantId($participant_id);
-		$this->skipValidation($skipValidation);
-
+	function make(){
 
 		if( !$this->event && !$this->participant )
 		{
 			throw new \Exception("Either event or participant must be resolved!");
 		}
 
-
-		if( ! $this->validate )
-		{
+		if( !$this->validate ){
 
 			if( ! $this->validateFields())
 			{
-				throw new \Exception("Problem with fields");
+			//	throw new \Exception("Problem with fields");
 			}
-
 
 			if( ! $this->validateTickets())
 			{
 				throw new \Exception("Problem with tickets");
-			}
-		
+			}		
 		}
 
-		if(! $this->participant )
-		{
+		if(! $this->participant ){
+
 			//create new participant!
-
-			if(empty($this->fields["email"]) || strpos($this->fields["email"], "@")===false)
-			{
-				throw new \Exception("Valid email must be provided");
-			}	
-
-			$participant = new Participant;
-
-			$participant->event_id 		= $this->event_id;
-			$participant->group_id 		= $this->group_id;
-			$participant->organizer_id 	= $this->organizer_id;
-			$participant->parent_id 	= $this->parent_id;
-			$participant->company_id 	= $this->company_id;
-			
-			$participant->token 		= sha1(Uuid::generate(4));
-			$participant->createdon 	= Carbon::now();
-			$participant->email 		= $this->fields["email"];
-			$participant->confirmed 	= 1;
-			$participant->lang 			= $this->locale;
-
-			if( isset($this->fields["important"]) ){
-				$participant->important = intval($this->fields["important"]);
-			}
-
-			$participant->save();
-
-			$this->setParticipant($participant);
- 	
+			$this->registerParticipant();			
 			//event(new UserWasRegistered());
 		}
 		
@@ -232,6 +185,39 @@ class SaveOrder {
 
 	}
 
+	public function registerParticipant(){
+
+		if(empty($this->fields["email"]) || strpos($this->fields["email"], "@")===false){
+				throw new \Exception("Valid email must be provided");
+		}	
+
+		if( ! $this->event){
+
+			throw new \Exception("No event data!");
+		}
+
+		$participant = new Participant;
+
+		$participant->event_id 		= $this->event_id;
+		$participant->group_id 		= $this->group_id;
+		$participant->organizer_id 	= $this->organizer_id;
+		$participant->parent_id 	= $this->parent_id;
+		$participant->company_id 	= $this->company_id;
+
+		$participant->token 		= sha1(Uuid::generate(4));
+		$participant->createdon 	= Carbon::now();
+		$participant->email 		= $this->fields["email"];
+		$participant->confirmed 	= 1;
+		$participant->lang 			= $this->locale;
+
+		if( isset($this->fields["important"]) ){
+			$participant->important = intval($this->fields["important"]);
+		}
+
+		$participant->save();
+
+		$this->setParticipant($participant);
+	}
 
 	public function makeVip(string $referral = ""){
 
@@ -248,11 +234,9 @@ class SaveOrder {
 		));
 	}
 
-	protected function saveTickets()
-	{
+	protected function saveTickets(){
 
 		//count AMOUNT!
-
 		foreach($this->tickets as $ticket_id => $quantity){
 
 			$ticket = Ticket::find($ticket_id);
