@@ -81,12 +81,15 @@ class Personalizer implements Arrayable {
 
 	public function __get($attr) {
 
-		if(isset($this->profile[$attr]))
-		{
+		if( isset($this->profile[$attr]) ){
 			return $this->profile[$attr];
 		}
 
-		return $this->model->$attr;
+		if( isset($this->model->$attr) ){
+			return $this->model->$attr;
+		}
+
+		return null;
 	}
 
 	public function __call($name, $arguments) {
