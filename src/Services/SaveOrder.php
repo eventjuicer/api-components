@@ -66,7 +66,7 @@ class SaveOrder {
 	public function setLocale(string $locale){
 
 		if(strlen($locale) === 2){
-			$this->locale = $locale;
+			$this->locale = strtolower($locale);
 		}
 	}
 
@@ -155,12 +155,11 @@ class SaveOrder {
 	function make(
 		$event_id = 0, 
 		$participant_id = 0, 
-		array $tickets, 
-		array $fields, 
+		array $tickets = [], 
+		array $fields = [], 
 		$skipValidation = false, 
 		$parent_id = 0,
 		$locale = ""){
-
 
 		$this->setLocale($locale);
 		$this->setTickets($tickets);
