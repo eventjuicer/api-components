@@ -36,6 +36,7 @@ class PersonPdfLabel {
             "code"      => $profile->code,
             "ribbon"	=> $profile->isVip() ? "VIP" : null
 		];
+		
 
         $this->label = (new PdfLabel())->addPage()->make($data)->addPage()->make($data);
 

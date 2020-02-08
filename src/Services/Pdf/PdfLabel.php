@@ -116,6 +116,7 @@ class PdfLabel
 		$this->pdf->SetFont($bold ? 'freesansb' : 'freesans', '', $fontSize);	
 		$this->pdf->Cell($this->boxwidth, 0, $text, 0, 1, "C", false, "", $stretch ? 2 : 1); 
 
+
 		return $this;
 	}
 
