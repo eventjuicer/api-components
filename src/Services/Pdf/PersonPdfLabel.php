@@ -30,11 +30,11 @@ class PersonPdfLabel {
 		$this->path = app()->basePath( $this->directory . "ticket_".$profile->code.".pdf");
     
 		$data = [
-			"first"     => $profile->fname, 
-            "second"    => $profile->lname, 
-            "third"     => $profile->cname2,
+			"first"     => mb_strtoupper($profile->fname), 
+            "second"    => mb_strtoupper($profile->lname), 
+            "third"     => mb_strtoupper($profile->cname2),
             "code"      => $profile->code,
-            "ribbon"	=> $profile->isVip() ? "vip" : null
+            "ribbon"	=> $profile->isVip() ? "VIP" : null
 		];
 
         $this->label = (new PdfLabel())->addPage()->make($data)->addPage()->make($data);
