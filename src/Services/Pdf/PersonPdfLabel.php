@@ -1,17 +1,15 @@
-<?php namespace Eventjuicer\Services\Pdf;
+<?php 
+
+namespace Eventjuicer\Services\Pdf;
 
 use Illuminate\Database\Eloquent\Model;
-
-use Eventjuicer\Services\Hashids;
+use Eventjuicer\Services\Personalizer;
 
 class PersonPdfLabel {
 	
 	protected $model;
-
 	protected $directory;
-
 	protected $path;
-
 	protected $label;
 
 	function __construct(Model $model, $directory = "public/temp")
@@ -21,50 +19,41 @@ class PersonPdfLabel {
 
 		$this->directory = trim($directory, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
 
-		$this->generate();
-
 	}
 
 	function generate(){
 
 		$user = $this->model;
 
-		$code = (new Hashids())->encode($user->id); 
+		$profile = (new Personalizer($this->model));
 
-		$this->path = app()->basePath( $this->directory . "ticket_".$code.".pdf");
+		$this->path = app()->basePath( $this->directory . "ticket_".$profile->code.".pdf");
     
-        $this->label = (new PdfLabel())->addPage()->make([
+		$data = [
+			"first"     => $profile->fname, 
+            "second"    => $profile->lname, 
+            "third"     => $profile->cname2,
+            "code"      => $profile->code,
+            "ribbon"	=> $profile->isVip() ? "vip" : null
+		];
 
-            "first"     => $user->profile("fname"), 
-            "second"    => $user->profile("lname"), 
-            "third"     => $user->profile("cname2"),
-            "code"      => $code
+        $this->label = (new PdfLabel())->addPage()->make($data)->addPage()->make($data);
 
-        ])
-
-       ->addPage()->make([
-
-            "first"     => $user->profile("fname"), 
-            "second"    => $user->profile("lname"), 
-            "third"     => $user->profile("cname2"),
-            "code"      => $code
-
-        ]);
-
-
+        return $this->label;
 	}
 
 
 	function save()
 	{
 
+		$this->generate();
+
        	$this->label->save($this->path);
 
        	$publicPath = str_replace(app()->basePath("public"), "", $this->path);
 
-     	 return url( $publicPath );
+     	return url( $publicPath );
 
-       // return "https://api.eventjuicer.com" . $publicPath;
 	}
 
 

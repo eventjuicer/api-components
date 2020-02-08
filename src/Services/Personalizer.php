@@ -78,15 +78,28 @@ class Personalizer implements Arrayable {
 		return $profile;
 	}
 
+	public function isVip(){
+
+		return ( $this->important > 0 || strlen($this->referral) > 1 );
+
+	}
+
+	public function getCode(){
+		return (new Hashids())->encode($this->model->id); 
+	}
 
 	public function __get($attr) {
 
-		if( isset($this->profile[$attr]) ){
-			return $this->profile[$attr];
+		if($attr === "code" || $attr === "hash"){
+			return $this->getCode();
 		}
 
 		if( isset($this->model->$attr) ){
 			return $this->model->$attr;
+		}
+
+		if( isset($this->profile[$attr]) ){
+			return $this->profile[$attr];
 		}
 
 		return null;
