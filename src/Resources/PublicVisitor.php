@@ -6,35 +6,25 @@ use Illuminate\Http\Resources\Json\Resource;
 
 use Eventjuicer\Models\Participant;
 use Eventjuicer\ValueObjects\EmailAddress;
-use Eventjuicer\Services\Hashids;
-
+use Eventjuicer\Services\Personalizer;
 
 class PublicVisitor extends Resource
 {
-
-    protected $presenterFields = ["fname", "cname2"];
 
 
     public function toArray($request)
     {
 
-            if(!$this->fields){
-                return [];
-            }
-
-            $profile = $this->fields->whereIn("name", $this->presenterFields)->mapWithKeys(function($item)
-            {     
-                return [ $item->name => $item->pivot->field_value ] ;
-
-            })->all();
-
-            $data = array_merge(array_fill_keys($this->presenterFields, ""), $profile);
-
+            $profile = new Personalizer($this->resource);
 
             $data["id"] = (int) $this->id;
+            $data["fname"] = (string) $profile->fname;
+            $data["cname2"] = (string) $profile->cname2;
+            $data["phone"] = str_pad ( substr( (string) $profile->phone, -3) , 9, "*", STR_PAD_LEFT);
+            $data["vip"] = (string) $profile->isVip();
             $data["ns"] = "participant";
             $data["email"] = (new EmailAddress($this->email))->obfuscated();
-            $data["code"] = (new Hashids())->encode($this->id);
+            $data["code"] = $profile->code;
 
            return $data;
     }
