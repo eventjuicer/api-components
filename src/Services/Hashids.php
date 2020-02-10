@@ -38,6 +38,12 @@ class Hashids {
 
 	}
 
+	function encodeArr(array $ids)
+	{
+	       
+	        return $this->hashids->encode($ids);
+	}
+
 	function encode($id = 0)
 	{
 	       
