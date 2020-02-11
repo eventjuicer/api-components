@@ -33,6 +33,7 @@ class ParticipantSendable {
 
 	protected $resolver;
 	protected $actions = [];
+	protected $file = "";
 
 	function __construct(ParticipantDeliveryRepository $deliveries, ParticipantMuteRepository $mutes)
 	{
@@ -43,6 +44,10 @@ class ParticipantSendable {
 
 		$this->setMuteTime();
 
+	}
+
+	public function excludeFromFile(string $file){
+		$this->file = strtolower( trim( file_get_contents($file) ) );
 	}
 
 	public function setMuteTime($muteTime = 120)
@@ -104,6 +109,10 @@ class ParticipantSendable {
 
 			if(!empty($excludes) && in_array($email, $excludes) )
 			{
+				return false;
+			}
+
+			if(!empty($this->file) && strpos($this->file, $email)!==false ){
 				return false;
 			}
 
