@@ -24,7 +24,7 @@ class CompanyReps {
 		self::$eventId = $eventId;
 	}
 
-	public function get($role = "representatve", $enhanced = true){
+	public function get($role = "representative", $enhanced = true){
 
 		if(!$this->company){
 			return collect([]);
