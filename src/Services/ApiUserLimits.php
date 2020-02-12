@@ -97,9 +97,9 @@ class ApiUserLimits {
 
 				$base = 30 + $tweak;
 
-				// if($this->user->company()->id == 1260){
-				// 	$base = $base + 15;
-				// }
+				if($this->user->company()->id == 1309){
+					$base = 500;
+				}
 
 				// if($this->points() > 29){
 				// 	$earned = $earned + 50;
