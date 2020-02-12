@@ -57,6 +57,11 @@ class CompanyData {
 
     }
 
+    public function getSafeName(){
+    	$name = $this->getName() ?? $this->getCompany()->slug;
+    	return str_slug($name, "_");
+    }
+
     public function accountUrl(){
     	return "https://account.".$this->getHostFromGroupId()."/#/login?token=" . $this->getModel()->token;
     }
