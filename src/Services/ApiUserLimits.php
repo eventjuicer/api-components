@@ -97,7 +97,7 @@ class ApiUserLimits {
 
 				$base = 30 + $tweak;
 
-				if($this->user->company()->id == 1309){
+				if($this->user->company()->id == 1309 || $this->user->company()->id == 1054){
 					$base = 500;
 				}
 
