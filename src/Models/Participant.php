@@ -88,11 +88,15 @@ class Participant extends Model
         return $this->hasMany(SocialVote:: class);
     }
 
+    public function ticketdownload()
+    {
+        return $this->hasOne(TicketDownload:: class);
+    }
+
     public function ticketdownloads()
     {
         return $this->hasMany(TicketDownload:: class);
     }
-
 
     public function parent()
     {
@@ -155,6 +159,10 @@ class Participant extends Model
         return $this->hasMany(ParticipantFields::class, "participant_id");
     }
 
+    // public function phone()
+    // {
+    //     return $this->hasMany(ParticipantFields::class, "participant_id")->where("field_id", 8);
+    // }
 
     /**NEW OR CHECKED**/
 
