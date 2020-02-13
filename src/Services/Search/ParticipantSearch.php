@@ -14,61 +14,48 @@ class ParticipantSearch {
 protected $result;
 
 
-function __construct(Repository $repo, int $event_id, string $q, $addFields = [])
-{
+function __construct(Repository $repo, int $event_id, string $q, $addFields = []){
 
-        if(!$q || strlen($q) < 3)
-        {
-            return null;
+        if(!$q || strlen($q) < 3){
+            return;
         }
 
-         $rows = [];
 
-        if(strpos($q, "@")!==false)
-        {
+        if(strpos($q, "@")!==false){
+
             $repo->with(["fields"]);
             $repo->pushCriteria(new BelongsToEvent($event_id));
             $repo->pushCriteria(new ColumnMatches("email", "%" . $q . "%"));
                 
-            $rows = $repo->all();
+            $this->result = $repo->all();
         
-        }
-        else
-        {
-            if(is_numeric($q) && strlen($q) > 2)
-            {
+        }else{
 
-                $rows = ParticipantFields::with("participant", "participant.fields")->where("event_id", $event_id)->where("field_id", 8)->where("field_value", "LIKE", $q."%")->get()->pluck("participant");     
+            if(is_numeric($q) && strlen($q) > 2){
 
-           }
-            else
-            {
+                $rows = ParticipantFields::with("participant", "participant.fields")->where("event_id", $event_id)->where("field_id", 8)->where("field_value", "LIKE", $q."%")->get()->pluck("participant");  
+
+                $this->result = $rows;   
+
+           }else{
 
                 $rows1 = ParticipantFields::with("participant", "participant.fields")->where("event_id", $event_id)->whereIn("field_id", array_merge([3,11], (array) $addFields))->where("field_value", "LIKE", $q."%")->get()->pluck("participant");
 
                 $repo->with(["fields"]);
                 $repo->pushCriteria(new BelongsToEvent($event_id));
                 $repo->pushCriteria(new ColumnMatches("email", "%" . $q . "%"));    
-
                 $rows = $rows1->merge( $repo->all() );
+
+                $this->result = $rows->unique("id")->values();
+
             }
-      
         }
-
-        //filter CANCELLED...
-
-        
-
-        $this->result = $rows->unique("id")->values();
-
-       
-
 }
 
 
 function results()
 {
-    return $this->result;
+    return $this->result ? $this->result : collect([]);
 }
 
 
