@@ -248,7 +248,12 @@ trait Fields {
     "253"=> "presentation_category",
     "254"=> "avatar_cdn",
     "255"=> "logotype_cdn",
-    "256"=> "votes_earned"
+    "256"=> "votes_earned",
+    "257"=> "account",
+    "258"=> "important",
+    "259"=> "referral",
+    "260"=> "winner"
+
   );
 
 
