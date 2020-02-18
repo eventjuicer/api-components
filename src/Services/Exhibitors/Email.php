@@ -39,6 +39,22 @@ class Email {
 		return array_get($admin, "calendar");
 	}
 
+	function getPollUrl(){
+
+		$admin = $this->getAdmin();
+
+		$id = array_get($admin, "id");
+
+		if($id == 16){
+			return 'https://forms.gle/DgCoXsnGgnv4nieL6';
+			
+		}else{
+			
+			return 'https://forms.gle/Z9GDgyj4Xi49afd26';
+		}
+	}
+
+
 	function getSender(){
 
 		$admin = $this->getAdmin();
