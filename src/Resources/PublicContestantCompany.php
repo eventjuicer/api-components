@@ -26,18 +26,18 @@ class PublicContestantCompany extends Resource
         "avatar_cdn",
 
         "featured",
-
         "awards_category",
-      
+
         "product_name",
         "product_description",
-      
         "project_name",
         "project_description",
-      
+        
         "video",
         "difference",
-        "innovations"
+        "innovations",
+        
+        "winner"
 
     );
 
