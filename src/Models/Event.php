@@ -23,6 +23,17 @@ class Event extends Model
     {
     	return $this->hasMany(Ticket::class, "event_id");
     }
+
+    public function ticketgroups()
+    {
+        return $this->hasMany(TicketGroup::class, "event_id");
+    }
+
+    public function fieldsets()
+    {
+        return $this->hasMany(Fieldset::class, "event_id");
+    }
+      
       
     public function purchases()
     {

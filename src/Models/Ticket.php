@@ -3,72 +3,53 @@
 
 /*
 
-id  
-
-portal_id
-
-organizer_id
-
-admin_id       
-
-parent_id      
-
-is_published       
-
-is_sticky       
-
-is_promoted       
-
-is_coverstory     
-
-is_deleted    
-
-interactivity   
-
-createdon    
-
-updatedon      
-
-publishedon     
-
-editedby
+    id 
+    portal_id
+    organizer_id
+    admin_id       
+    parent_id      
+    is_published       
+    is_sticky       
+    is_promoted       
+    is_coverstory     
+    is_deleted    
+    interactivity   
+    createdon    
+    updatedon      
+    publishedon     
+    editedby
 
 */  
+
+
 namespace Eventjuicer\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-
 use Eventjuicer\Models\Traits\AbleTrait;
 
+class Ticket extends Model{
 
-class Ticket extends Model
-{
-
-
-  use AbleTrait;
-
+    use AbleTrait;
 
     protected $table = "bob_tickets";
+    public $timestamps = false;
 
     protected $casts = [
 
         'price' => 'array',
-        'names' => 'array'
+        'names' => 'array',
+        'descriptions' => 'array'
     ];
 
     protected $dates = ['start', 'end'];
 
-
-
-   //  public function pu()
-   //  {
+   // public function pu(){
    //      return $this->hasManyThrough(
    //          'Models\Participant', 'Models\Participant',
    //          'id', 'user_id', 'id'
    //      );
-   
-   // }
+   //}
 
     public function purchasesNotCancelled()
     {
@@ -93,6 +74,11 @@ class Ticket extends Model
 
     }
 
+    public function fields(){
+        
+        return $this->belongsToMany(Field::class, 'bob_fieldsets')->withPivot("event_id", "type", "sorting");
+
+    }
   
     public function contexts()
     {

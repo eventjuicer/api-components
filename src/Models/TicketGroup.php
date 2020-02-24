@@ -13,6 +13,7 @@ class TicketGroup extends Model
 
 
     protected $table = "bob_ticket_groups";
+    public $timestamps = false;
 
     protected $casts = [
 
