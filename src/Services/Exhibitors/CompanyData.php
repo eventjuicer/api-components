@@ -223,10 +223,10 @@ class CompanyData {
 		return collect([]);
 	}
 
-	public function getLang(){
+	public function getLang($defaultLang){
 
 		$lang = array_get($this->companyData(), "lang", "");
-		return strlen($lang)===2 ? $lang : $this->defaultLang;
+		return strlen($lang)===2 ? $lang : $defaultLang;
 	}
 
 	public function getEventManager(){
