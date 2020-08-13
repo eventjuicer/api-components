@@ -34,7 +34,8 @@ class PresenterResource extends Resource
         "bio",
         "featured",
         "custom_admin_1",
-        "cfp_category"
+        "cfp_category",
+        "featured_cfp"
     ); 
 
 

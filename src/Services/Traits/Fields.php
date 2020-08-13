@@ -252,7 +252,8 @@ trait Fields {
     "257"=> "account",
     "258"=> "important",
     "259"=> "referral",
-    "260"=> "winner"
+    "260"=> "winner",
+    "261"=> "featured_cfp"
 
   );
 
