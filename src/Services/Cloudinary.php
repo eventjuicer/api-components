@@ -58,6 +58,28 @@ class Cloudinary {
         ]);
 	}
 
+
+	public function uploadBase64($data, $name = "", array $options = [])
+	{
+
+		if(! imagecreatefromstring(base64_decode($data))){
+			return false;
+		}
+
+		$name = env("APP_ENV", "local") === "local" ? 'test_' . $name : $name;
+
+		if(!empty($name))
+		{
+			$options["public_id"] = $name;
+		}
+
+		$response = Uploader::upload($data, $options);
+
+		return $response;
+		
+		
+	}
+
 	public function upload($path, $name = "", array $options = [])
 	{
 
