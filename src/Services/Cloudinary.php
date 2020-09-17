@@ -62,9 +62,9 @@ class Cloudinary {
 	public function uploadBase64($data, $name = "", array $options = [])
 	{
 
-		if(! imagecreatefromstring(base64_decode($data))){
-			return false;
-		}
+		// if(! imagecreatefromstring(base64_decode($data))){
+		// 	return false;
+		// }
 
 		$name = env("APP_ENV", "local") === "local" ? 'test_' . $name : $name;
 
