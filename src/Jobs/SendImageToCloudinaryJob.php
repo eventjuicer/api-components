@@ -50,7 +50,7 @@ class SendImageToCloudinaryJob extends Job //implements ShouldQueue
 
         $company        = $this->companydata->company;
 
-        $validBase64 =  !empty($this->base64) && base64_encode(base64_decode($this->base64, true)) === $this->base64;
+        $validBase64 =  !empty($this->base64);// && base64_encode(base64_decode($this->base64, true)) === $this->base64;
      
         if(stristr($this->companydata->value, "http") === false || !$validBase64){
             //nothing to do!!!!
