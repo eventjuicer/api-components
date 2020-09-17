@@ -70,6 +70,6 @@ class ImageUrlWasProvidedListener
 
     public function handle(ImageUrlWasProvided $event)
     {               
-        dispatch( new SendImageToCloudinaryJob( $event->model, $event->base64 ) );
+        dispatch( new SendImageToCloudinaryJob( $event->model ) );
     }
 }

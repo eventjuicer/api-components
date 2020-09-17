@@ -30,11 +30,9 @@ class SendImageToCloudinaryJob extends Job //implements ShouldQueue
      */
 
     public $companydata;
-    public $base64 = "";
 
-    public function __construct(Model $companydata, $base64=""){
+    public function __construct(Model $companydata){
         $this->companydata = $companydata;
-        $this->base64 = $base64;
     }
 
     /**
@@ -49,18 +47,16 @@ class SendImageToCloudinaryJob extends Job //implements ShouldQueue
     ){
 
         $company        = $this->companydata->company;
-
-        $validBase64 =  !empty($this->base64);// && base64_encode(base64_decode($this->base64, true)) === $this->base64;
      
-        if(stristr($this->companydata->value, "http") === false || !$validBase64){
+        if(stristr($this->companydata->value, "http") === false || empty($this->companydata->base64) ){
             //nothing to do!!!!
             return;
         }
 
         $pubName        = "c_" . $company->id . "_" . $this->companydata->name;
 
-        if(!empty($this->base64)){
-            $response = $image->upload($this->base64, $pubName);
+        if(!empty($this->companydata->base64)){
+            $response = $image->upload($this->companydata->base64, $pubName);
         }else{
             $response = $image->upload($this->companydata->value, $pubName);
         }
@@ -76,22 +72,21 @@ class SendImageToCloudinaryJob extends Job //implements ShouldQueue
 
         $companydataPrepare->make($company);
 
-        //validate Cloudinary response????
+        //CDN!!!
 
         $companydataRepo->pushCriteria(new BelongsToCompany($company->id));
         $companydataRepo->pushCriteria(new FlagEquals("name", $this->companydata->name . "_cdn"));
+        $cdn = $companydataRepo->all()->first();
 
-        $target = $companydataRepo->all()->first();
-
-        if($target)
-        {
-            $target->value = $secureUrl;
-            $target->save();
+        if($cdn){
+            $cdn->value = $secureUrl;
+            $cdn->save();
         }
 
         
-        if($validBase64){
+        if(!empty($this->companydata->base64)){
             $this->companydata->value = $secureUrl;
+            $this->companydata->base64 = null;
             $this->companydata->save();
         }
 
