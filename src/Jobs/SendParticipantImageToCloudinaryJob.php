@@ -13,7 +13,6 @@ use Eventjuicer\Services\Cloudinary;
 use Eventjuicer\Repositories\ParticipantRepository;
 
 
-
 use Eventjuicer\Repositories\Criteria\BelongsToCompany;
 use Eventjuicer\Repositories\Criteria\FlagEquals;
 use Eventjuicer\Services\Personalizer;
@@ -51,7 +50,26 @@ class SendParticipantImageToCloudinaryJob extends Job //implements ShouldQueue
      * @return void
      */
 
+
+    public function getSetting(string $name){
+
+        if(empty($this->state)){
+            return null;
+        }
+
+        $organizer = Organizer::findOrFail( $this->getOrganizer() );
+
+        if($organizer && $organizer->settings){
+          $setting = $organizer->settings->where("name", $name)->first();
+          return $setting ? json_decode($setting->data, true) : null;
+        }
+        return null;
+    }
+
+
     public function handle( Cloudinary $image ){
+
+        //TEMP 
 
 
         $profile = (new Personalizer( $this->participant ))->getProfile();

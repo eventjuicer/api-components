@@ -30,10 +30,11 @@ class SendImageToCloudinaryJob extends Job //implements ShouldQueue
      */
 
     public $companydata;
+    public $base64 = "";
 
-    public function __construct(Model $companydata)
-    {
+    public function __construct(Model $companydata, $base64=""){
         $this->companydata = $companydata;
+        $this->base64 = $base64;
     }
 
     /**
@@ -49,21 +50,27 @@ class SendImageToCloudinaryJob extends Job //implements ShouldQueue
 
         $company        = $this->companydata->company;
 
-        if(stristr($this->companydata->value, "http") === false)
-        {
+        $validBase64 =  !empty($this->base64) && base64_decode($this->base64, true)!==false;
+     
+        if(stristr($this->companydata->value, "http") === false || !$validBase64){
             //nothing to do!!!!
             return;
         }
 
         $pubName        = "c_" . $company->id . "_" . $this->companydata->name;
 
-
-        $response = $image->upload($this->companydata->value, $pubName);
+        if(!empty($this->base64)){
+            $response = $image->upload($this->base64, $pubName);
+        }else{
+            $response = $image->upload($this->companydata->value, $pubName);
+        }
 
         if(empty($response))
         {
             throw new \Exception('Cannot upload given resource to: ' . $pubName);
         }
+
+        $secureUrl = array_get($response, "secure_url", "");
 
         //just in case :D
 
@@ -78,12 +85,15 @@ class SendImageToCloudinaryJob extends Job //implements ShouldQueue
 
         if($target)
         {
-            $target->value = array_get($response, "secure_url", "");
+            $target->value = $secureUrl;
             $target->save();
         }
 
         
-    
+        if($validBase64){
+            $this->companydata->value = $secureUrl;
+            $this->companydata->save();
+        }
 
     }
 }
