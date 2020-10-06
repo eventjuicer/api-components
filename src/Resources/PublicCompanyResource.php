@@ -66,11 +66,11 @@ class PublicCompanyResource extends Resource
     {   
 
 
-        $profile = $this->data->whereIn("name", self::$presenterFields)->mapWithKeys(function($item){     
+        $profile = array_merge(array_flip(self::$presenterFields), $this->data->whereIn("name", self::$presenterFields)->mapWithKeys(function($item){     
 
                     return [ $item->name => $item->value ] ;
 
-        })->all();
+        })->all());
 
         $logotype_thumbnail = (new CloudinaryImage($profile["logotype_cdn"]))->thumb(600, 600);
         //we take opengraph_image_cdn and resize it if needed...
@@ -78,10 +78,11 @@ class PublicCompanyResource extends Resource
 
         //it should be taken from settings....
         $profile["og_template"] = $this->group_id > 1 ? 'ebe5_template' : 'template_teh19_exhibitor';
-
         $profile["thumbnail"] = $logotype_thumbnail ?? $profile["logotype"];
 
-        $profile["og_image"] = $og_image ?? (new CloudinaryImage($profile["logotype_cdn"]))->wrapped($profile["og_template"] . "_" . $profile["lang"]);
+        $lang = !empty($profile["lang"]) ? $profile["lang"] : $this->group_id > 1 ? "en" : "pl";
+
+        $profile["og_image"] = $og_image ?? (new CloudinaryImage($profile["logotype_cdn"]))->wrapped($profile["og_template"] . "_" . $lang);
 
         $data = [
 
