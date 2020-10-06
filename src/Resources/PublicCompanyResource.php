@@ -72,10 +72,16 @@ class PublicCompanyResource extends Resource
 
         })->all();
 
-        //it should be taken from settings....
-        $profile["og_template"] = $this->group_id > 1 ? 'ebe5_template' : 'template_4';
+        $logotype_thumbnail = (new CloudinaryImage($profile["logotype_cdn"]))->thumb(600, 600);
+        //we take opengraph_image_cdn and resize it if needed...
+        $og_image = (new CloudinaryImage($profile["opengraph_image_cdn"]))->thumb(1200, 630);
 
-        $profile["thumbnail"] = !empty($profile["logotype_cdn"]) ? (new CloudinaryImage($profile["logotype_cdn"]))->thumb() : '';
+        //it should be taken from settings....
+        $profile["og_template"] = $this->group_id > 1 ? 'ebe5_template' : 'template_teh19_exhibitor';
+
+        $profile["thumbnail"] = $logotype_thumbnail ?? $profile["logotype"];
+
+        $profile["og_image"] = $og_image ?? (new CloudinaryImage($profile["logotype_cdn"]))->wrapped($profile["og_template"] . "_" . $profile["lang"]);
 
         $data = [
 

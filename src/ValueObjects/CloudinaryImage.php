@@ -18,20 +18,19 @@ class CloudinaryImage {
 
 	public function isValid(){
 
-		return strpos(
-			(string) $this->path, "res.cloudinary.com")!==false;
+		return strpos( (string) $this->path, "res.cloudinary.com") !== false;
 	}
 
-	public function thumb(){
+	public function thumb($width = 600, $height = 600){
 
 		$str = (string) $this->path;
 
 		if($this->isValid()){
 
-			return str_replace("/image/upload/v", "/image/upload/w_600,h_300,c_fit/v", $str);
+			return str_replace("/image/upload/v", "/image/upload/w_".$width.",h_".$height.",c_fit,f_auto/v", $str);
 		}
 
-		return $str;
+		return null;
 	}
 
 	public function version(){
@@ -50,7 +49,7 @@ class CloudinaryImage {
 		}
 		//download template.... check dimensions...calculate stuff....
 
-		return 'https://res.cloudinary.com/eventjuicer/image/upload/c_fit,h_220,w_800/u_'.$template.',y_12/' . str_replace(".svg", ".jpg", $this->version() );
+		return 'https://res.cloudinary.com/eventjuicer/image/upload/c_fit,h_210,w_800/u_'.$template.',y_10/' . str_replace(".svg", ".jpg", $this->version() );
 	}
 
 
