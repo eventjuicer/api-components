@@ -55,7 +55,7 @@ class PresenterResource extends Resource
         $votes_override_field = $this->fieldpivot->where("field_id", 213)->first();
         $votes_override = !is_null($votes_override_field) ? (int) $votes_override_field->field_value : 0;
                   
-        $data["votes"] = $this->relationLoaded("votes") ? $this->votes->count() + $votes_override : 0;
+      //  $data["votes"] = $this->relationLoaded("votes") ? $this->votes->count() + $votes_override : 0;
 
         $data["id"] = (int) $this->id;
 
