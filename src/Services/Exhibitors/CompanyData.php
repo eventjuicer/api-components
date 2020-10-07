@@ -31,7 +31,7 @@ class CompanyData {
 	protected $defaultLang = "en";
 	protected $messagebag;
 	
-	protected $prefix = "th4x90iy_";
+	protected $prefix = "rd53ds4_"; 
     protected $campaign = "promoninja";
 
 	function __construct(Model $model){
@@ -50,16 +50,7 @@ class CompanyData {
 	}
 
 	public function profileUrl(){
-
-		$name = $this->getName() ?? $this->getCompany()->slug;
-
-        return "https://".$this->getHostFromGroupId()."/" .  str_slug(trim($name), "-") .  ",c,". $this->getCompany()->id;
-
-    }
-
-    public function getSafeName(){
-    	$name = $this->getName() ?? $this->getCompany()->slug;
-    	return str_slug($name, "_");
+        return "https://".$this->getHostFromGroupId() . "/exhibitors/" .  $this->getCompany()->slug;
     }
 
     public function accountUrl(){
