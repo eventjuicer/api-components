@@ -46,7 +46,7 @@ class Creatives {
 
 
         $logotype_cdn = new CloudinaryImage( array_get($cd, "logotype_cdn", ""));
-        $opengraph_image_cdn = (string) (new CloudinaryImage( array_get($cd, "opengraph_image_cdn", "")))->version();
+        $opengraph_image_cdn = (string) (new CloudinaryImage( array_get($cd, "opengraph_image_cdn", "")))->thumb(1200, 630);
 
 
         //EBE!
@@ -192,8 +192,7 @@ class Creatives {
 
             //TEH
 
-            $logotype_cdn_pl = $logotype_cdn->wrapped("template_teh19_exhibitor_pl");
-            $logotype_cdn_en = $logotype_cdn->wrapped("template_teh19_exhibitor_en");
+            $logotype = $logotype_cdn->wrapped("template_teh19_exhibitor_" . array_get($cd, "lang", "pl") );
 
             return [
 
@@ -221,49 +220,31 @@ class Creatives {
             [
                 "id" => 50,
                 "name" => "logotype",
-                "lang" => "pl",
+                "lang" => array_get($cd, "lang", "pl"),
                 "act_as" => "link",
-                "link" =>  $this->companydata->trackingLink("link", "logotype,pl"),
-                "link_full" => $this->companydata->trackedProfileUrl("link", "logotype,pl"),
+                "link" =>  $this->companydata->trackingLink("link", "logotype"),
+                "link_full" => $this->companydata->trackedProfileUrl("link", "logotype"),
                 "shareable" => true,
                 "services" => ["linkedin", "twitter", "facebook"],
                 "requires" => ["logotype"],
-                "enabled" => strpos(array_get($cd, "logotype", ""), "http") !== false,
-                "template" => $logotype_cdn_pl,
-                "sharers" => $this->sharer( $this->companydata->trackedProfileUrl("link", "logotype,pl") )
-                //"template" => 'https://res.cloudinary.com/eventjuicer/image/upload/c_fit,g_center,h_220,w_600,y_30,l_c_'.$company_id.'_logotype/ebe_template_en.png'
+                "enabled" => strpos(array_get($cd, "logotype_cdn", ""), "cloudinary") !== false && strpos( array_get($cd, "opengraph_image_cdn", ""), "cloudinary") === false,
+                "template" => $logotype,
+                "sharers" => $this->sharer( $this->companydata->trackedProfileUrl("link", "logotype") )
             ],
+
 
             [
                 "id" => 51,
-                "name" => "logotype",
-                "lang" => "en",
-                "act_as" => "link",
-                "link" =>  $this->companydata->trackingLink("link", "logotype,en"),
-                "link_full" => $this->companydata->trackedProfileUrl("link", "logotype,en"),
-                "shareable" => true,
-                "services" => ["facebook"],
-                "requires" => ["logotype"],
-                "enabled" => strpos(array_get($cd, "logotype", ""), "http") !== false,
-                "template" => $logotype_cdn_en,
-                "sharers" => $this->sharer( $this->companydata->trackedProfileUrl("link", "logotype,en") )
-                //"template" => 'https://res.cloudinary.com/eventjuicer/image/upload/c_fit,g_center,h_220,w_600,y_30,l_c_'.$company_id.'_logotype/ebe_template_en.png'
-            
-            ],
-
-
-            [
-                "id" => 52,
                 "name" => "opengraph_image",
                 "lang" => "undefined",
                 "act_as" => "link",
                 "link" =>  $this->companydata->trackingLink("link", "opengraph_image"),
                 "link_full" => $this->companydata->trackedProfileUrl("link", "opengraph_image"),
                 "shareable" => true,
-                "services" => ["facebook"],
+                "services" => ["facebook", "linkedin", "twitter"],
                 "requires" => ["opengraph_image"],
-                "enabled" => strpos( array_get($cd, "opengraph_image", ""), "http") !== false,
-                "template" => 'https://res.cloudinary.com/eventjuicer/image/upload/w_960,h_504,c_fit/' . $opengraph_image_cdn,
+                "enabled" => strpos( array_get($cd, "opengraph_image_cdn", ""), "cloudinary") !== false,
+                "template" => $opengraph_image_cdn,
                 "sharers" => $this->sharer( $this->companydata->trackingLink("link", "opengraph_image") )
             ],
 
