@@ -10,11 +10,12 @@ use Eventjuicer\Services\Hashids;
 use Eventjuicer\Services\Traits\Fields;
 
 
-class PresenterResource extends Resource
-{   
+class PresenterResource extends Resource{   
 
 
     use Fields;
+
+    static $showVotes = false;
 
     protected $showable = array(
         "fname",
@@ -38,6 +39,9 @@ class PresenterResource extends Resource
         "featured_cfp"
     ); 
 
+    static public function showVotes($bool){
+        self::$showVotes = $bool;
+    }
 
     //votes_override = 213!!!
 
@@ -52,13 +56,11 @@ class PresenterResource extends Resource
 
         $data = $this->filterFields($this->fieldpivot, $this->showable);
 
-        $votes_override_field = $this->fieldpivot->where("field_id", 213)->first();
-        $votes_override = !is_null($votes_override_field) ? (int) $votes_override_field->field_value : 0;
-                  
-      //  $data["votes"] = $this->relationLoaded("votes") ? $this->votes->count() + $votes_override : 0;
+        if(self::$showVotes){
+             $data["votes"] = $this->_votes;
+        }
 
         $data["id"] = (int) $this->id;
-
         $data["event"] = new PublicEventResource($this->whenLoaded("event"));
 
         return $data;
