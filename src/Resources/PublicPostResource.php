@@ -20,10 +20,7 @@ class PublicPostResource extends Resource
     {
 
 
-        //find cover image!
 
-        $_cover = $this->images->where("is_cover", 1)->first();
-        $cover = $_cover ? $_cover->path : $this->images->first()->path;
 
 
        return [
@@ -43,7 +40,7 @@ class PublicPostResource extends Resource
 
             "company" => new PublicPostCompanyResource($this->company),
             "meta" => new PublicPostMetaResource($this->meta),
-            "cover" => $cover
+            "cover" => $this->_cover
 
         ];
     }
