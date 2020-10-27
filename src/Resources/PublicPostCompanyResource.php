@@ -38,7 +38,9 @@ class PublicPostCompanyResource extends Resource
             })->all();
 
         $data["id"] = $this->id;
-        
+        $data["slug"] = $this->slug;
+        $data["featured"] = $this->featured;
+
         return $data;
     }
 
