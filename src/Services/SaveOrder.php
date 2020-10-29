@@ -89,6 +89,13 @@ class SaveOrder {
 		}
 	}
 
+	public function setParticipantByToken(string $token){
+
+		if($token){
+			$this->setParticipant( Participant::where("token", $token)->first() );
+		}
+	}
+
 	public function clone(){
 		
 		/*
