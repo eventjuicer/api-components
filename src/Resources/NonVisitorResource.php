@@ -6,7 +6,16 @@ use Illuminate\Http\Resources\Json\Resource;
 
 class NonVisitorResource extends Resource{
 
-    static $protectedProfileFields = ["phone", "cname", "votes_override", "votes_earned", "nip", "company_address"];
+    static $protectedProfileFields = [
+        "phone", 
+        "cname", 
+        "votes_override", 
+        "votes_earned", 
+        "votes",
+        "nip", 
+        "company_address",
+        "summary_for_jury"
+    ];
 
 
     public function toArray($request)
@@ -17,7 +26,7 @@ class NonVisitorResource extends Resource{
         $data["company_id"] = $this->company_id;
         $data["event_id"] = $this->company_id;
         $data["lang"] = $this->lang;
-		$data["fields"] = array_diff_key($this->profile(), array_flip(self::$protectedProfileFields));        
+		$data["profile"] = array_diff_key($this->profile(), array_flip(self::$protectedProfileFields));        
 
 
         $votes_override_field = $this->fieldpivot->where("field_id", 213)->first();
