@@ -80,7 +80,16 @@ class Participant extends Model
     }
 
 
+    public function roles(){
 
+        return $this->purchases->filter(function($item){
+
+            return $item->status != "cancelled" ;
+
+        })->pluck("tickets")->collapse()->pluck("role")->all();
+    }
+
+    
     /**NEW OR CHECKED**/
  
     public function votes()
