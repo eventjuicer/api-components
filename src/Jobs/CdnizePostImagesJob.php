@@ -6,7 +6,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Eventjuicer\Services\Cloudinary;
 use Eventjuicer\Models\PostImage as Model;
 
-class CdnizePostImagesJob extends Job implements ShouldQueue {
+class CdnizePostImagesJob extends Job { //implements ShouldQueue {
  
     public $postimage;
 
@@ -21,10 +21,15 @@ class CdnizePostImagesJob extends Job implements ShouldQueue {
      */
     public function handle(Cloudinary $image){
         
-        $source = file_get_contents("/u/apps/eventjuicer-production/public" . $this->postimage->path);
+
+        $filepath = "/u/apps/eventjuicer-production/public" . $this->postimage->path;
+
+        $source = file_get_contents($filepath);
 
         if(!$source){
-            return;
+
+            dd($source);
+            throw new \Exception("file not accessible");
         }
 
         $oldFilename = end(explode('/', $this->postimage->path));
@@ -40,9 +45,11 @@ class CdnizePostImagesJob extends Job implements ShouldQueue {
 
         $secureUrl = array_get($response, "secure_url", "");
 
-        $this->postimage->path = $secureUrl;
-        $this->postimage->cloudinary_uploaded = 1;
-        $this->postimage->save();
+        if($secureUrl){
+            $this->postimage->path = $secureUrl;
+            $this->postimage->cloudinary_uploaded = 1;
+            $this->postimage->save();
+        }
 
     }
 }
