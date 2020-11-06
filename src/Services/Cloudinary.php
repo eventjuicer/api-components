@@ -80,6 +80,30 @@ class Cloudinary {
 		
 	}
 
+	public function uploadLocalFile($path, $prefix = ""){
+
+		$options = [];
+
+		if(!file_exists($path)){
+			return [];
+		}
+
+		$file = file_get_contents($path);
+
+		if(!$file){
+			return [];
+		}
+
+		$array = explode('/', $path);
+		$filename = end($array);
+        $options["public_id"] = $prefix . $filename;
+
+		$response = Uploader::upload($path, $options);
+
+		return $response;
+		
+	}
+
 	public function upload($path, $name = "", array $options = [])
 	{
 

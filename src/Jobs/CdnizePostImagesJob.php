@@ -24,24 +24,15 @@ class CdnizePostImagesJob extends Job { //implements ShouldQueue {
 
         $filepath = "/u/apps/eventjuicer-production/public" . $this->postimage->path;
 
-        $source = file_get_contents($filepath);
+        $resource = stristr($this->postimage->imageable_type, "User")===false ? "posts/" : "users/";
+        $prefix = $resource . $this->postimage->imageable_id . "_";
+        
 
-        if(!$source){
-
-            dd($source);
-            throw new \Exception("file not accessible");
-        }
-
-        $array = explode('/', $this->postimage->path);
-        $oldFilename = end($array);
-
-        $prefix = stristr($this->postimage->imageable_type, "User")===false ? "posts/" : "users/";
-        $newFilename = $prefix . $this->postimage->imageable_id . "_" . $oldFilename;
-        $response = $image->upload($source, $newFilename);
+        $response = $image->uploadLocalFile($filepath, $prefix);
 
         if(empty($response))
         {
-            throw new \Exception('Cannot upload given resource to: ' . $newFilename);
+            throw new \Exception('Cannot upload given resource to ' . );
         }
 
         $secureUrl = array_get($response, "secure_url", "");
