@@ -96,7 +96,10 @@ class Cloudinary {
 
 		$array = explode('/', $path);
 		$filename = end($array);
-        $options["public_id"] = $prefix . $filename;
+		$array = explode(".", $filename);
+		$filename_without_extension = reset($array);
+
+        $options["public_id"] = $prefix . $filename_without_extension;
 
 		$response = Uploader::upload($path, $options);
 
