@@ -95,9 +95,12 @@ class Cloudinary {
 		}
 
 		$array = explode('/', $path);
-		$filename = end($array);
+		end($array);
+		$filename = key($array);
+		
 		$array = explode(".", $filename);
-		$filename_without_extension = reset($array);
+		reset($array);
+		$filename_without_extension = key($array);
 
         $options["public_id"] = $prefix . $filename_without_extension;
 
