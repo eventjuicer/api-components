@@ -6,7 +6,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Eventjuicer\Services\Cloudinary;
 use Eventjuicer\Models\PostImage as Model;
 
-class CdnizePostImagesJob extends Job { //implements ShouldQueue {
+class CdnizePostImagesJob extends Job implements ShouldQueue {
  
     public $postimage;
 
