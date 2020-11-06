@@ -32,7 +32,8 @@ class CdnizePostImagesJob extends Job { //implements ShouldQueue {
             throw new \Exception("file not accessible");
         }
 
-        $oldFilename = end(explode('/', $this->postimage->path));
+        $array = explode('/', $this->postimage->path);
+        $oldFilename = end($array);
 
         $prefix = stristr($this->postimage->imageable_type, "User")===false ? "posts/" : "users/";
         $newFilename = $prefix . $this->postimage->imageable_id . "_" . $oldFilename;
