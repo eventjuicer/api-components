@@ -27,20 +27,23 @@ class CdnizePostImagesJob extends Job {// implements ShouldQueue {
         $resource = stristr($this->postimage->imageable_type, "User")===false ? "posts" : "users";
         $prefix = $resource . "/" . $this->postimage->imageable_id . "_";
         
-        $response = $image->uploadLocalFile($filepath, $prefix);
+        try{
 
-        if(empty($response))
-        {
-            throw new \Exception('Cannot upload given resource');
+            $response = $image->uploadLocalFile($filepath, $prefix);
+
+            $secureUrl = array_get($response, "secure_url", "");
+
+            if(!empty($secureUrl)){
+                $this->postimage->path = $secureUrl;
+                $this->postimage->cloudinary_uploaded = 1;
+                $this->postimage->save();
+            }
+
+        }catch(\Exception $e){
+
         }
 
-        $secureUrl = array_get($response, "secure_url", "");
-
-        if($secureUrl){
-            $this->postimage->path = $secureUrl;
-            $this->postimage->cloudinary_uploaded = 1;
-            $this->postimage->save();
-        }
+       
 
     }
 }

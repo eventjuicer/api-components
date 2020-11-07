@@ -85,13 +85,13 @@ class Cloudinary {
 		$options = [];
 
 		if(!file_exists($path)){
-			return [];
+			throw new \Exception("file doesn't exist");
 		}
 
 		$file = file_get_contents($path);
 
 		if(!$file){
-			return [];
+			throw new \Exception("cannot read file");
 		}
 
 		$array = explode('/', $path);
