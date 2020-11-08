@@ -40,7 +40,7 @@ class PublicPostResource extends Resource
 
             "company" => new PublicPostCompanyResource($this->company),
             "meta" => new PublicPostMetaResource($this->meta),
-            "images" => new PublicPostImageResource($this->images),
+            "images" => PublicPostImageResource::collection($this->images),
             "cover" => $this->_cover
 
         ];
