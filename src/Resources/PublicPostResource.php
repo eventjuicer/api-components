@@ -4,11 +4,15 @@ namespace Eventjuicer\Resources;
 
 use Illuminate\Http\Resources\Json\Resource;
 
-class PublicPostResource extends Resource
-{
+class PublicPostResource extends Resource {
 
 
-  
+    static $includeBody = false;
+
+    static function includeBody($boolval){
+        self::$includeBody = $boolval;
+    }
+
 
     /**
      * Transform the resource into an array.
@@ -16,12 +20,11 @@ class PublicPostResource extends Resource
      * @param  \Illuminate\Http\Request
      * @return array
      */
-    public function toArray($request)
-    {
+    public function toArray($request){
 
-
-
-
+       if(self::$includeBody){
+        PublicPostMetaResource::includeBody(true);
+       }
 
        return [
 
