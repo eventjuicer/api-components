@@ -26,6 +26,9 @@ class PublicPostResource extends Resource {
         PublicPostMetaResource::includeBody(true);
        }
 
+       PublicCompanyResource::disablePurchases();
+       PublicCompanyResource::enableProfile();
+
        return [
 
             "id"        => (int) $this->id,
@@ -41,7 +44,7 @@ class PublicPostResource extends Resource {
             "updated_at" => (string) $this->updated_at,
             "published_at" => (string) $this->published_at,
 
-            "company" => new PublicPostCompanyResource($this->company),
+            "company" => new PublicCompanyResource($this->company),
             "meta" => new PublicPostMetaResource($this->meta),
             "images" => PublicPostImageResource::collection($this->images),
             "cover" => $this->_cover
