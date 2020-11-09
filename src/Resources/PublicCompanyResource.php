@@ -15,6 +15,7 @@ class PublicCompanyResource extends Resource
 
     public static $skipPurchases = false;
     public static $skipProfile = false;
+    public static $skipLongTexts = false;
 
 
     protected static $presenterFields = [
@@ -48,6 +49,16 @@ class PublicCompanyResource extends Resource
         self::$skipPurchases = false;
     }
 
+    public static function disableLongTexts()
+    {
+        self::$skipLongTexts = true;
+    }
+
+    public static function enableLongTexts()
+    {
+        self::$skipLongTexts = false;
+    }
+
     public static function disableProfile()
     {
         self::$skipProfile = true;
@@ -71,6 +82,13 @@ class PublicCompanyResource extends Resource
                     return [ $item->name => $item->value ] ;
 
         })->all());
+
+
+        if(self::$skipLongTexts){
+            unset($profile["about"]);
+            unset($profile["expo"]);
+            unset($profile["products"]);
+        }
 
         $logotype_thumbnail = (new CloudinaryImage($profile["logotype_cdn"]))->thumb(600, 600);
         //we take opengraph_image_cdn and resize it if needed...

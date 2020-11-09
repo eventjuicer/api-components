@@ -28,6 +28,8 @@ class PublicPostResource extends Resource {
 
        PublicCompanyResource::disablePurchases();
        PublicCompanyResource::enableProfile();
+       PublicCompanyResource::disableLongTexts();
+
 
        return [
 
