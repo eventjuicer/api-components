@@ -32,10 +32,12 @@ class PublicContestantCompany extends Resource
         "product_description",
         "project_name",
         "project_description",
+        "case_study",
         
         "video",
         "difference",
         "innovations",
+        "testimonials",
         
         "winner"
 

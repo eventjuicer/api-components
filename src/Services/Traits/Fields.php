@@ -253,7 +253,10 @@ trait Fields {
     "258"=> "important",
     "259"=> "referral",
     "260"=> "winner",
-    "261"=> "featured_cfp"
+    "261"=> "featured_cfp",
+    "262"=> "testimonials",
+    "263"=> "case_study",
+    "264"=> "confidential"
 
   );
 
