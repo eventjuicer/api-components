@@ -12,8 +12,7 @@ use Eventjuicer\Services\Personalizer;
 use Carbon\Carbon;
 
 
-class SendParticipantImageToCloudinaryJob extends Job //implements ShouldQueue 
-{
+class SendParticipantImageToCloudinaryJob extends Job implements ShouldQueue {
     //use Dispatchable;
 
     public $participant;
