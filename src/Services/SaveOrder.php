@@ -179,6 +179,12 @@ class SaveOrder {
 		return $this->participant;
 	}
 
+	public function getParticipantId()
+	{
+		return $this->participant->id;
+	}
+
+
 	public function getPurchase()
 	{
 		return $this->purchase;
