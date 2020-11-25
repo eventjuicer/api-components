@@ -5,36 +5,23 @@ namespace Eventjuicer\Jobs;
 
 use Illuminate\Contracts\Queue\ShouldQueue;
 //use Illuminate\Foundation\Bus\Dispatchable;
-
 use Eventjuicer\Models\Participant as Model;
 use Eventjuicer\Models\ParticipantFields;
-
 use Eventjuicer\Services\Cloudinary;
-use Eventjuicer\Repositories\ParticipantRepository;
-
-
-use Eventjuicer\Repositories\Criteria\BelongsToCompany;
-use Eventjuicer\Repositories\Criteria\FlagEquals;
 use Eventjuicer\Services\Personalizer;
 use Carbon\Carbon;
 
 
-class SendParticipantImageToCloudinaryJob extends Job //implements ShouldQueue
+class SendParticipantImageToCloudinaryJob extends Job //implements ShouldQueue 
 {
     //use Dispatchable;
-
-    /**
-     * Create a new job instance.
-     *
-     * @return void
-     */
 
     public $participant;
 
     public $fieldsToSend = [
 
-        "logotype" => 255,
-        "avatar" => 254
+        "logotype" => 255, // logotype_cdn
+        "avatar" => 254 // avatar_cdn
     ];
 
 
@@ -42,28 +29,6 @@ class SendParticipantImageToCloudinaryJob extends Job //implements ShouldQueue
     public function __construct(Model $participant)
     {
         $this->participant = $participant;
-    }
-
-    /**
-     * Execute the job.
-     *
-     * @return void
-     */
-
-
-    public function getSetting(string $name){
-
-        if(empty($this->state)){
-            return null;
-        }
-
-        $organizer = Organizer::findOrFail( $this->getOrganizer() );
-
-        if($organizer && $organizer->settings){
-          $setting = $organizer->settings->where("name", $name)->first();
-          return $setting ? json_decode($setting->data, true) : null;
-        }
-        return null;
     }
 
 
@@ -102,7 +67,7 @@ class SendParticipantImageToCloudinaryJob extends Job //implements ShouldQueue
                     "field_id" => $targetFieldPivot,
                     "field_value" => $response["secure_url"],
                     "organizer_id" => $this->participant->organizer_id,
-                    "group_id" => $this->participant->organizer_id,
+                    "group_id" => $this->participant->group_id,
                     "event_id" => $this->participant->event_id,
                     "archive" => "",
                     "updatedon" => (string) Carbon::now()->toDateTimeString()
@@ -116,25 +81,4 @@ class SendParticipantImageToCloudinaryJob extends Job //implements ShouldQueue
     }
 }
 
-/*
 
-array:16 [
-  "public_id" => "p_97790_avatar"
-  "version" => 1568766134
-  "signature" => "37c0d8ae469eb76a3d73f91356fefd1586605d6a"
-  "width" => 640
-  "height" => 544
-  "format" => "jpg"
-  "resource_type" => "image"
-  "created_at" => "2019-09-18T00:22:14Z"
-  "tags" => []
-  "bytes" => 54969
-  "type" => "upload"
-  "etag" => "f4a19d6b10d16c3d74af0fc98da20995"
-  "placeholder" => false
-  "url" => "http://res.cloudinary.com/eventjuicer/image/upload/v1568766134/p_97790_avatar.jpg"
-  "secure_url" => "https://res.cloudinary.com/eventjuicer/image/upload/v1568766134/p_97790_avatar.jpg"
-  "original_filename" => "Donatas-34"
-]
-
-*/
