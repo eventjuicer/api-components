@@ -8,13 +8,15 @@ class NonVisitorResource extends Resource{
 
     static $protectedProfileFields = [
         "phone", 
-        "cname", 
+        "cname",
+        "fname",
+        "lname",
         "votes_override", 
         "votes_earned", 
         "votes",
         "nip", 
         "company_address",
-        "summary_for_jury"
+        "confidential"
     ];
 
 
