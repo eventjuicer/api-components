@@ -42,10 +42,12 @@ class AdminPostResource extends Resource {
             "admin_id"      => $this->admin_id,
             "editor_id"      => $this->editor_id,
 
-            "is_published" => $this->is_published,
-            "is_sticky"    => $this->is_sticky,
-            "is_promoted"  => $this->is_promoted,
+            "is_published" => boolval($this->is_published),
+            "is_sticky"    => boolval($this->is_sticky),
+            "is_promoted"  => boolval($this->is_promoted),
+
             "interactivity" => $this->interactivity,
+            
             "created_at" => (string) $this->created_at,
             "updated_at" => (string) $this->updated_at,
             "published_at" => (string) $this->published_at,
@@ -53,6 +55,7 @@ class AdminPostResource extends Resource {
             "company" => new PublicCompanyResource($this->company),
             "meta" => new PublicPostMetaResource($this->meta),
             "images" => PublicPostImageResource::collection($this->images),
+            
             "cover" => $this->_cover
 
         ];
