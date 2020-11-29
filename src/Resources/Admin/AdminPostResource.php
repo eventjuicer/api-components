@@ -39,6 +39,9 @@ class AdminPostResource extends Resource {
 
             "id"        => (int) $this->id,
 
+            "organizer_id"    => (int) $this->organizer_id,
+            "group_id"        => (int) $this->group_id,
+
             "admin_id"      => $this->admin_id,
             "editor_id"      => $this->editor_id,
 
@@ -48,6 +51,8 @@ class AdminPostResource extends Resource {
 
             "interactivity" => $this->interactivity,
             
+            "category" => (string) $this->category,
+
             "created_at" => (string) $this->created_at,
             "updated_at" => (string) $this->updated_at,
             "published_at" => (string) $this->published_at,
