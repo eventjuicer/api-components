@@ -65,7 +65,7 @@ Yourmodel::saving(function($model)
 
 	final public function topics()
     {
-        return $this->belongsToMany('Eventjuicer\Topic', static::$topicable_table, "xref_id", "topic_id")->withPivot( static::$topicable_table_sync );
+        return $this->belongsToMany('Eventjuicer\Models\Topic', static::$topicable_table, "xref_id", "topic_id")->withPivot( static::$topicable_table_sync );
     }
 
 

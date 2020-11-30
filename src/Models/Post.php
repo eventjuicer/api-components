@@ -18,9 +18,9 @@ use Illuminate\Database\Eloquent\Model;
 
 //sync Topics 
 
-use Eventjuicer\Services\Syncs\SyncTopicsTrait;
-use Eventjuicer\Services\Syncs\SyncTagsTrait;
-use Eventjuicer\Services\Syncs\SyncCommentsTrait;
+// use Eventjuicer\Services\Syncs\SyncTopicsTrait;
+// use Eventjuicer\Services\Syncs\SyncTagsTrait;
+// use Eventjuicer\Services\Syncs\SyncCommentsTrait;
 
 use Eventjuicer\ValueObjects\UTCDateTime;
 
@@ -31,39 +31,23 @@ use Carbon\Carbon;
 use Eventjuicer\Models\Traits\AbleTrait;
 use Eventjuicer\Models\PostMeta;
 
-class Post extends Model 
-{
+class Post extends Model {
 
 	use AbleTrait;
 
-
-
-    use SyncTopicsTrait;
-    use SyncTagsTrait;
-    use SyncCommentsTrait;
-
+    // use SyncTopicsTrait;
+    // use SyncTagsTrait;
+    // use SyncCommentsTrait;
 
     public static $taggable_pivot_model   = 'Models\PostTags';
     public static $taggable_table 	= 'editorapp_post_tag';
 	public static $taggable_table_sync = ['group_id', 'organizer_id', 'published_at', "is_published"];
-	
     public static $topicable_table = "eventjuicer_post_topic";
     public static $topicable_table_sync = ["organizer_id", "group_id", "published_at", "is_published"];
-
-
     public static $commentable_table_sync = ["organizer_id", "group_id", "event_id"];
 
-
-
-
-
-
-
 	static $visible_posts = array();
-
     protected $table = "editorapp_posts";
-
-
 	protected $fillable = ['group_id', 
                             'admin_id',                             
                             'published_at', 
@@ -71,15 +55,9 @@ class Post extends Model
                             'is_sticky'
                         ];
 
-
 	//protected $dates = ["published_at"];
 
-
-
-
-
-    public function shouldBePublished()
-    {
+    public function shouldBePublished(){
         return strtotime($this->getOriginal("published_at")) < strtotime(Carbon::now('UTC')->toDateTimeString());
     }
 

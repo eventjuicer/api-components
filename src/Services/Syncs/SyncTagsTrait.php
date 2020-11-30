@@ -50,12 +50,12 @@ trait SyncTagsTrait {
 
 	final public function tags()
     {
-        return $this->belongsToMany('Eventjuicer\Tag', static::$taggable_table, "xref_id", "tag_id")->withPivot( static::$taggable_table_sync );
+        return $this->belongsToMany('Eventjuicer\Models\Tag', static::$taggable_table, "xref_id", "tag_id")->withPivot( static::$taggable_table_sync );
     }
     
     public function mostUsedTags()
     {
-        return \Eventjuicer\Tag::join(static::$taggable_table, static::$taggable_table.'.tag_id', '=', 'bob_tags.id')->groupBy('bob_tags.id')->orderBy('tag_count', 'desc')->get(['bob_tags.id', 'bob_tags.name', \DB::raw('count(bob_tags.id) as tag_count')]);
+        return \Eventjuicer\Models\Tag::join(static::$taggable_table, static::$taggable_table.'.tag_id', '=', 'bob_tags.id')->groupBy('bob_tags.id')->orderBy('tag_count', 'desc')->get(['bob_tags.id', 'bob_tags.name', \DB::raw('count(bob_tags.id) as tag_count')]);
     }
 
     final public function tagsToArray()

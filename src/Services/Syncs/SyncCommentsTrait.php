@@ -29,7 +29,7 @@ trait SyncCommentsTrait {
 
     public function comments()
     {
-        return $this->morphMany('Eventjuicer\Comment', 'commentable');
+        return $this->morphMany('Eventjuicer\Models\Comment', 'commentable');
     }
 
 
