@@ -119,7 +119,9 @@ class AdminUser {
 
 	}
 
-
+	public function getUserId(){
+		return $this->user ? $this->user->id : 0;
+	}
 
 	public function organizations(){
 
