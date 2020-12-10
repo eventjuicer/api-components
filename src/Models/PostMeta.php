@@ -26,13 +26,10 @@ class PostMeta extends Model
 
     public $incrementing = false;
 
-	protected $fillable = ['headline', 'quote','quote_parsed','body', 'body_parsed', 'guestauthor','metatitle','metadescription'];
+	protected $fillable = ['headline', 'quote','body', 'guestauthor','metatitle','metadescription'];
 	
 	//protected $touches = ['post'];
-	
-	public $preparse = ["quote", "body"];
-
-
+	// public $preparse = ["quote", "body"];
 
     public function post()
     {
