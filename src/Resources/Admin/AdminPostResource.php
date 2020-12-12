@@ -41,6 +41,7 @@ class AdminPostResource extends Resource {
 
             "organizer_id"    => (int) $this->organizer_id,
             "group_id"        => (int) $this->group_id,
+            "company_id"        => (int) $this->company_id,
 
             "admin_id"      => $this->admin_id,
             "editor_id"      => $this->editor_id,
