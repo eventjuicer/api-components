@@ -48,12 +48,7 @@ class Post extends Model {
 
 	static $visible_posts = array();
     protected $table = "editorapp_posts";
-	protected $fillable = ['group_id', 
-                            'admin_id',                             
-                            'published_at', 
-                            'is_promoted',
-                            'is_sticky'
-                        ];
+	protected $guarded = ["id", "group_id", "organizer_id"];
 
 	//protected $dates = ["published_at"];
 
