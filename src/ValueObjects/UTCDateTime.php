@@ -65,7 +65,7 @@ class UTCDateTime {
 
     public function dateTimeNowUTC()
     {
-         return Carbon::now('UTC')->toDateTimeString();
+         return (string) Carbon::now('UTC')->toDateTimeString();
     }
 
     public function compare()

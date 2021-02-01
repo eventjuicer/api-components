@@ -19,6 +19,11 @@ class NonVisitorResource extends Resource{
         "confidential"
     ];
 
+    static $showVotes = false;
+
+    static public function showVotes($bool){
+        self::$showVotes = $bool;
+    }
 
     public function toArray($request)
     {
@@ -30,10 +35,13 @@ class NonVisitorResource extends Resource{
         $data["lang"] = $this->lang;
 		$data["profile"] = array_diff_key($this->profile(), array_flip(self::$protectedProfileFields));        
 
+        // $votes_override_field = $this->fieldpivot->where("field_id", 213)->first();
+        // $votes_override = !is_null($votes_override_field) ? (int) $votes_override_field->field_value : 0;     
+        // $data["votes"] = $this->votes->count() + $votes_override;
 
-        $votes_override_field = $this->fieldpivot->where("field_id", 213)->first();
-        $votes_override = !is_null($votes_override_field) ? (int) $votes_override_field->field_value : 0;     
-        $data["votes"] = $this->votes->count() + $votes_override;
+        if(self::$showVotes){
+             $data["votes"] = $this->_votes;
+        }
 
 
         $data["roles"] = $this->roles();
