@@ -36,7 +36,10 @@ class PresenterResource extends Resource{
         "featured",
         "custom_admin_1",
         "cfp_category",
-        "featured_cfp"
+        "featured_cfp",
+        "video_length_minutes",
+        "video_is_public",
+        "video"
     ); 
 
     static public function showVotes($bool){

@@ -256,7 +256,9 @@ trait Fields {
     "261"=> "featured_cfp",
     "262"=> "testimonials",
     "263"=> "case_study",
-    "264"=> "confidential"
+    "264"=> "confidential",
+    "265"=> "video_length_minutes",
+    "266"=> "video_is_public"
 
   );
 
@@ -265,7 +267,7 @@ trait Fields {
         return array_get($this->fields, $keyId, null);
     }
 
-    public function filterFields(Collection $profile, $showable = []){
+    public function filterFields(Collection $profile, $showable = [], $conditions = []){
 
         $filtered = $profile->mapWithKeys(function($item)use($showable) {
 
@@ -279,6 +281,12 @@ trait Fields {
 
             return [];
            })->all();
+
+        //conditional filtering
+
+        if(!empty($conditions)){
+            
+        }
 
         return $filtered;
     }
