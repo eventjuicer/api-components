@@ -27,9 +27,7 @@ class PublicPostMetaResource extends Resource
         
             "headline" => (string) $this->headline,
             "quote" => (string) $this->quote,    
-            "body" => self::$includeBody ? (string) $this->body : "",
-
-            
+            "body" => self::$includeBody ? (string) $this->body : ":)",
             "guestauthor" => self::$includeBody ? (string) $this->guestauthor : "",
             "metatitle" => self::$includeBody ? (string) $this->metatitle: "",
             "metadescription" => self::$includeBody ? (string) $this->metadescription: "",
