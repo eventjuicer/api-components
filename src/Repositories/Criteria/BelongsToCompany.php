@@ -17,7 +17,7 @@ class BelongsToCompany extends Criteria {
 
             $company = Company::where("slug", "like", $id)->where("organizer_id", $organizer_id)->get();
 
-            $this->id = $company->first()->id;
+            $this->id = $company->first() ? $company->first()->id : 0;
 
         }else{
             $this->id = (int) $id;
