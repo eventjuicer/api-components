@@ -37,7 +37,7 @@ class PublicPostResource extends Resource {
 
             "admin_id"      => $this->admin_id,
             "editor_id"      => $this->editor_id,
-
+            "cover_image_id" => $this->cover_image_id,
             "is_published" => $this->is_published,
             "is_sticky"    => $this->is_sticky,
             "is_promoted"  => $this->is_promoted,
