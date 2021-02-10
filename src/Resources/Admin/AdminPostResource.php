@@ -45,6 +45,7 @@ class AdminPostResource extends Resource {
 
             "admin_id"      => $this->admin_id,
             "editor_id"      => $this->editor_id,
+            "cover_image_id" => $this->cover_image_id,
 
             "is_published" => boolval($this->is_published),
             "is_sticky"    => boolval($this->is_sticky),
