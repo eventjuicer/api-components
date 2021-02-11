@@ -3,6 +3,8 @@
 namespace Eventjuicer\Resources;
 
 use Illuminate\Http\Resources\Json\Resource;
+use Eventjuicer\ValueObjects\CloudinaryImage;
+
 
 class PublicPostResource extends Resource {
 
@@ -49,7 +51,8 @@ class PublicPostResource extends Resource {
             "company" => new PublicCompanyResource($this->company),
             "meta" => new PublicPostMetaResource($this->meta),
             "images" => PublicPostImageResource::collection($this->images),
-            "cover" => $this->_cover
+            "cover" => $this->_cover,
+            "og_image" => (string) (new CloudinaryImage($this->_cover))->wrapped("template_teh19_exhibitor_en")
 
         ];
     }
