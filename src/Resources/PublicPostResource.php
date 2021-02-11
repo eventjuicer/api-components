@@ -52,7 +52,7 @@ class PublicPostResource extends Resource {
             "meta" => new PublicPostMetaResource($this->meta),
             "images" => PublicPostImageResource::collection($this->images),
             "cover" => $this->_cover,
-            "og_image" => (string) (new CloudinaryImage($this->_cover))->wrapped("template_teh19_exhibitor_en", "c_fill,w_960", "x_-10,y_50")
+            "og_image" => (string) (new CloudinaryImage($this->_cover))->wrapped("ehandel_cl_tmpl", "c_fill,w_1000", "x_-200,y_0")
         ];
     }
 }
