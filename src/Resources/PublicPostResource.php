@@ -48,6 +48,8 @@ class PublicPostResource extends Resource {
             "updated_at" => (string) $this->updated_at,
             "published_at" => (string) $this->published_at,
 
+            "category" => (string) $this->category,
+
             "company" => new PublicCompanyResource($this->company),
             "meta" => new PublicPostMetaResource($this->meta),
             "images" => PublicPostImageResource::collection($this->images),
