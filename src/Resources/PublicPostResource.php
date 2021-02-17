@@ -9,7 +9,6 @@ use Eventjuicer\ValueObjects\CloudinaryImage;
 class PublicPostResource extends Resource {
 
 
-    protected $preventCriteriaOverwriting = false;
 
     static $includeBody = false;
 

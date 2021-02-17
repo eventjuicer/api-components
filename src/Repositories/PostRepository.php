@@ -12,6 +12,8 @@ use Bosnadev\Repositories\Eloquent\Repository;
 class PostRepository extends Repository
 {
     
+    protected $preventCriteriaOverwriting = false;
+
 
     public function model()
     {
