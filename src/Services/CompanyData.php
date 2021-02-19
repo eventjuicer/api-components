@@ -39,9 +39,9 @@ class CompanyData {
         "sales_manager"         => 0,
    
         //"marketing_person"      => 0,
-        "invitation_template"   => 0,
+        "invitation_template"   => 0
 
-        "shared_image" => 0
+
     ];
 
     protected $namesInternal = [
@@ -50,7 +50,8 @@ class CompanyData {
         "ranking_tweak",
         "invitations_tweak",
         "contributor",
-        "password" 
+        "password",
+        "shared_image"
     ];
 
 
