@@ -67,7 +67,7 @@ class Personalizer implements Arrayable {
 
 		if($enrich)
 		{
-			$profile["code"] = (new Hashids())->encode($this->model->id);
+			$profile["code"] = $this->getCode();
 			$profile["hash"] = $profile["code"];
 			$profile["token"] = $this->model->token;
 			$profile["company_id"] = $this->model->company_id;
