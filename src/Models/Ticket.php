@@ -39,7 +39,8 @@ class Ticket extends Model{
 
         'price' => 'array',
         'names' => 'array',
-        'descriptions' => 'array'
+        'descriptions' => 'array',
+        "json"  => "array"
     ];
 
     protected $dates = ['start', 'end'];

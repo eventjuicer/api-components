@@ -18,7 +18,8 @@ class TicketGroup extends Model
     protected $casts = [
 
         'descriptions' => 'array',
-        'booth' => 'array'
+        'booth' => 'array',
+        "json" => "array"
     ];
     
     public function tickets()
