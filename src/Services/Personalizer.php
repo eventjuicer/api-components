@@ -60,6 +60,18 @@ class Personalizer implements Arrayable {
 		return $this->getProfile(true);
 	}
 
+	public function getProfileArray(){
+
+		return $this->model->fields->map(function($_item){
+                
+                return [
+                	"name" => $_item->name,
+                	"value" => $_item->pivot->field_value
+                ];
+
+        })->all();
+	}
+
 	public function getProfile($enrich = false)
 	{
 
