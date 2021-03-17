@@ -258,7 +258,8 @@ trait Fields {
     "263"=> "case_study",
     "264"=> "confidential",
     "265"=> "video_length_minutes",
-    "266"=> "video_is_public"
+    "266"=> "url",
+    "267"=> "video_is_public",
 
   );
 

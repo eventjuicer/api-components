@@ -62,7 +62,7 @@ class Personalizer implements Arrayable {
 
 	public function getProfileArray(){
 
-		return $this->model->fields->map(function($_item){
+		$arr = $this->model->fields->map(function($_item){
                 
                 return [
                 	"name" => $_item->name,
@@ -70,6 +70,10 @@ class Personalizer implements Arrayable {
                 ];
 
         })->all();
+
+        $arr[] = ["name" => "email", "value" => $this->model->email];
+
+        return $arr;
 	}
 
 	public function getProfile($enrich = false)
