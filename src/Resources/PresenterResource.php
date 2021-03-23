@@ -39,7 +39,10 @@ class PresenterResource extends Resource{
         "featured_cfp",
         "video_length_minutes",
         "video_is_public",
-        "video"
+        "video",
+        "profile_twitter",
+        "profile_linkedin",
+        "profile_facebook"
     ); 
 
     static public function showVotes($bool){
