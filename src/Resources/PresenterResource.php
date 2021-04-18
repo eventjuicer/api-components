@@ -27,6 +27,7 @@ class PresenterResource extends Resource{
         "presentation_description",
         "presentation_venue",
         "presentation_time",
+        "presentation_day",
         "presentation_category",
         "avatar",
         "logotype",
