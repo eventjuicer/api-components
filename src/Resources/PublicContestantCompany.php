@@ -9,8 +9,7 @@ use Eventjuicer\ValueObjects\EmailAddress;
 use Eventjuicer\Services\Hashids;
 use Eventjuicer\Services\Traits\Fields;
 
-class PublicContestantCompany extends Resource
-{
+class PublicContestantCompany extends Resource {
 
     use Fields;
 
@@ -63,6 +62,8 @@ class PublicContestantCompany extends Resource
         $data["votes"] = $this->relationLoaded("votes") ? $this->votes->count() + $votes_override : 0;
 
         $data["id"] = (int) $this->id;
+
+        $data["current"] = $this->event_id == self::$event_id;
 
         $data["event"] = new PublicEventResource($this->whenLoaded("event"));
 

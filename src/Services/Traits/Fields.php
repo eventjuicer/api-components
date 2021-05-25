@@ -5,6 +5,8 @@ use Illuminate\Database\Eloquent\Collection;
 
 trait Fields {
 
+    static $event_id = 0;
+
 	public $fields = array(
 
     "2"=> "fname",
