@@ -278,7 +278,7 @@ class SaveOrder {
 
 
 	protected function countTotalAmount(){
-		
+
 		//count AMOUNT!
 		foreach($this->tickets as $ticket_id => $ticket_data){
 
@@ -338,6 +338,8 @@ class SaveOrder {
                 $quantity = $ticket_data;
             }else{
                 $quantity = !empty($ticket_data["quantity"])? $ticket_data["quantity"]: 1;
+
+                dd($ticket_data["formdata"]);
             }
 
 			$t 					= new PurchaseTicket;
