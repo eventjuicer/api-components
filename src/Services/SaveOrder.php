@@ -339,7 +339,7 @@ class SaveOrder {
             }else{
                 $quantity = !empty($ticket_data["quantity"])? $ticket_data["quantity"]: 1;
 
-                dd($ticket_data["formdata"]);
+               throw new \Exception(var_export($ticket_data));
             }
 
 			$t 					= new PurchaseTicket;
