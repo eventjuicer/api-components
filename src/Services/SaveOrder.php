@@ -77,8 +77,8 @@ class SaveOrder {
 	}
 
 	public function setTickets(array $tickets){
-		foreach($tickets as $ticket_id => $quantity){
-			$this->tickets[$ticket_id] = $quantity;
+		foreach($tickets as $ticket_id => $data){
+			$this->tickets[$ticket_id] = $data;
 		}
 	}
 
@@ -276,10 +276,17 @@ class SaveOrder {
 		));
 	}
 
-	protected function saveTickets(){
 
+	protected function countTotalAmount(){
+		
 		//count AMOUNT!
-		foreach($this->tickets as $ticket_id => $quantity){
+		foreach($this->tickets as $ticket_id => $ticket_data){
+
+			if(is_numeric($ticket_data)){
+                $quantity = $ticket_data;
+            }else{
+                $quantity = !empty($ticket_data["quantity"])? $ticket_data["quantity"]: 1;
+            }
 
 			$ticket = Ticket::find($ticket_id);
 
@@ -293,8 +300,16 @@ class SaveOrder {
 				throw new \Exception("no price for this locale!");
 			}
 
-			$this->amount += intval($localPrice) * $quantity;
+			$this->amount += intval($localPrice) * intval($quantity);
 		}
+
+		return $this->amount;
+	}
+
+
+	protected function saveTickets(){
+
+		$this->countTotalAmount();
 
 		//save Purchase
 
@@ -317,14 +332,20 @@ class SaveOrder {
 
 		$this->setPurchase( $purchase );
 
-		foreach($this->tickets as $ticket_id => $quantity)
-		{	
+		foreach($this->tickets as $ticket_id => $ticket_data){
+
+			if(is_numeric($ticket_data)){
+                $quantity = $ticket_data;
+            }else{
+                $quantity = !empty($ticket_data["quantity"])? $ticket_data["quantity"]: 1;
+            }
+
 			$t 					= new PurchaseTicket;
 			$t->ticket_id 		= $ticket_id;
 			$t->participant_id 	= $this->participant_id;
 			$t->purchase_id 	= $purchase->id;
 			$t->event_id 		= $this->event_id;
-			$t->formdata		= "";
+			$t->formdata		= isset($ticket_data["formdata"])? $ticket_data["formdata"]: "";
 			$t->quantity 		= $quantity;
 			$t->sold 			= 1;
 			$t->save();
