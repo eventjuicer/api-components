@@ -39,12 +39,6 @@ class ParticipantTicket extends Model
 
     // }
 
-  
-    public function contexts()
-    {
-        return $this->morphToMany(Context::class, 'contextable');
-    }
-
 
     public function participant()
     {

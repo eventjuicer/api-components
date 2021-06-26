@@ -17,7 +17,7 @@ use Eventjuicer\Models\Participant;
 use Eventjuicer\Models\Organizer;
 use Eventjuicer\Models\Group;
 use Eventjuicer\Models\Event;
-use Eventjuicer\Models\PurchaseTicket;
+use Eventjuicer\Models\ParticipantTicket;
 use Eventjuicer\Models\ParticipantFields;
 use Eventjuicer\Models\Purchase;
 use Eventjuicer\Models\Input;
@@ -338,11 +338,9 @@ class SaveOrder {
                 $quantity = $ticket_data;
             }else{
                 $quantity = !empty($ticket_data["quantity"])? $ticket_data["quantity"]: 1;
-
-               throw new \Exception(var_export($ticket_data));
             }
 
-			$t 					= new PurchaseTicket;
+			$t 					= new ParticipantTicket;
 			$t->ticket_id 		= $ticket_id;
 			$t->participant_id 	= $this->participant_id;
 			$t->purchase_id 	= $purchase->id;
