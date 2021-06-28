@@ -15,6 +15,8 @@ class ParticipantTicketResource extends Resource
 
  		$data = $this->formdata;
 
+        dd($data);
+
  		$data["participant_id"] = $this->participant_id;
   		$data["ticket_id"] = $this->ticket_id;
 

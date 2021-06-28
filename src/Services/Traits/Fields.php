@@ -262,6 +262,7 @@ trait Fields {
     "265"=> "video_length_minutes",
     "266"=> "url",
     "267"=> "video_is_public",
+    "268"=> "locale"
 
   );
 
