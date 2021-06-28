@@ -15,14 +15,12 @@ class ParticipantTicketResource extends Resource
 
  		$data = $this->formdata;
 
-        dd($data);
-
- 		$data["participant_id"] = $this->participant_id;
-  		$data["ticket_id"] = $this->ticket_id;
-
-        $data["company"] = new PublicCompanyResource($this->participant->company);
- 		$data["purchase"] = new PurchaseResource($this->purchase);
-
+        if(is_array($data)){
+            $data["participant_id"] = $this->participant_id;
+            $data["ticket_id"] = $this->ticket_id;
+            $data["company"] = new PublicCompanyResource($this->participant->company);
+            $data["purchase"] = new PurchaseResource($this->purchase);
+        }
  		
         return $data;
     }
