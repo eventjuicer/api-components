@@ -53,6 +53,9 @@ class SavePaidOrder {
 		if(!$this->event_id || !is_numeric($this->event_id)){
 			throw new \Exception("setEventId() missing");
 		}
+
+		//purge old items?
+        $this->removeOldLocks();
 		
 		return PreBooking::where("event_id", $this->event_id)->where("blockedon", ">", time() - intval($this->threshold))->get();
 
@@ -86,10 +89,14 @@ class SavePaidOrder {
 		/**
 		 * + purge outdated locks
 		 */
-
-		$this->removeOldLocks(); 
+		$this->removeOldLocks();
+		$this->removeOldUserLocks(); 
 		return $this->getLocksForUUID();
 	}		
+
+
+
+
 
 	/**
 	 * we don't care about the owner here...
@@ -136,15 +143,22 @@ class SavePaidOrder {
 	}
 
 	protected function getLocksForUUID(){
+
 		return PreBooking::where("sessid", $this->uuid)->where("event_id", $this->event_id)->get();
 	}
+
 
 	protected function removeOldLocks(){
 
 		/**
 		 * purge old 
 		 * */
-		PreBooking::where("blockedon", "<", time() - intval($this->threshold))->delete();
+		return PreBooking::where("blockedon", "<", time() - intval($this->threshold))->delete();
+
+	}
+
+	protected function removeOldUserLocks(){
+
 
 		$locks = $this->getLocksForUUID();
 
