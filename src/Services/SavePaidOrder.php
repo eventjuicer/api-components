@@ -8,14 +8,15 @@ use Uuid;
 use Carbon\Carbon;
 use Eventjuicer\Models\PreBooking;
 use Eventjuicer\Models\ParticipantTicket;
-
+use Arr;
 
 class SavePaidOrder {
 
 	protected $request;
 	protected $threshold = 600;
-	protected $event_id;
-	protected $sessid;
+	protected $event_id = 0;
+	protected $uuid = "";
+	protected $cart = [];
 
 
 	function __construct(Request $request){
@@ -23,86 +24,160 @@ class SavePaidOrder {
 		
 	}
 	
-	function createSession(){
-		$this->setSession(sha1(Uuid::generate(4)));
+	public function setUUID($raw = ""){
+		  $this->uuid = strlen($raw) != 40 ? sha1($raw): $raw;
 	}
 
-	function setSession($sessid = ""){
-		$this->sessid = $sessid;
-	}
-
-	function setEventId($event_id){
+	public function setEventId($event_id){
 		$this->event_id = (int) $event_id;
 	}
 
-	function lookupPurchases(){
+	public function setCart($cart = []){
+		if(is_array($cart)){
+			$this->cart = $cart;
+		}
+	}
 
-		ParticipantTicket::where()
+	public function setThreshold($val){
+		if(is_numeric($val)){
+			$this->threshold = (int) $val;
+		}
+	}
+
+	public function getThreshold(){
+		return $this->threshold;
+	}
+
+	public function getCurrentLocks(){
+
+		if(!$this->event_id || !is_numeric($this->event_id)){
+			throw new \Exception("setEventId() missing");
+		}
+		
+		return PreBooking::where("event_id", $this->event_id)->where("blockedon", ">", time() - intval($this->threshold))->get();
 
 	}
 
-	function createLocksForPotentialPurchase($data = []){
-		
+	public function create(){
 
-		// tickets[1808]: 1
-		// ticketdata[1808]: {"ti":"A9.1","id":"booth-126-336"}
+		/**
+		 * Scenario 1
+		 * we add new items to the cart...
+		 */
 
-		//before locking we must remove old locks associated with this sessid
+		foreach($this->cart as $ticket_id => $data){
 
-		if(!empty($data["sessid"])){
-
-			$this->setSession($data["sessid"]);
-			$this->removeLockForSession();
-		}
-
-		$lockStatus = true;
-
-		foreach($data["tickets"] as $ticket_id => $quantity){
-
-			if(!$quantity>0){
+			if(empty($data["formdata"]) || empty($data["formdata"]["id"])){
 				continue;
 			}
 
-			$ticketdata = !empty($data["ticketdata"]) && isset($data["ticketdata"][$ticket_id])? json_decode(stripslashes($data["ticketdata"][$ticket_id]), true): [];
+			$item_uid = $data["formdata"]["id"];
 
-			//before setting-up a new lock we must ensure there is no lock is
-
-			$lock = PreBooking::where("ticket_id", $ticket_id)->whereNot("sessid", $this->sessid)->first();
-
-			$this->createLock($ticket_id, $ticketdata);
+			$this->setLock($ticket_id, $item_uid, $data["formdata"]);
 		}
 
-		return $lockStatus;
+		/**
+		 * Scenario 2
+		 * a) cart emptied
+		 * b) cart item removed
+		 * = we should remove items that are not present in the cart
+		 */
+
+		/**
+		 * + purge outdated locks
+		 */
+
+		$this->removeOldLocks(); 
+		return $this->getLocksForUUID();
+	}		
+
+	/**
+	 * we don't care about the owner here...
+	 * */
+	protected function checkLock($ticket_id, $item_uid){
+
+		//{quantity: 1, formdata: {ti: "G10", id: "booth-0-918"}}}
+
+		return PreBooking::where("ticket_id", $ticket_id)->where("item_uid", $item_uid)->first();
+
 	}
 
-	function createLock($ticket_id= 0, $ticketdata= ""){
+	protected function setLock($ticket_id, $item_uid, $ticketdata){
 
-		//validate ticket_id
+		if(!$this->uuid || strlen($this->uuid)!=40){
+			return null;
+		}
 
-    	$participant->createdon 	= Carbon::now();
+		if(!$ticket_id || !is_numeric($ticket_id)){
+			return null;
+		}
 
-    	//check if not already present?
+		if($this->checkLock($ticket_id, $item_uid)){
+			return false;
+		}
 
-    	//check if not already purchased?
-
-    	$lock = new PreBooking;
-    	$lock->sessid = $this->sessid;
+		$lock = new PreBooking;
+    	$lock->sessid = $this->uuid;
     	$lock->ticket_id = $ticket_id;
+    	$lock->item_uid = $item_uid;
+    	/**
+    	 * compat
+    	 */
     	$lock->ticketdata = $ticketdata;
+    	/**
+    	 * compat
+    	 */
     	$lock->event_id = $this->event_id;
     	$lock->blockedon = time();
     	$lock->ip = $this->request->ip();
+    	$lock->save();
 
+    	return $lock;
+	}
 
-	}		
+	protected function getLocksForUUID(){
+		return Prebooking::where("sessid", $this->uuid)->where("event_id", $this->event_id)->get();
+	}
 
+	protected function removeOldLocks(){
 
-	function removeOldLocks(){
+		/**
+		 * purge old 
+		 * */
 		PreBooking::where("blockedon", "<", time() - intval($this->threshold))->delete();
+
+		$locks = $this->getLocksForUUID();
+
+		/**
+		 * check if the item is in the cart
+		 */
+
+		foreach($locks as $lock){
+			
+			/***
+			 * if there is no such ticket we may delete it immediately!
+			 */
+
+			if(!isset($this->cart[$lock->ticket_id])){
+				$lock->delete();
+				continue;
+			}
+
+			/**
+			 * otherwise we have to compare formdata!
+			 * */
+
+			foreach($this->cart AS $ticket_id => $data){
+
+				$item_uid = $data["formdata"]["id"];
+
+				if($ticket_id == $lock->ticket_id && $item_uid != $lock->item_uid){
+					$lock->delete();
+				}				
+			}
+		}
 	}
 
-	function removeLockForSession(){
-		PreBooking::like("sessid", $this->sessid)->delete();
-	}
+
 
 }
