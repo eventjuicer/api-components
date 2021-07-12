@@ -2,7 +2,7 @@
 
 namespace Eventjuicer\Repositories;
 
-use Eventjuicer\Models\Prebooking;
+use Eventjuicer\Models\PreBooking;
 use Eventjuicer\Repositories\Repository;
 
 use Carbon\Carbon;
@@ -14,7 +14,7 @@ class PrebookingRepository extends Repository {
 
     public function model()
     {
-        return Prebooking::class;
+        return PreBooking::class;
     }
 
 

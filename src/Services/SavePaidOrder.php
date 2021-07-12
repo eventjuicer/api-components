@@ -136,7 +136,7 @@ class SavePaidOrder {
 	}
 
 	protected function getLocksForUUID(){
-		return Prebooking::where("sessid", $this->uuid)->where("event_id", $this->event_id)->get();
+		return PreBooking::where("sessid", $this->uuid)->where("event_id", $this->event_id)->get();
 	}
 
 	protected function removeOldLocks(){
