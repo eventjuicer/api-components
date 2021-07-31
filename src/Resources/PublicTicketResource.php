@@ -10,115 +10,79 @@ use Carbon\Carbon;
 
 use Illuminate\Support\Collection;
 
-class PublicTicketResource extends Resource
-{
+class PublicTicketResource extends Resource{
 
-	protected $roles = ["contestant", "visitor", "exhibitor" , "presenter"];
+    /** 
+    * moved to TicketsSold 
+    * // public static function enhanceWithGroupInfo(Collection $groupsByGroupId)
+    * // {self::$groupInfo = $groupsByGroupId;}
+    */ 
 
-	protected $limitFromGroup;
-
-	static $groupInfo;
-
-	public function __construct($resource, $limitFromGroup = 0)
-    {
-        $this->resource = $resource;
-        $this->limitFromGroup = $limitFromGroup;
-    }
-
-    public static function enhanceWithGroupInfo(Collection $groupsByGroupId)
-    {
-    	self::$groupInfo = $groupsByGroupId;
-    }
-
-
-    public function toArray($request)
-    {   
-
-
-    	$datePassed 	= Carbon::now()->greaterThan( $this->end );
- 		$dateInFuture 	= Carbon::now()->lessThan( $this->start );
-
-
+    public function toArray($request){   
 
     	$data = [];
-
  		$data["id"] 		= $this->id;
  		$data["group_id"] 	= $this->ticket_group_id;
- 		
  		$data["names"] 		= $this->names;
  		$data["price"] 		= $this->price;
- 		$data["role"] 		= in_array($this->role, $this->roles) ? $this->role : "";
- 		
+ 		$data["role"] 		= $this->role;
  		$data["limit"] 		= $this->limit;
  		$data["max_quantity"] = $this->max;
-
  		$data["start"] 		= (string) $this->start;
  		$data["end"] 		= (string) $this->end;
+        $data["thumbnail"]    = (string) $this->thumbnail;
+        $data["image"]    = (string) $this->image;
+        $data["translation_asset_id"] = (string) $this->translation_asset_id;
+        $data["details_url"] = (string) $this->details_url;
 
-    $data["thumbnail"]    = (string) $this->thumbnail;
-    $data["image"]    = (string) $this->image;
+        /** 
+         * moved to TicketsSold 
+         *  //"customers" => $this->customers, //$this->ticketpivot->count(),
+         * //"sold"      => $this->sold, //$this->ticketpivot->sum("quantity")
+         **/
+ 		$data["agg"] =  $this->agg;
+        $data["remaining"] = $this->remaining;
 
-    $data["translation_asset_id"] = (string) $this->translation_asset_id;
-    $data["details_url"] = (string) $this->details_url;
+        /**
+         * moved to TicketsSold
+         * 
+         * //if($this->ticket_group_id && self::$groupInfo){
+         * //$group = self::$groupInfo[$this->ticket_group_id];
+         * //$remainingInGroup = $group->limit - $group->agg["sold"];
+         * //$data["remaining"]  = min($remainingInGroup, ($data["limit"] - $data["agg"]["sold"]) );
+         * //}else{
+         * //$data["remaining"]  = $data["limit"] - $data["agg"]["sold"];
+         * //}
+         **/
 
- 		$data["agg"] = [
- 				"customers" => $this->ticketpivot->count(),
- 				"sold" 		=> $this->ticketpivot->sum("quantity")			
- 		];
-
- 	 
-
- 		if( $this->ticket_group_id && self::$groupInfo)
- 		{
- 			//lookup for GROUP limit!
-
- 			$group = self::$groupInfo[$this->ticket_group_id];
-
- 			$remainingInGroup = $group->limit - $group->agg["sold"];
-
- 			$data["remaining"] 	= min($remainingInGroup, ($data["limit"] - $data["agg"]["sold"]) );
- 		}
- 		else
- 		{
- 			$data["remaining"] 	= $data["limit"] - $data["agg"]["sold"];
- 		}
-
-
+ 		/** 
+         * moved to TicketsSold 
+         * //intval( !$datePassed && !$dateInFuture );
+         **/
+ 		$data["in_dates"] 	= $this->in_dates; 
+        
+        /** 
+         * moved to TicketsSold 
+         * //intval( $data["remaining"] && $data["in_dates"] );
+         **/
+ 		$data["bookable"] 	= $this->bookable;
  		
- 		$data["in_dates"] 	= intval( !$datePassed && !$dateInFuture );
+        /**
+         * moved to TicketSold
+         * 
+         * //$data["errors"]  = [];
+         * //if(! $data["in_dates"] ){
+         * //if($datePassed){$data["errors"][] = 'overdue';}
+         * //if(!$datePassed && $dateInFuture){$data["errors"][] = 'future';}
+         * //}
+         * //if(! $data["remaining"] > 0 ){
+         * //$data["errors"][] = 'soldout';
+         * //if(isset($remainingInGroup)){$data["errors"][] = 'soldout_pool';}
+         * //}
+         */
 
- 		$data["bookable"] 	= intval( $data["remaining"] && $data["in_dates"] );
+        $data["errors"] = $this->errors;
 
- 		$data["errors"] 	= [];
-
- 		if(! $data["in_dates"] )
- 		{
- 			
- 			if($datePassed)
- 			{
- 				$data["errors"][] = 'overdue';
- 			}
-
- 			if(!$datePassed && $dateInFuture)
- 			{
- 				$data["errors"][] = 'future';
- 			}
-  		}
-
-  		if(! $data["remaining"] > 0 )
-  		{
-  			$data["errors"][] = 'soldout';
-
-  			if(isset($remainingInGroup))
-  			{
-  				$data["errors"][] = 'soldout_pool';
-  			}
-
-  		}
-
-
- 		
- 		
         return $data;
     }
 }
