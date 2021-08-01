@@ -31,41 +31,45 @@ class TicketsSold {
 	public function all(){
 
 		$ticketsrepo = clone $this->ticketsrepo;
-        $ticketsFromTicketGroups = $this->withGroup()->pluck("tickets")->collapse(); 
-        //find tickets without ticket group assigned
-        $ticketsrepo->pushCriteria(
-        	new WhereNotIn( "id", $ticketsFromTicketGroups->pluck("id")->all() )
-        );
         $ticketsrepo->pushCriteria(new BelongsToEvent(  $this->event_id ));
         //fuck cancelled purchases, we only care about HOLD and OK
         $ticketsrepo->with(["ticketpivot" => function($q){ 
         	$q->where("sold", 1);
-        }]); 
-        $merged = $ticketsFromTicketGroups->merge( $ticketsrepo->all() );
-        return $this->enrichCollection($merged);
+        }]);   
+        return $this->enrichCollection( $ticketsrepo->all() );
     }
+
 
     public function enrichCollection(Collection $collection){
 
 		$keyedGroups = $this->withGroup()->keyBy("id");
-    	$collection->transform(function($ticket) use($keyedGroups) {
 
+    	$collection->transform(function($ticket) use($keyedGroups) {
+    		$errors = [];
         	$datePassed 	= Carbon::now()->greaterThan( $ticket->end );
  			$dateInFuture 	= Carbon::now()->lessThan( $ticket->start );
+
  			$ticket->agg = [
  				"customers" => $ticket->ticketpivot->count(),
  				"sold" => $ticket->ticketpivot->sum("quantity")
  			];
+
  			$ticket->in_dates 	= intval( !$datePassed && !$dateInFuture );
-			if( $ticket->ticket_group_id ) {
+ 			$ticket->remaining 	= $ticket->limit - $ticket["agg"]["sold"];
+
+			if( $ticket->ticket_group_id > 0) {
 	 			$group = $keyedGroups[$ticket->ticket_group_id];
 	 			$remainingInGroup = $group->limit - $group->agg["sold"];
-	 			$ticket->remaining 	= min($remainingInGroup, ($ticket->limit - $ticket["agg"]["sold"]) );
- 			}else{
- 				$ticket->remaining 	= $ticket->limit - $ticket->sold;
+	 			if($remainingInGroup < $ticket->remaining){
+	 				$ticket->remaining = $remainingInGroup;
+	 			}
+	 			if(!$remainingInGroup > 0){
+	 				$errors[] = 'soldout_pool';
+	 			}
  			}
+
  			$ticket->bookable = intval( $ticket->remaining && $ticket->in_dates );
-			$errors = [];
+
 			if(! $ticket->in_dates ){
  				if($datePassed){
  					$errors[] = 'overdue';
@@ -76,9 +80,6 @@ class TicketsSold {
   			}
   			if(! $ticket->remaining > 0 ){
   				$errors[] = 'soldout';
-	  			if(isset($remainingInGroup)){
-	  				$errors[] = 'soldout_pool';
-	  			}
   			}
   			$ticket->errors = $errors;
         	return $ticket;
@@ -99,7 +100,7 @@ class TicketsSold {
 
         	/**
         	 * ALERT!
-        	 * $group->tickets will not be enriched... as we would have infinite loop here
+        	 * $group->tickets will NOT be enriched... as we would have infinite loop here
         	 * $groups->transform(function($ticketgroup){
         	 	* $ticketgroup->tickets = $this->ticketsold->enrichCollection($ticketgroup->tickets);
         	 	* return $ticketgroup;
