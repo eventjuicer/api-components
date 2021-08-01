@@ -17,7 +17,7 @@ class SavePaidOrder implements SavesPaidOrder {
 	protected $threshold = 600;
 	protected $event_id = 0;
 	protected $uuid = "";
-	protected $cart = [];
+	protected $tickets = [];
 
 
 	function __construct(Request $request){
@@ -26,16 +26,19 @@ class SavePaidOrder implements SavesPaidOrder {
 	}
 	
 	public function setUUID($raw = ""){
-		  $this->uuid = strlen($raw) != 40 ? sha1($raw): $raw;
+
+		$this->uuid = strlen($raw) > 40 ? sha1($raw): $raw;
 	}
 
 	public function setEventId($event_id){
-		$this->event_id = (int) $event_id;
+		if(is_numeric($event_id)){
+			$this->event_id = (int) $event_id;
+		}
 	}
 
-	public function setCart($cart = []){
-		if(is_array($cart)){
-			$this->cart = $cart;
+	public function setTickets(array $tickets){
+		if(is_array($tickets)){
+			$this->tickets = $tickets;
 		}
 	}
 
@@ -69,7 +72,7 @@ class SavePaidOrder implements SavesPaidOrder {
 		 * we add new items to the cart...
 		 */
 
-		foreach($this->cart as $ticket_id => $data){
+		foreach($this->tickets as $ticket_id => $data){
 
 			if(empty($data["formdata"]) || empty($data["formdata"]["id"])){
 				continue;
@@ -96,7 +99,36 @@ class SavePaidOrder implements SavesPaidOrder {
 	}		
 
 
+	public function filterTickets(){
 
+		//check locks against tickets
+		$locks = $this->getLocksForUUID();
+
+		foreach($this->tickets as $ticket_id => $data){
+
+			/*
+			* leave ticket as is
+			*/
+			if(empty($data["formdata"]) || empty($data["formdata"]["id"])){
+				continue;
+			}
+
+			$item_uid = $data["formdata"]["id"];
+
+			if($locks->isEmpty()){
+				unset($this->tickets[$ticket_id]);
+			}
+
+			//check if lock exists
+
+			if(!$locks->firstWhere("item_uid", $item_uid)){
+				unset($this->tickets[$ticket_id]);
+			}
+		
+		}
+
+		return $this->tickets;
+	}
 
 
 	/**
@@ -121,6 +153,7 @@ class SavePaidOrder implements SavesPaidOrder {
 		}
 
 		if($this->checkLock($ticket_id, $item_uid)){
+			//already set...lets keep it!
 			return false;
 		}
 
@@ -158,8 +191,14 @@ class SavePaidOrder implements SavesPaidOrder {
 
 	}
 
+	/**
+	 * 
+	 * remove locks that were previously set for the user but are not valid
+	 * (1) compare tickets - faster
+	 * (2) if tickets match we must still compare formdata
+	 * 
+	 * */
 	protected function removeOldUserLocks(){
-
 
 		$locks = $this->getLocksForUUID();
 
@@ -168,23 +207,19 @@ class SavePaidOrder implements SavesPaidOrder {
 		 */
 
 		foreach($locks as $lock){
-			
-			/***
-			 * if there is no such ticket we may delete it immediately!
-			 */
 
-			if(!isset($this->cart[$lock->ticket_id])){
+			if(!isset($this->tickets[$lock->ticket_id])){
 				$lock->delete();
 				continue;
 			}
 
-			/**
-			 * otherwise we have to compare formdata!
-			 * */
-
-			foreach($this->cart AS $ticket_id => $data){
+			foreach($this->tickets AS $ticket_id => $data){
 
 				$item_uid = $data["formdata"]["id"];
+
+				/**
+				 * TODO: this should be handled differently!
+				 */
 
 				if($ticket_id == $lock->ticket_id && $item_uid != $lock->item_uid){
 					$lock->delete();

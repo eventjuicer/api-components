@@ -79,10 +79,14 @@ class SaveOrder {
 	}
 
 	public function setTickets(array $tickets){
-		foreach($tickets as $ticket_id => $data){
-			$this->tickets[$ticket_id] = $data;
-		}
+		$this->tickets = $tickets;
 	}
+
+	// public function addTickets(array $tickets){
+	// 	foreach($tickets as $ticket_id => $data){
+	// 		$this->tickets[$ticket_id] = $data;
+	// 	}
+	// }
 
 	public function setParticipantId(int $participant_id){
 
@@ -424,7 +428,12 @@ class SaveOrder {
 
 	
 	protected function validateTickets(){
-		
+
+		if(empty($this->tickets)){
+			$this->errors[] = "api.errors.cart_empty";
+			return;
+		}
+
 		$this->ticketssold->setEventId($this->event_id);
 		$tickets = $this->ticketssold->all()->keyBy("id");
 
