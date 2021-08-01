@@ -8,8 +8,10 @@ use Eventjuicer\Repositories\Criteria\BelongsToEvent;
 use Eventjuicer\Repositories\Criteria\WhereNotIn;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
+use Eventjuicer\Contracts\CountsSoldTickets;
 
-class TicketsSold {
+
+class TicketsSold implements CountsSoldTickets {
 
 	protected $ticketgroupsrepo;
 	protected $ticketsrepo;
@@ -29,6 +31,10 @@ class TicketsSold {
 
 
 	public function all(){
+
+		if(empty($this->event_id)){
+			throw new \Exception("No active event id set!");
+		}
 
 		$ticketsrepo = clone $this->ticketsrepo;
         $ticketsrepo->pushCriteria(new BelongsToEvent(  $this->event_id ));
@@ -63,12 +69,12 @@ class TicketsSold {
 	 			if($remainingInGroup < $ticket->remaining){
 	 				$ticket->remaining = $remainingInGroup;
 	 			}
-	 			if(!$remainingInGroup > 0){
+	 			if(! ($remainingInGroup > 0) ){
 	 				$errors[] = 'soldout_pool';
 	 			}
  			}
 
- 			$ticket->bookable = intval( $ticket->remaining && $ticket->in_dates );
+ 			$ticket->bookable = intval( $ticket->remaining>0 && $ticket->in_dates );
 
 			if(! $ticket->in_dates ){
  				if($datePassed){
@@ -78,7 +84,7 @@ class TicketsSold {
  					$errors[] = 'future';
  				}
   			}
-  			if(! $ticket->remaining > 0 ){
+  			if(! ($ticket->remaining > 0) ){
   				$errors[] = 'soldout';
   			}
   			$ticket->errors = $errors;
@@ -89,6 +95,10 @@ class TicketsSold {
 
 
  	public function withGroup(){
+
+ 		if(empty($this->event_id)){
+			throw new \Exception("No active event id set!");
+		}
 
  		$ticketgroupsrepo = clone $this->ticketgroupsrepo;
         $ticketgroupsrepo->pushCriteria(new BelongsToEvent( $this->event_id ));
