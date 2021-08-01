@@ -97,12 +97,20 @@ class TicketsSold {
         $all =  $ticketgroupsrepo->all();
         $all->transform(function($group){
 
+        	/**
+        	 * ALERT!
+        	 * $group->tickets will not be enriched... as we would have infinite loop here
+        	 * $groups->transform(function($ticketgroup){
+        	 	* $ticketgroup->tickets = $this->ticketsold->enrichCollection($ticketgroup->tickets);
+        	 	* return $ticketgroup;
+        	 	* });
+        	 **/
+
             $purchases = $group->tickets->pluck("ticketpivot")->collapse();
             $group->agg  = [
                   "offered"     => $group->tickets->sum("limit"),
                   "sold"        => $purchases->sum("quantity"),
                   "customers"   => $purchases->count()
-
             ];
             return $group;
         });

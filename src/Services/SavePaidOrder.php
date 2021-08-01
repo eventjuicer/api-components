@@ -2,6 +2,7 @@
 
 namespace Eventjuicer\Services;
 
+use Eventjuicer\Contracts\SavesPaidOrder;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Model;
 use Uuid;
@@ -10,7 +11,7 @@ use Eventjuicer\Models\PreBooking;
 use Eventjuicer\Models\ParticipantTicket;
 use Arr;
 
-class SavePaidOrder {
+class SavePaidOrder implements SavesPaidOrder {
 
 	protected $request;
 	protected $threshold = 600;
