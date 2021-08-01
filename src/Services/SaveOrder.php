@@ -199,7 +199,7 @@ class SaveOrder {
 		$this->validateTickets();
 
 		if(!empty($this->errors)){
-			throw new \Exception(implode(", ", $this->errors));
+			throw new \Exception(implode(",", $this->errors));
 		}
 
 		if(! $this->participant ){
@@ -342,8 +342,7 @@ class SaveOrder {
 		}
 	}
 
-	protected function saveFields()
-	{
+	protected function saveFields(){
 
 		foreach($this->fields as $field_name => $field_value)
 		{
@@ -429,21 +428,45 @@ class SaveOrder {
 		$this->ticketssold->setEventId($this->event_id);
 		$tickets = $this->ticketssold->all()->keyBy("id");
 
+		$formdata = $tickets->pluck("ticketpivot")->collapse()->filter(function($item){return $item->formdata && isset($item->formdata["id"]); })->pluck("formdata.id")->all();
+
         foreach($this->tickets AS $ticketID => $ticketData){
 
         	if(!isset($tickets[$ticketID])){
         		//ticket from other event!
-        		$this->errors["Bad ticket id: " . $ticketID];
+        		$this->setTicketError($ticketID, "api.errors.bad_ticket_id");
+        		continue;
         	}
 
         	$ticket = $tickets[$ticketID];
 
         	if(!$ticket->bookable){
-        		$this->errors["Ticket not bookable: " . $ticketID . ' reason(s): ' . implode(",", $ticket->errors)];
+        		$this->setTicketError($ticketID, 
+        			"api.errors.ticket_not_bookable|errors: ". implode(",", $ticket->errors)
+        		);
+        		continue;
         	}
+
+        	if(isset($ticketData["formdata"]) && isset($ticketData["formdata"]["id"])){
+        		
+        		if(in_array($ticketData["formdata"]["id"], $formdata)){
+        			$this->setTicketError($ticketID,  
+        				"api.errors.formdata_conflict|id: ". $ticketData["formdata"]["id"]
+        			);
+        			continue;
+        		}
+        	}
+
+        	//validate formdata if present!
+
         }
 	}
 
+	protected function setTicketError($ticket_id, $errorMsg=""){
+		$this->errors[] = $errorMsg . "|ticket id: " . $ticket_id; 
+		//do not process this ticket...
+        unset( $this->tickets[$ticket_id] );
+	}
 
 
 }
