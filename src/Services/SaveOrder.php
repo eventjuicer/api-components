@@ -23,6 +23,7 @@ use Eventjuicer\Models\Purchase;
 use Eventjuicer\Models\Input;
 use Eventjuicer\Models\Ticket;
 use Illuminate\Database\Eloquent\Model;
+use Eventjuicer\Contracts\CountsSoldTickets;
 
 use Uuid;
 use Carbon\Carbon;
@@ -32,6 +33,7 @@ class SaveOrder {
 //	use ProvidesConvenienceMethods;
 
 	protected $request;
+	protected $ticketssold;
 	protected $purchase;
 
 	protected $amount = 0;
@@ -53,12 +55,12 @@ class SaveOrder {
 	protected $organizer_id = 0;
 	protected $group_id = 0;
 	protected $event_id = 0;
-	protected $validate = true;
 
+	protected $errors = [];
 
-	function __construct(Request $request)
-	{
+	function __construct(Request $request, CountsSoldTickets $ticketssold){
 		$this->request = $request;
+		$this->ticketssold = $ticketssold;
 	}
 
 	/* SETTERS */
@@ -143,15 +145,10 @@ class SaveOrder {
 	}
 
 	public function setParent(Model $model){
-
 		$this->parent = $model;
 		$this->parent_id = $model->id;
 		$this->company_id = $model->company_id;
 
-	}
-
-	public function skipValidation(bool $skip = true){
-		$this->validate = !$skip;
 	}
 
 	public function setEventId(int $event_id){
@@ -169,7 +166,6 @@ class SaveOrder {
 			$this->group_id 		= $event->group_id;
 			$this->organizer_id 	= $event->organizer_id;
 		}
-	
 	}
 
 	/* GETTERS */
@@ -196,22 +192,14 @@ class SaveOrder {
 
 	function make(){
 
-		if( !$this->event && !$this->participant )
-		{
+		if( !$this->event && !$this->participant ){
 			throw new \Exception("Either event or participant must be resolved!");
 		}
 
-		if( !$this->validate ){
+		$this->validateTickets();
 
-			if( ! $this->validateFields())
-			{
-			//	throw new \Exception("Problem with fields");
-			}
-
-			if( ! $this->validateTickets())
-			{
-				throw new \Exception("Problem with tickets");
-			}		
+		if(!empty($this->errors)){
+			throw new \Exception(implode(", ", $this->errors));
 		}
 
 		if(! $this->participant ){
@@ -388,8 +376,7 @@ class SaveOrder {
 	}
 
 
-	public function updateFields(array $data = [])
-	{
+	public function updateFields(array $data = []){
 
 		$this->setFields($data);
 
@@ -397,8 +384,7 @@ class SaveOrder {
 			throw new \Exception("No participant defined!");
 		}
 
-		foreach($this->fields as $field_name => $field_value)
-		{
+		foreach($this->fields as $field_name => $field_value){
 
 			$field_name = strtolower(trim($field_name));
 			//this is senseless... array should be checked..!
@@ -438,30 +424,26 @@ class SaveOrder {
 	}
 
 	
-	protected function validateTickets( )
-	{
-		foreach($this->tickets as $ticket)
-		{
-			//check limits....!
-		}
-
-		return true;
-	}
-
-	protected function validateFields( )
-	{
-		return Validator::make($this->fields, 
-		[
-				"fname" 	=> "required", 
-				"lname" 	=> "required",
-				"email" 	=> "required,email",
-				"phone"		=> "required",
-				"cname2"	=> "required"
-		]);
-	}
-
-
-
+	protected function validateTickets(){
 		
+		$this->ticketssold->setEventId($this->event_id);
+		$tickets = $this->ticketssold->all()->keyBy("id");
+
+        foreach($this->tickets AS $ticketID => $ticketData){
+
+        	if(!isset($tickets[$ticketID])){
+        		//ticket from other event!
+        		$this->errors["Bad ticket id: " . $ticketID];
+        	}
+
+        	$ticket = $tickets[$ticketID];
+
+        	if(!$ticket->bookable){
+        		$this->errors["Ticket not bookable: " . $ticketID . ' reason(s): ' . implode(",", $ticket->errors)];
+        	}
+        }
+	}
+
+
 
 }
