@@ -142,7 +142,7 @@ class SavePaidOrder implements SavesPaidOrder {
 
 	protected function setLock($ticket_id, $item_uid, $ticketdata){
 
-		if(!$this->uuid || strlen($this->uuid)!=40){
+		if(!$this->uuid){
 			return null;
 		}
 
@@ -176,7 +176,7 @@ class SavePaidOrder implements SavesPaidOrder {
 
 	protected function getLocksForUUID(){
 
-		return PreBooking::where("sessid", $this->uuid)->where("event_id", $this->event_id)->get();
+		return PreBooking::where("sessid", $this->uuid)->get();
 	}
 
 
