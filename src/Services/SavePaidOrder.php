@@ -26,8 +26,7 @@ class SavePaidOrder implements SavesPaidOrder {
 	}
 	
 	public function setUUID($raw = ""){
-
-		$this->uuid = strlen($raw) > 40 ? sha1($raw): $raw;
+		$this->uuid = strlen($raw) != 40 ? sha1($raw): $raw;
 	}
 
 	public function setEventId($event_id){
