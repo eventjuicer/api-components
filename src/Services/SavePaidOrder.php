@@ -18,7 +18,7 @@ class SavePaidOrder implements SavesPaidOrder {
 	protected $event_id = 0;
 	protected $uuid = "";
 	protected $tickets = [];
-
+	protected $locksFailed = [];
 
 	function __construct(Request $request){
 		$this->request = $request;
@@ -62,7 +62,26 @@ class SavePaidOrder implements SavesPaidOrder {
 
 	}
 
+	public function getFailedLocks(){
+		return $this->locksFailed;
+	}
+
 	public function create(){
+
+
+		/**
+		 * + purge outdated locks
+		 */
+		$this->removeOldLocks();
+		
+		/**
+		 * Scenario 2
+		 * a) cart emptied
+		 * b) cart item removed
+		 * = we should remove items that are not present in the cart
+		 */
+
+		$this->removeOldUserLocks(); 
 
 		/**
 		 * Scenario 1
@@ -77,23 +96,18 @@ class SavePaidOrder implements SavesPaidOrder {
 
 			$item_uid = $data["formdata"]["id"];
 
-			$this->setLock($ticket_id, $item_uid, $data["formdata"]);
+			if(! $this->setLock($ticket_id, $item_uid, $data["formdata"]) ){
+				$this->locksFailed[$ticket_id] = $item_uid;
+			}
+
 		}
 
-		/**
-		 * Scenario 2
-		 * a) cart emptied
-		 * b) cart item removed
-		 * = we should remove items that are not present in the cart
-		 */
+	}
 
-		/**
-		 * + purge outdated locks
-		 */
-		$this->removeOldLocks();
-		$this->removeOldUserLocks(); 
-		return $this->getLocksForUUID();
-	}		
+	public function getLocksForUUID(){
+
+		return PreBooking::where("sessid", $this->uuid)->get();
+	}
 
 
 	public function filterTickets(){
@@ -136,22 +150,35 @@ class SavePaidOrder implements SavesPaidOrder {
 		//{quantity: 1, formdata: {ti: "G10", id: "booth-0-918"}}}
 
 		return PreBooking::where("ticket_id", $ticket_id)->where("item_uid", $item_uid)->first();
-
 	}
 
 	protected function setLock($ticket_id, $item_uid, $ticketdata){
 
-		if(!$this->uuid){
-			return null;
+		if(empty($this->uuid)){
+			throw new \Exception("no uuid!");
 		}
 
-		if(!$ticket_id || !is_numeric($ticket_id)){
-			return null;
+		if(empty($this->event_id)){
+			throw new \Exception("no event_id!");
 		}
 
-		if($this->checkLock($ticket_id, $item_uid)){
-			//already set...lets keep it!
-			return false;
+		if(empty($item_uid)){
+			throw new \Exception("no item_uid!");
+		}
+
+		if(empty($ticket_id) || !is_numeric($ticket_id)){
+			throw new \Exception("bad cart data!");
+		}
+
+		$lookup = $this->checkLock($ticket_id, $item_uid);
+
+		if($lookup){
+			//someone else has a lock - we should report that!
+			if($lookup->sessid != $this->uuid){
+				return false;
+			}
+			//there is an active lock but it belongs to same user
+			return true;
 		}
 
 		$lock = new PreBooking;
@@ -173,10 +200,7 @@ class SavePaidOrder implements SavesPaidOrder {
     	return $lock;
 	}
 
-	protected function getLocksForUUID(){
 
-		return PreBooking::where("sessid", $this->uuid)->get();
-	}
 
 
 	protected function removeOldLocks(){
@@ -199,6 +223,10 @@ class SavePaidOrder implements SavesPaidOrder {
 
 		$locks = $this->getLocksForUUID();
 
+		if($locks->isEmpty()){
+			return;
+		}
+
 		/**
 		 * check if the item is in the cart
 		 */
@@ -210,17 +238,22 @@ class SavePaidOrder implements SavesPaidOrder {
 				continue;
 			}
 
-			$found = false;
+			$foundLockInCart = false;
 
 			foreach($this->tickets AS $ticket_id => $data){
 
+				if(!isset($data["formdata"]) || !isset($data["formdata"]["id"])){
+					continue;
+				}
+
 				$item_uid = $data["formdata"]["id"];
+
 				if($ticket_id == $lock->ticket_id && $item_uid == $lock->item_uid){
-					$found = true;
+					$foundLockInCart = true;
 				}				
 			}
 
-			if(!$found){
+			if(!$foundLockInCart){
 				$lock->delete();
 			}
 		}
