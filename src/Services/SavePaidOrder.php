@@ -37,9 +37,7 @@ class SavePaidOrder implements SavesPaidOrder {
 	}
 
 	public function setTickets(array $tickets){
-		if(is_array($tickets)){
-			$this->tickets = $tickets;
-		}
+		$this->tickets = $tickets;
 	}
 
 	public function setThreshold($val){
@@ -193,7 +191,7 @@ class SavePaidOrder implements SavesPaidOrder {
 
 	/**
 	 * 
-	 * remove locks that were previously set for the user but are not valid
+	 * remove locks that were previously set for the users but are not currently present in their cart
 	 * (1) compare tickets - faster
 	 * (2) if tickets match we must still compare formdata
 	 * 
@@ -213,17 +211,18 @@ class SavePaidOrder implements SavesPaidOrder {
 				continue;
 			}
 
+			$found = false;
+
 			foreach($this->tickets AS $ticket_id => $data){
 
 				$item_uid = $data["formdata"]["id"];
-
-				/**
-				 * TODO: this should be handled differently!
-				 */
-
-				if($ticket_id == $lock->ticket_id && $item_uid != $lock->item_uid){
-					$lock->delete();
+				if($ticket_id == $lock->ticket_id && $item_uid == $lock->item_uid){
+					$found = true;
 				}				
+			}
+
+			if(!$found){
+				$lock->delete();
 			}
 		}
 	}
