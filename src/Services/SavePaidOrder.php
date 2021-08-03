@@ -19,6 +19,9 @@ class SavePaidOrder implements SavesPaidOrder {
 	protected $uuid = "";
 	protected $tickets = [];
 	protected $locksFailed = [];
+	protected $newLocksCreated = [];
+	protected $locksRemoved = [];
+
 
 	function __construct(Request $request){
 		$this->request = $request;
@@ -27,6 +30,10 @@ class SavePaidOrder implements SavesPaidOrder {
 	
 	public function setUUID($raw = ""){
 		$this->uuid = strlen($raw) != 40 ? sha1($raw): $raw;
+	}
+
+	public function getUUID(){
+		return $this->uuid;
 	}
 
 	public function setEventId($event_id){
@@ -64,6 +71,10 @@ class SavePaidOrder implements SavesPaidOrder {
 
 	public function getFailedLocks(){
 		return $this->locksFailed;
+	}
+
+	public function hasNewLocks(){
+		return count($this->newLocksCreated);
 	}
 
 	public function create(){
@@ -197,6 +208,10 @@ class SavePaidOrder implements SavesPaidOrder {
     	$lock->ip = $this->request->ip();
     	$lock->save();
 
+    	if($lock->id){
+    		$this->newLocksCreated[] = $lock;
+    	}
+ 
     	return $lock;
 	}
 
@@ -205,10 +220,12 @@ class SavePaidOrder implements SavesPaidOrder {
 
 	protected function removeOldLocks(){
 
-		/**
-		 * purge old 
-		 * */
-		return PreBooking::where("blockedon", "<", time() - intval($this->threshold))->delete();
+		$oldLocks = PreBooking::where("blockedon", "<", time() - intval($this->threshold))->get();
+
+		return $oldLocks->each(function($lock){
+			$this->locksRemoved[] = $lock;
+			$lock->delete();
+		});
 
 	}
 
@@ -234,6 +251,7 @@ class SavePaidOrder implements SavesPaidOrder {
 		foreach($locks as $lock){
 
 			if(!isset($this->tickets[$lock->ticket_id])){
+				$this->locksRemoved[] = $lock;
 				$lock->delete();
 				continue;
 			}
@@ -254,6 +272,7 @@ class SavePaidOrder implements SavesPaidOrder {
 			}
 
 			if(!$foundLockInCart){
+				$this->locksRemoved[] = $lock;
 				$lock->delete();
 			}
 		}
