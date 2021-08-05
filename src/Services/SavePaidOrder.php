@@ -77,6 +77,11 @@ class SavePaidOrder implements SavesPaidOrder {
 		return count($this->newLocksCreated);
 	}
 
+
+	public function sync(){
+		$this->removeOldUserLocks(); 
+	}
+
 	public function create(){
 
 
@@ -85,20 +90,6 @@ class SavePaidOrder implements SavesPaidOrder {
 		 */
 		$this->removeOldLocks();
 		
-		/**
-		 * Scenario 2
-		 * a) cart emptied
-		 * b) cart item removed
-		 * = we should remove items that are not present in the cart
-		 */
-
-		$this->removeOldUserLocks(); 
-
-		/**
-		 * Scenario 1
-		 * we add new items to the cart...
-		 */
-
 		foreach($this->tickets as $ticket_id => $data){
 
 			if(empty($data["formdata"]) || empty($data["formdata"]["id"])){
