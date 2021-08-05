@@ -14,12 +14,10 @@ class NewLockWasCreated extends Event implements ShouldBroadcast{
     use SerializesModels;
 
     public $data;
-    public $uuid;
 
-    public function __construct(Collection $locks, $uuid) {
+    public function __construct(Collection $locks) {
        
         $this->data = PublicPreBookingResource::collection($locks)->toArray(app("request"));
-        $this->uuid = $uuid;
     }
 
 
