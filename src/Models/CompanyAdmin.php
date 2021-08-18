@@ -18,9 +18,8 @@ class CompanyAdmin extends BaseUser
 
     protected $casts = [
         'profile' => 'array',
+        'organizations.pivot.roles' => 'array'
     ];
-
-
 
     protected static $graph_node_field_aliases = [
         'id' => 'facebook_user_id',
@@ -58,11 +57,9 @@ class CompanyAdmin extends BaseUser
     }
 
  
-    public function organizations()
-    {
+    public function organizations(){
 
-        //return $this->belongsToMany('Models\Organizer', "eventjuicer_user_organizations", "user_id", "organizer_id");
-        return $this->belongsToMany(Organizer::class, "eventjuicer_user_organizations");
+        return $this->belongsToMany(Organizer::class, "eventjuicer_user_organizations", "user_id", "organizer_id")->withPivot('is_default','roles','is_admin','theme');
 
     }
 

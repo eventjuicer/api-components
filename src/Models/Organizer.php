@@ -10,11 +10,14 @@ class Organizer extends Model
 {
 
       use AbleTrait;
-	
 
 	   public $timestamps = false;
      
    	protected $table = "bob_organizers";
+
+      protected $casts = [
+        'users.pivot.roles' => 'array'
+      ];
 
 
    	public function groups()
