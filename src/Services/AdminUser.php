@@ -109,7 +109,7 @@ class AdminUser {
 
 	}
 
-	public function active_organizer(){
+	public function active_organizer_id(){
 
 		$active_event_id = $this->active_event_id();
 
@@ -117,6 +117,10 @@ class AdminUser {
 			return $this->events->find($active_event_id)->organizer_id;
 		}
 
+	}
+
+	public function getUser(){
+		return $this->user? $this->user: null;
 	}
 
 	public function getUserId(){
@@ -143,7 +147,9 @@ class AdminUser {
 
 	public function admins(){
 
-		return $this->organizers->find($this->active_organizer())->users;
+		$organizer = $this->organizers->find($this->active_organizer_id());
+
+		return $organizer? $organizer->users: collect([]);
 	}
 
 	public function groups(){
