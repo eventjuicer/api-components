@@ -73,7 +73,9 @@ class Company extends Model
         return $this->hasMany(Scan::class);
     }
 
-
+    public function logs(){
+        return $this->morphMany(UserLog::class, 'loggable');
+    }
 
 
 
