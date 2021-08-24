@@ -22,7 +22,7 @@ class TicketsSold implements CountsSoldTickets {
 	protected $role = "";
 	protected $ticket_group_id = 0;
 	protected $keyedGroups;
-	protected $lowStock = 0.25;
+	protected $lowStock = 0.1;
 
 	function __construct(
 		TicketGroupRepository $ticketgroupsrepo, 
@@ -128,7 +128,7 @@ class TicketsSold implements CountsSoldTickets {
 				$ticket->status = 3;
 			}
 			if($ticket->in_dates){
-				if($ticket->remaining < $ticket->limit * $this->lowStock){
+				if($ticket->remaining < 3 || $ticket->remaining < $ticket->limit * $this->lowStock){
 					$ticket->status = 1;
 				}else{
 					$ticket->status = 2;
