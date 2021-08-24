@@ -21,6 +21,7 @@ class TicketsSold implements CountsSoldTickets {
 	protected $event_id = 0;
 	protected $role = "";
 	protected $ticket_group_id = 0;
+	protected $keyedGroups;
 
 	function __construct(
 		TicketGroupRepository $ticketgroupsrepo, 
@@ -32,6 +33,8 @@ class TicketsSold implements CountsSoldTickets {
 
 	public function setEventId($event_id){
 		$this->event_id = $event_id;
+		//it must not be called earlier :)
+		$this->keyedGroups = $this->withGroup()->keyBy("id");
 	}
 
 	public function setRole($role = ""){
@@ -56,7 +59,7 @@ class TicketsSold implements CountsSoldTickets {
         }
 
         if($this->ticket_group_id > 0){
-        	$ticketsrepo->pushCriteria(new FlagEquals("ticket_group_id", $this->ticket_group_id));
+        	$ticketsrepo->pushCriteria(new FlagEquals("ticket_group_id", (int) $this->ticket_group_id));
         }
 
         //fuck cancelled purchases, we only care about HOLD and OK
@@ -69,49 +72,55 @@ class TicketsSold implements CountsSoldTickets {
 
     public function enrichCollection(Collection $collection){
 
-		$keyedGroups = $this->withGroup()->keyBy("id");
+    	$collection->transform(function($ticket){
+    		return $this->enrichTicket($ticket);
+    	});
 
-    	$collection->transform(function($ticket) use($keyedGroups) {
-    		$errors = [];
-        	$datePassed 	= Carbon::now()->greaterThan( $ticket->end );
- 			$dateInFuture 	= Carbon::now()->lessThan( $ticket->start );
-
- 			$ticket->agg = [
- 				"customers" => $ticket->ticketpivot->count(),
- 				"sold" => $ticket->ticketpivot->sum("quantity")
- 			];
-
- 			$ticket->in_dates 	= intval( !$datePassed && !$dateInFuture );
- 			$ticket->remaining 	= $ticket->limit - $ticket["agg"]["sold"];
-
-			if( $ticket->ticket_group_id > 0) {
-	 			$group = $keyedGroups[$ticket->ticket_group_id];
-	 			$remainingInGroup = $group->limit - $group->agg["sold"];
-	 			if($remainingInGroup < $ticket->remaining){
-	 				$ticket->remaining = $remainingInGroup;
-	 			}
-	 			if(! ($remainingInGroup > 0) ){
-	 				$errors[] = 'soldout_pool';
-	 			}
- 			}
-
- 			$ticket->bookable = intval( $ticket->remaining>0 && $ticket->in_dates );
-
-			if(! $ticket->in_dates ){
- 				if($datePassed){
- 					$errors[] = 'overdue';
- 				}
- 				if(!$datePassed && $dateInFuture){
- 					$errors[] = 'future';
- 				}
-  			}
-  			if(! ($ticket->remaining > 0) ){
-  				$errors[] = 'soldout';
-  			}
-  			$ticket->errors = $errors;
-        	return $ticket;
-        });
     	return $collection;
+    }
+
+
+    public function enrichTicket($ticket){
+    	
+		$errors = [];
+    	$datePassed = Carbon::now()->greaterThan( $ticket->end );
+		$dateInFuture 	= Carbon::now()->lessThan( $ticket->start );
+
+		$ticket->agg = [
+			"customers" => $ticket->ticketpivot->count(),
+			"sold" => $ticket->ticketpivot->sum("quantity")
+		];
+
+		$ticket->in_dates 	= intval( !$datePassed && !$dateInFuture );
+		$ticket->remaining 	= $ticket->limit - $ticket["agg"]["sold"];
+
+		if( $ticket->ticket_group_id > 0) {
+			$group = $this->keyedGroups[$ticket->ticket_group_id];
+			$remainingInGroup = $group->limit - $group->agg["sold"];
+			if($remainingInGroup < $ticket->remaining){
+				$ticket->remaining = $remainingInGroup;
+			}
+			if(! ($remainingInGroup > 0) ){
+				$errors[] = 'soldout_pool';
+			}
+		}
+
+		$ticket->bookable = intval( $ticket->remaining>0 && $ticket->in_dates );
+
+		if(! $ticket->in_dates ){
+			if($datePassed){
+				$errors[] = 'overdue';
+			}
+			if(!$datePassed && $dateInFuture){
+				$errors[] = 'future';
+			}
+		}
+		if(! ($ticket->remaining > 0) ){
+			$errors[] = 'soldout';
+		}
+		$ticket->errors = $errors;
+		
+		return $ticket;
     }
 
 
