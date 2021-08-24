@@ -22,6 +22,7 @@ class TicketsSold implements CountsSoldTickets {
 	protected $role = "";
 	protected $ticket_group_id = 0;
 	protected $keyedGroups;
+	protected $lowStock = 0.25;
 
 	function __construct(
 		TicketGroupRepository $ticketgroupsrepo, 
@@ -120,10 +121,36 @@ class TicketsSold implements CountsSoldTickets {
 		if(! ($ticket->remaining > 0) ){
 			$errors[] = 'soldout';
 		}
+
+		//handle INT status
+		if($ticket->remaining > 0 && !$datePassed){
+			if($dateInFuture){
+				$ticket->status = 3;
+			}
+			if($ticket->in_dates){
+				if($ticket->remaining < $ticket->limit * $this->lowStock){
+					$ticket->status = 1;
+				}else{
+					$ticket->status = 2;
+				}
+			}
+			
+		}else{
+			$ticket->status = 0;
+		}
+
 		$ticket->errors = $errors;
 		
 		return $ticket;
     }
+
+
+    /*
+    red: (record) => record && !record.bookable,
+    orange: (record) => record && record.bookable && record.remaining < record.limit/4,
+    blue: (record) => record && record.remaining > 0 && record.errors.includes("future"),
+    green: (record) => record && record.bookable,
+    */
 
 
  	public function withGroup(){

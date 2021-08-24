@@ -49,6 +49,7 @@ class AdminTicketResource extends Resource
             "in_dates" => $this->in_dates,
             "bookable" => $this->bookable,
             "errors" => $this->errors,
+            "status" => $this->status
 
         ];
     }
