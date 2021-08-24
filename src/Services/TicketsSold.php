@@ -48,7 +48,7 @@ class TicketsSold implements CountsSoldTickets {
 		$this->ticket_group_id = $ticket_group_id;
 	}
 
-	public function all($with = []){
+	public function all(array $with = []){
 
 		if(empty($this->event_id)){
 			throw new \Exception("No active event id set!");
@@ -65,10 +65,10 @@ class TicketsSold implements CountsSoldTickets {
         	$ticketsrepo->pushCriteria(new FlagEquals("ticket_group_id", (int) $this->ticket_group_id));
         }
 
-        //fuck cancelled purchases, we only care about HOLD and OK
-        $ticketsrepo->with(array_merge(["ticketpivot" => function($q){ 
-        	$q->where("sold", 1);
-        }], $with));   
+        if(!empty($with)){
+        	$ticketsrepo->with($with);
+        }
+      
         return $this->enrichCollection( $ticketsrepo->all() );
     }
 
@@ -89,17 +89,23 @@ class TicketsSold implements CountsSoldTickets {
     	$datePassed = Carbon::now()->greaterThan( $ticket->end );
 		$dateInFuture 	= Carbon::now()->lessThan( $ticket->start );
 
+		/**
+		 * Double check!
+		 */
+
+		$ticketpivot = $ticket->ticketpivot->where("sold", 1);
+
 		$ticket->agg = [
-			"customers" => $ticket->ticketpivot->count(),
-			"sold" => $ticket->ticketpivot->sum("quantity")
+			"customers" => $ticketpivot->count(),
+			"sold" => $ticketpivot->sum("quantity")
 		];
 
 		$ticket->in_dates 	= intval( !$datePassed && !$dateInFuture );
-		$ticket->remaining 	= $ticket->limit - $ticket["agg"]["sold"];
+		$ticket->remaining 	= max(0, $ticket->limit - $ticket->agg["sold"]);
 
 		if( $ticket->ticket_group_id > 0) {
 			$group = $this->keyedGroups[$ticket->ticket_group_id];
-			$remainingInGroup = $group->limit - $group->agg["sold"];
+			$remainingInGroup = max(0, $group->limit - $group->agg["sold"]);
 			if($remainingInGroup < $ticket->remaining){
 				$ticket->remaining = $remainingInGroup;
 			}
