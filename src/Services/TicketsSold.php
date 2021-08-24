@@ -6,6 +6,9 @@ use Eventjuicer\Repositories\TicketGroupRepository;
 use Eventjuicer\Repositories\EloquentTicketRepository;
 use Eventjuicer\Repositories\Criteria\BelongsToEvent;
 use Eventjuicer\Repositories\Criteria\WhereNotIn;
+use Eventjuicer\Repositories\Criteria\FlagEquals;
+use Eventjuicer\Repositories\Criteria\ColumnMatches;
+
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Eventjuicer\Contracts\CountsSoldTickets;
@@ -16,6 +19,8 @@ class TicketsSold implements CountsSoldTickets {
 	protected $ticketgroupsrepo;
 	protected $ticketsrepo;
 	protected $event_id = 0;
+	protected $role = "";
+	protected $ticket_group_id = 0;
 
 	function __construct(
 		TicketGroupRepository $ticketgroupsrepo, 
@@ -29,8 +34,15 @@ class TicketsSold implements CountsSoldTickets {
 		$this->event_id = $event_id;
 	}
 
+	public function setRole($role = ""){
+		$this->role = $role;	
+	}
 
-	public function all(){
+	public function setTicketGroupId($ticket_group_id = 0){
+		$this->ticket_group_id = $ticket_group_id;
+	}
+
+	public function all($with = []){
 
 		if(empty($this->event_id)){
 			throw new \Exception("No active event id set!");
@@ -38,10 +50,19 @@ class TicketsSold implements CountsSoldTickets {
 
 		$ticketsrepo = clone $this->ticketsrepo;
         $ticketsrepo->pushCriteria(new BelongsToEvent(  $this->event_id ));
+
+        if($this->role){
+        	$ticketsrepo->pushCriteria(new ColumnMatches("role", $this->role));
+        }
+
+        if($this->ticket_group_id > 0){
+        	$ticketsrepo->pushCriteria(new FlagEquals("ticket_group_id", $this->ticket_group_id));
+        }
+
         //fuck cancelled purchases, we only care about HOLD and OK
-        $ticketsrepo->with(["ticketpivot" => function($q){ 
+        $ticketsrepo->with(array_merge(["ticketpivot" => function($q){ 
         	$q->where("sold", 1);
-        }]);   
+        }], $with));   
         return $this->enrichCollection( $ticketsrepo->all() );
     }
 
