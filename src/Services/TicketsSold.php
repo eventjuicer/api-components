@@ -32,9 +32,11 @@ class TicketsSold implements CountsSoldTickets {
 	}
 
 	public function setEventId($event_id){
-		$this->event_id = $event_id;
-		//it must not be called earlier :)
-		$this->keyedGroups = $this->withGroup()->keyBy("id");
+		if($event_id>0){
+			$this->event_id = $event_id;
+			//it must not be called earlier :)
+			$this->keyedGroups = $this->withGroup()->keyBy("id");
+		}
 	}
 
 	public function setRole($role = ""){
