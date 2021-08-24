@@ -20,18 +20,40 @@ class AdminTicketResource extends Resource
             
             "ticket_group_id"    => (int) $this->ticket_group_id,
 
-            "name" => array_get($this->names, "pl"),
+            "organizer_id" => (int) $this->organizer_id,
+            "group_id" => (int) $this->group_id,
+            "event_id" => (int) $this->event_id,
+
+
+            "translation_asset_id" => (string) $this->translation_asset_id,
+            "internal_name" => (string) $this->internal_name,
+            "baseprice" => (int) $this->baseprice,
+            "_price"  => $this->price,
+            "price_currency" => (string) $this->price_currency,
+            "_name"  => (string) array_get($this->names, "pl"),
+
             "role" => $this->role,
 
             "tags" =>  AdminTagResource::collection($this->oldtags),
 
-            "price" => array_get($this->price, "pl"),
-
             "start" => (string) $this->start,
             "end" => (string) $this->end,
-            "limit" => $this->limit
+            "limit" => $this->limit,
+            "agg" =>  $this->agg,
+            "remaining" => $this->remaining,
 
+            "thumbnail" => (string) $this->thumbnail,
+            "image" => (string) $this->image,
+            "details_url" => (string) $this->details_url,
+
+            "in_dates" => $this->in_dates,
+            "bookable" => $this->bookable,
+            "errors" => $this->errors,
 
         ];
     }
 }
+
+
+
+
