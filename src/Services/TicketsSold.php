@@ -64,10 +64,12 @@ class TicketsSold implements CountsSoldTickets {
         if($this->ticket_group_id > 0){
         	$ticketsrepo->pushCriteria(new FlagEquals("ticket_group_id", (int) $this->ticket_group_id));
         }
+		
+		$ticketsrepo->with(array_merge(["ticketpivot" => function($q){ 
+        	$q->where("sold", 1);
+        }], $with));   
 
-        if(!empty($with)){
-        	$ticketsrepo->with($with);
-        }
+        //$ticketsrepo->with(array_merge(["ticketpivot"], $with));   
       
         return $this->enrichCollection( $ticketsrepo->all() );
     }
@@ -90,7 +92,7 @@ class TicketsSold implements CountsSoldTickets {
 		$dateInFuture 	= Carbon::now()->lessThan( $ticket->start );
 
 		/**
-		 * Double check!
+		 * WE NEED THIS for single item fetch
 		 */
 
 		$ticketpivot = $ticket->ticketpivot->where("sold", 1);
@@ -183,6 +185,8 @@ class TicketsSold implements CountsSoldTickets {
         	 **/
 
             $purchases = $group->tickets->pluck("ticketpivot")->collapse();
+
+
             $group->agg  = [
                   "offered"     => $group->tickets->sum("limit"),
                   "sold"        => $purchases->sum("quantity"),
