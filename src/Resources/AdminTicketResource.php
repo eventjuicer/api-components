@@ -18,11 +18,14 @@ class AdminTicketResource extends Resource
        return [
             "id"    => (int) $this->id,
             
-            "ticket_group_id"    => (int) $this->ticket_group_id,
+           
 
             "organizer_id" => (int) $this->organizer_id,
             "group_id" => (int) $this->group_id,
             "event_id" => (int) $this->event_id,
+
+            "ticket_group_id"    => (int) $this->ticket_group_id,
+            "ticket_group" => new AdminTicketGroupResource($this->group),
 
 
             "translation_asset_id" => (string) $this->translation_asset_id,

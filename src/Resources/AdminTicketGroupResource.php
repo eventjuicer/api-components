@@ -16,22 +16,11 @@ class AdminTicketGroupResource extends Resource
     {
 
        return [
-
             "id"    => (int) $this->id,
-
             "name" => $this->name,
-
-            "descriptions" => $this->descriptions,
-            
-            "role" => null,
-
             "tags" =>  AdminTagResource::collection($this->oldtags),
-
             "booth" => $this->booth,
-
             "limit" => $this->limit
-
-
         ];
     }
 }
