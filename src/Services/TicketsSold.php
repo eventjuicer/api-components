@@ -25,6 +25,7 @@ class TicketsSold implements CountsSoldTickets {
 	protected $ticket_group_id = 0;
 	protected $keyedGroups;
 	protected $lowStock = 0.1;
+	protected $query;
 
 	function __construct(
 		TicketGroupRepository $ticketgroupsrepo, 
@@ -66,6 +67,12 @@ class TicketsSold implements CountsSoldTickets {
 		$this->ticket_group_id = $ticket_group_id;
 	}
 
+	public function setQuery(string $query){
+		if(strlen($query)>1){
+			$this->query = $query;
+		}
+	}
+
 	public function all(array $with = []){
 
 		$this->guessEventIdIfPossible();
@@ -84,6 +91,13 @@ class TicketsSold implements CountsSoldTickets {
 
         if($this->ticket_group_id > 0){
         	$ticketsrepo->pushCriteria(new FlagEquals("ticket_group_id", (int) $this->ticket_group_id));
+        }
+
+        if(!empty($this->query)){
+        	$ticketsrepo->pushCriteria(new ColumnMatches(function($q){
+        		$q->where("translation_asset_id", "like", "%".$this->query."%");
+        		$q->orwhere("internal_name", "like", "%".$this->query."%");
+        	}));
         }
 		
 		$ticketsrepo->with(array_merge(["ticketpivot" => function($q){ 
