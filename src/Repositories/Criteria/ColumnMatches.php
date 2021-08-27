@@ -12,7 +12,7 @@ class ColumnMatches extends Criteria {
     private $value;
     private $or;
 
-    function __construct(string $column_name, string $value, $or = false)
+    function __construct($column_name, $value = null, $or = false)
     {
         $this->column_name  = $column_name;
         $this->value        = $value;
@@ -26,6 +26,10 @@ class ColumnMatches extends Criteria {
      */
     public function apply($model, Repository $repository)
     {
+
+        if(is_callable($this->column_name)){
+            return $model->where($this->column_name);
+        }
 
         if($this->or)
         {
