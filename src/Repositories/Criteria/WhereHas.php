@@ -26,6 +26,11 @@ class WhereHas extends Criteria {
     public function apply($model, Repository $repository)
     {
 
+        if(is_callable($this->conditions)){
+            return $model->whereHas($this->relation, $this->conditions);
+        }
+
+
         return $model->whereHas($this->relation, function($query){
         
             foreach($this->conditions as $column => $value)

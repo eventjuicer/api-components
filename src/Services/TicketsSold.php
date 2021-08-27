@@ -90,7 +90,7 @@ class TicketsSold implements CountsSoldTickets {
 		$errors = [];
     	$datePassed = Carbon::now()->greaterThan( $ticket->end );
 		$dateInFuture 	= Carbon::now()->lessThan( $ticket->start );
-
+		$ticket->_ticket_group = null;
 		/**
 		 * WE NEED THIS for single item fetch
 		 */
@@ -114,6 +114,7 @@ class TicketsSold implements CountsSoldTickets {
 			if(! ($remainingInGroup > 0) ){
 				$errors[] = 'soldout_pool';
 			}
+			$ticket->_ticket_group = $group;
 		}
 
 		$ticket->bookable = intval( $ticket->remaining>0 && $ticket->in_dates );
