@@ -5,20 +5,22 @@ namespace Eventjuicer\Services;
 use Eventjuicer\Repositories\TicketGroupRepository;
 use Eventjuicer\Repositories\EloquentTicketRepository;
 use Eventjuicer\Repositories\Criteria\BelongsToEvent;
-use Eventjuicer\Repositories\Criteria\WhereNotIn;
+use Eventjuicer\Repositories\Criteria\WhereIn;
 use Eventjuicer\Repositories\Criteria\FlagEquals;
 use Eventjuicer\Repositories\Criteria\ColumnMatches;
 
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Eventjuicer\Contracts\CountsSoldTickets;
-
+use Eventjuicer\Models\Ticket;
+use Eventjuicer\Models\TicketGroup;
 
 class TicketsSold implements CountsSoldTickets {
 
 	protected $ticketgroupsrepo;
 	protected $ticketsrepo;
 	protected $event_id = 0;
+	protected $ticketIds = [];
 	protected $role = "";
 	protected $ticket_group_id = 0;
 	protected $keyedGroups;
@@ -34,11 +36,27 @@ class TicketsSold implements CountsSoldTickets {
 
 	public function setEventId($event_id){
 		if($event_id>0){
-			$this->event_id = $event_id;
+			$this->event_id = (int) $event_id;
 			//it must not be called earlier :)
 			$this->keyedGroups = $this->withGroup()->keyBy("id");
 		}
 	}
+
+	public function setTicketIds($ids){
+
+		if(!is_array($ids) && (is_numeric($ids) || strpos($ids, "|")!==false)){
+			$ids = explode("|", $ids);
+		}
+
+		if(is_array($ids)){
+			$ids = array_filter($ids, function($id){
+				return is_numeric($id);
+			});
+
+			$this->ticketIds = $ids;
+		}
+	}
+
 
 	public function setRole($role = ""){
 		$this->role = $role;	
@@ -50,12 +68,15 @@ class TicketsSold implements CountsSoldTickets {
 
 	public function all(array $with = []){
 
-		if(empty($this->event_id)){
-			throw new \Exception("No active event id set!");
-		}
+		$this->guessEventIdIfPossible();
 
+		
 		$ticketsrepo = clone $this->ticketsrepo;
         $ticketsrepo->pushCriteria(new BelongsToEvent(  $this->event_id ));
+
+        if(!empty($this->ticketIds)){
+        	$ticketsrepo->pushCriteria(new WhereIn("id", $this->ticketIds));
+        }
 
         if($this->role){
         	$ticketsrepo->pushCriteria(new ColumnMatches("role", $this->role));
@@ -164,9 +185,7 @@ class TicketsSold implements CountsSoldTickets {
 
  	public function withGroup(){
 
- 		if(empty($this->event_id)){
-			throw new \Exception("No active event id set!");
-		}
+ 		$this->guessEventIdIfPossible();
 
  		$ticketgroupsrepo = clone $this->ticketgroupsrepo;
         $ticketgroupsrepo->pushCriteria(new BelongsToEvent( $this->event_id ));
@@ -198,6 +217,48 @@ class TicketsSold implements CountsSoldTickets {
 
         return $all;
     }
+
+    protected function guessEventIdIfPossible(){
+
+		if(!empty($this->ticketIds) && isset($this->ticketIds[0])){
+
+			$event_id = (int) Ticket::find($this->ticketIds[0])->event_id;
+
+			$this->checkForScopeErrors($event_id);
+
+			if(empty($this->event_id)){
+				$this->setEventId($event_id);
+			}
+			
+		}
+
+		if($this->ticket_group_id > 0){
+			
+        	$event_id = (int) TicketGroup::find($this->ticket_group_id)->event_id;
+
+        	$this->checkForScopeErrors($event_id);
+
+			if(empty($this->event_id)){
+				$this->setEventId($event_id);
+			}
+        }
+
+        if(empty($this->event_id)){
+			throw new \Exception("No active event id set!");
+		}
+
+		
+	}
+
+	protected function checkForScopeErrors($event_id){
+
+		if(!empty($this->event_id) && $event_id !== $this->event_id){
+			throw new \Exception("Tickets outside the event scope!");
+		}
+
+
+	}
+
 
 
 }
