@@ -12,6 +12,15 @@ trait GetByHelperFunctions {
     protected $paginator = null;
     protected $ticketIds = [];
     protected $with = [];
+    protected $onlySold = false;
+
+    public function hideCancelled(){
+        $this->onlySold = true;
+    }
+
+    public function showCancelled(){
+        $this->onlySold = false;
+    }
 
     public function setEventId($eventId){
         if($eventId > 0){

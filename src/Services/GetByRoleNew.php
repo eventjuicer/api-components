@@ -23,24 +23,27 @@ class GetByRoleNew   {
 	}
 
    public function get(){
-        
-         $this->setRelations([
-            "participant.ticketpivot", 
-            "participant.purchases", 
-            "participant.fields"
-        ]);
 
-        $this->repo->pushCriteria( new SortByDesc( "participant_id" ));
-        $this->repo->pushCriteria( new WhereHas("ticket", function($q){
-            $q->where("role", $this->role);
-            $q->where("event_id", $this->eventId);
-        }));
-        $this->repo->with($this->with);
-        $this->paginator = $this->repo->paginate(1);
+      $this->setRelations([
+         "participant.ticketpivot", 
+         "participant.purchases", 
+         "participant.fields"
+      ]);
 
-        $res = $this->repo->all();
+      $this->repo->pushCriteria( new SortByDesc( "participant_id" ));
+      if($this->onlySold){
+         $this->repo->pushCriteria(new FlagEquals("sold", 1));
+      }
+      $this->repo->pushCriteria( new WhereHas("ticket", function($q){
+         $q->where("role", $this->role);
+         $q->where("event_id", $this->eventId);
+      }));
+      $this->repo->with($this->with);
+      $this->paginator = $this->repo->paginate(1);
 
-        return $res->pluck("participant");
+      $res = $this->repo->all();
+
+      return $res->pluck("participant");
 
    }
 
