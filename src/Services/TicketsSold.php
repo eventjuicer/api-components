@@ -109,6 +109,12 @@ class TicketsSold implements CountsSoldTickets {
         return $this->enrichCollection( $ticketsrepo->all() );
     }
 
+    public function filterUnused(Collection $collection){
+
+    	return $collection->filter(function($ticket){
+    		return $ticket->agg["sold"] === 0 && Carbon::now()->greaterThan( $ticket->end );
+    	});
+    }
 
     public function enrichCollection(Collection $collection){
 
