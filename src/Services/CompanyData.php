@@ -24,19 +24,19 @@ class CompanyData {
         "website"               => 1,
 
 
-        "facebook"              => 0,
-        "twitter"               => 0,
-        "linkedin"              => 0,
-        "xing"                  => 0,
+        "facebook"              => 1,
+        "twitter"               => 1,
+        "linkedin"              => 1,
+        "xing"                  => 1,
 
         "logotype"              => 1,
-        "countries"             => 0,
+        "countries"             => 1,
         "opengraph_image"       => 0,
         "lang"                  => 0,
 
-        "event_manager"         => 0,
-        "pr_manager"            => 0,
-        "sales_manager"         => 0,
+        "event_manager"         => 1,
+        "pr_manager"            => 1,
+        "sales_manager"         => 1,
    
         //"marketing_person"      => 0,
         "invitation_template"   => 0
