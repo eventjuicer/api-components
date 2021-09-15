@@ -62,6 +62,7 @@ class PublicContestantCompany extends Resource {
         $data["votes"] = $this->relationLoaded("votes") ? $this->votes->count() + $votes_override : 0;
 
         $data["id"] = (int) $this->id;
+        $data["event_id"] = (int) $this->event_id;
 
         $data["current"] = $this->event_id == self::$event_id;
 
