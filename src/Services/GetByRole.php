@@ -48,12 +48,12 @@ class GetByRole {
 
         if(empty($ticketIds))
         {
-            return collect([]);
+            return [];
         }
 
         $participantIds = $this->getPurchasesFromTickets($ticketIds);
 
-        return empty($participantIds) ? collect([]) : $participantIds;
+        return empty($participantIds) ? [] : $participantIds;
 
     }
 
@@ -96,6 +96,10 @@ class GetByRole {
     }
 
     public function getPurchasesFromTickets(array $ticketIds){
+
+        if(empty($ticketIds)){
+            return [];
+        }
 
          //GET PARTICIPANTS FILTERED BY ABOVE TICKETS AND PAID STATUS
         $this->participantTicketRepo->pushCriteria( new WhereIn("ticket_id", $ticketIds ));

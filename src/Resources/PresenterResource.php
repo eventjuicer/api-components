@@ -68,6 +68,7 @@ class PresenterResource extends Resource{
         }
 
         $data["id"] = (int) $this->id;
+        $data["event_id"] = (int) $this->event_id;
         $data["event"] = new PublicEventResource($this->whenLoaded("event"));
 
         return $data;
