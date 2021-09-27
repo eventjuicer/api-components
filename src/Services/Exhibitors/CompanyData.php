@@ -31,7 +31,7 @@ class CompanyData {
 	protected $defaultLang = "en";
 	protected $messagebag;
 	
-	protected $prefix = "rd53ds4_"; 
+	protected $prefix = "yy14dcs4_"; 
     protected $campaign = "promoninja";
 
 	function __construct(Model $model){
