@@ -35,7 +35,7 @@ class PartnerPerformance {
 	
 	protected $startDate;
 	protected $endDate;
-	protected $prefix = "rd53ds4_"; //"th3rCMiM_";
+	protected $prefix = "yy14dcs4_"; //"th3rCMiM_";
  
 
 	protected $ebe_prizes = [
@@ -465,8 +465,8 @@ class PartnerPerformance {
 
         	//ebe5
         	$dt = Period::create(
-        		Carbon::createFromDate(2020, 01, 15), 
-        		Carbon::create(2020, 02, 04, 23, 59, 59)
+        		Carbon::createFromDate(2021, 9, 26), 
+        		Carbon::create(2021, 10, 15, 23, 59, 59)
         	);
 
 			$response = $this->analytics->performQuery(
