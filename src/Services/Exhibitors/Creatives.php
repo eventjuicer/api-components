@@ -192,7 +192,9 @@ class Creatives {
 
             //TEH
 
-            $logotype = $logotype_cdn->wrapped("template_teh19_exhibitor_" . array_get($cd, "lang", "pl") );
+            $lang = trim(strval(array_get($cd, "lang"))) ? array_get($cd, "lang") : "pl";
+
+            $logotype = $logotype_cdn->wrapped("template_teh20_exhibitor_" . $lang);
 
             return [
 
