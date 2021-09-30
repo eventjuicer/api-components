@@ -121,12 +121,12 @@ class PartnerPerformance {
 
 	protected $prizes = [
   		
-		// [	
-		// 		"name" => "badges", 
-		// 		"min" => 1, 
-		// 		"max" => 1, 
-		// 		"level"=> 200
-		// ],
+		[	
+				"name" => "badges", 
+				"min" => 1, 
+				"max" => 1, 
+				"level"=> 200
+		],
 		// [
 		// 		"name" => "presentation", 
 		// 		"min" => 1, 
@@ -190,12 +190,12 @@ class PartnerPerformance {
 				"level" => 20
 		],
 
-		// [		
-		// 		"name" => "blog", 
-		// 		"min" => 1, 
-		// 		"max" => 10,
-		// 		"level" => 20
-		// ],
+		[		
+				"name" => "blog", 
+				"min" => 1, 
+				"max" => 10,
+				"level" => 20
+		],
 
 	];
 
