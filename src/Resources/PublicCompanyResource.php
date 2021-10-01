@@ -100,7 +100,7 @@ class PublicCompanyResource extends Resource
 
         $lang = !empty($profile["lang"]) ? $profile["lang"] : $this->group_id > 1 ? "en" : "pl";
 
-        $profile["og_image"] = $og_image ?? (new CloudinaryImage($profile["logotype_cdn"]))->wrapped($profile["og_template"] . "_" . $lang);
+        $profile["og_image"] = strpos($profile["opengraph_image"], "http")!==false && $og_image ? $og_image:  (new CloudinaryImage($profile["logotype_cdn"]))->wrapped($profile["og_template"] . "_" . $lang);
 
         $data = [
 
