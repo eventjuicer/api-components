@@ -76,6 +76,7 @@ class PublicCompanyResource extends Resource
     public function toArray($request)
     {   
 
+        $defaultLang = $this->group_id > 1 ? "en" : "pl";
 
         $profile = array_merge(array_flip(self::$presenterFields), $this->data->whereIn("name", self::$presenterFields)->mapWithKeys(function($item){     
 
@@ -98,7 +99,7 @@ class PublicCompanyResource extends Resource
         $profile["og_template"] = $this->group_id > 1 ? 'ebe5_template' : 'template_teh20_exhibitor';
         $profile["thumbnail"] = $logotype_thumbnail ?? $profile["logotype"];
 
-        $lang = strlen($profile["lang"])>1 ? $profile["lang"] : $this->group_id > 1 ? "en" : "pl";
+        $lang = !empty($profile["lang"]) && strlen($profile["lang"])>1 ? $profile["lang"] : $defaultLang;
 
         $profile["og_image"] = strpos($profile["opengraph_image"], "http")!==false && $og_image ? $og_image:  (new CloudinaryImage($profile["logotype_cdn"]))->wrapped($profile["og_template"] . "_" . $lang);
 
