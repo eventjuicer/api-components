@@ -98,7 +98,7 @@ class PublicCompanyResource extends Resource
         $profile["og_template"] = $this->group_id > 1 ? 'ebe5_template' : 'template_teh20_exhibitor';
         $profile["thumbnail"] = $logotype_thumbnail ?? $profile["logotype"];
 
-        $lang = !empty($profile["lang"]) ? $profile["lang"] : $this->group_id > 1 ? "en" : "pl";
+        $lang = strlen($profile["lang"])>1 ? $profile["lang"] : $this->group_id > 1 ? "en" : "pl";
 
         $profile["og_image"] = strpos($profile["opengraph_image"], "http")!==false && $og_image ? $og_image:  (new CloudinaryImage($profile["logotype_cdn"]))->wrapped($profile["og_template"] . "_" . $lang);
 
