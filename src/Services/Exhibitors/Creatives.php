@@ -49,9 +49,16 @@ class Creatives {
         $opengraph_image_cdn = (string) (new CloudinaryImage( array_get($cd, "opengraph_image_cdn", "")))->thumb(1200, 630);
 
 
+        $hasCustomImage = strpos( array_get($cd, "opengraph_image", ""), "http") !== false &&strpos( array_get($cd, "opengraph_image_cdn", ""), "cloudinary") !== false;
+
+        $hasBasicLogo = strpos(array_get($cd, "logotype", ""), "http") !== false && strpos(array_get($cd, "logotype_cdn", ""), "cloudinary") !== false;
+
         //EBE!
         if( $this->companydata->getCompany()->organizer_id > 1) 
         {
+
+            $lang = trim(strval(array_get($cd, "lang"))) ? array_get($cd, "lang") : "en";
+
 
             $logotype_cdn_en = $logotype_cdn->wrapped("ebe5_template_en");
             $logotype_cdn_de = $logotype_cdn->wrapped("ebe5_template_de");
@@ -91,7 +98,7 @@ class Creatives {
                 "shareable" => true,
                 "services" => ["linkedin", "twitter", "facebook"],
                 "requires" => ["logotype"],
-                "enabled" => strpos(array_get($cd, "logotype_cdn", ""), "http") !== false,
+                "enabled" => $hasBasicLogo && !$hasCustomImage,
                 "template" => $logotype_cdn_en,
                 "sharers" => $this->sharer( $this->companydata->trackedProfileUrl("link", "logotype,en") )
             
@@ -107,7 +114,7 @@ class Creatives {
                 "shareable" => true,
                 "services" => ["facebook"],
                 "requires" => ["logotype"],
-                "enabled" => strpos(array_get($cd, "logotype", ""), "http") !== false,
+                "enabled" => $hasBasicLogo && !$hasCustomImage,
                 "template" => $logotype_cdn_de,
                 "sharers" => $this->sharer( $this->companydata->trackedProfileUrl("link", "logotype,de") )
             
@@ -124,7 +131,7 @@ class Creatives {
                 "shareable" => true,
                 "services" => ["facebook"],
                 "requires" => ["opengraph_image"],
-                "enabled" => strpos( array_get($cd, "opengraph_image_cdn", ""), "http") !== false,
+                "enabled" => $hasCustomImage,
                 "template" => 'https://res.cloudinary.com/eventjuicer/image/upload/w_960,h_504,c_fit/' . $opengraph_image_cdn
             
             ],
@@ -196,6 +203,7 @@ class Creatives {
 
             $logotype = $logotype_cdn->wrapped("template_teh20_exhibitor_" . $lang);
 
+
             return [
 
             [  
@@ -229,7 +237,7 @@ class Creatives {
                 "shareable" => true,
                 "services" => ["linkedin", "twitter", "facebook"],
                 "requires" => ["logotype"],
-                "enabled" => strpos(array_get($cd, "logotype_cdn", ""), "cloudinary") !== false && strpos( array_get($cd, "opengraph_image_cdn", ""), "cloudinary") === false,
+                "enabled" =>  $hasBasicLogo && !$hasCustomImage,
                 "template" => $logotype,
                 "sharers" => $this->sharer( $this->companydata->trackedProfileUrl("link", "logotype") )
             ],
@@ -245,7 +253,7 @@ class Creatives {
                 "shareable" => true,
                 "services" => ["facebook", "linkedin", "twitter"],
                 "requires" => ["opengraph_image"],
-                "enabled" => strpos( array_get($cd, "opengraph_image_cdn", ""), "cloudinary") !== false,
+                "enabled" => $hasCustomImage,
                 "template" => $opengraph_image_cdn,
                 "sharers" => $this->sharer( $this->companydata->trackingLink("link", "opengraph_image") )
             ],
