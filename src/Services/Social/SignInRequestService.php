@@ -5,7 +5,6 @@ namespace Eventjuicer\Services\Social;
 use Eventjuicer\Models\SocialSignInRequest;
 use Eventjuicer\Models\Group;
 use Eventjuicer\Models\Organizer;
-//use Eventjuicer\Services\Cascaded\Setting;
 
 use Uuid; //https://github.com/webpatser/laravel-uuid
 
@@ -15,12 +14,9 @@ class SignInRequestService {
 	protected $redirect, $project, $appid;
 	protected $service = "linkedin";
 	protected $services = ["linkedin"];
-	//protected $settings;
 	protected $session = "";
 
-	function __construct(){
-		//$this->settings = $settings;
-	}
+	function __construct(){}
 
 	public function retrieve(){
 
