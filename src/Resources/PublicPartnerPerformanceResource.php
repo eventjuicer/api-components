@@ -5,6 +5,7 @@ namespace Eventjuicer\Resources;
 use Illuminate\Http\Resources\Json\Resource;
 use Eventjuicer\Services\Exhibitors\CompanyData;
 use Eventjuicer\ValueObjects\CloudinaryImage;
+use Eventjuicer\Services\Exhibitors\Creatives;
 
 class PublicPartnerPerformanceResource extends Resource
 {
@@ -24,6 +25,7 @@ class PublicPartnerPerformanceResource extends Resource
         $data["name"] = $cd->getName() ?? $this->company->slug;
         $data["logotype"] = $logotype ? (new CloudinaryImage($logotype))->thumb() : "";
 	    $data["stats"] = isset($this->company->stats) ? $this->company->stats : [];
+        $data["creatives"] = (new Creatives($cd))->get();
 
 		return $data;
 
