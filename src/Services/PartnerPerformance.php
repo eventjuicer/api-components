@@ -16,6 +16,7 @@ use Eventjuicer\Repositories\CompanyRepository;
 
 use Illuminate\Contracts\Cache\Repository as Cache;
 use Eventjuicer\Models\Event;
+use Eventjuicer\Models\PromoPrize;
 
 use Eventjuicer\Repositories\Criteria\ColumnMatches;
 use Eventjuicer\Repositories\Criteria\BelongsToEvent;
@@ -36,168 +37,6 @@ class PartnerPerformance {
 	protected $startDate;
 	protected $endDate;
 	protected $prefix = "yy14dcs4_"; //"th3rCMiM_";
- 
-
-	protected $ebe_prizes = [
-  		
-		[	
-				"name" => "badges", 
-				"min" => 1, 
-				"max" => 1, 
-				"level"=> 500
-		],
-
-		[
-				"name" => "presentation", 
-				"min" => 1, 
-				"max" => 3, 
-				"level" => 250
-		],
-
-		// [		
-		// 		"name" => "floor", 
-		// 		"min" => 1, 
-		// 		"max" => 3, 
-		// 		"level" => 50
-		// ],
-
-		[		
-				"name" => "video_interview", 
-				"min" => 1, 
-				"max" => 5,
-				"level" => 150
-		],
-
-		[		
-				"name" => "earlybird", 
-				"min" => 1, 
-				"max" => 30, 
-				"level" => 30
-		],
-
-		[		
-				"name" => "meetups", 
-				"min" => 1, 
-				"max" => 50, 
-				"level" => 50
-		],
-
-		[
-				"name" => "brand_highlight", 
-				"min" => 1, 
-				"max" => 4,  
-				"level" => 100
-		],
-
-		[
-				"name" => "leaflets", 
-				"min" => 1, 
-				"max" => 15,  
-				"level" => 30
-		],
-	
-		// [		
-		// 		"name" => "scanner", 
-		// 		"min" => 1, 
-		// 		"max" => 30, 
-		// 		"level" => 30
-		// ],
-
-		[
-				"name" => "rollups", 
-				"min" => 1, 
-				"max" => 8,  
-				"level" => 50
-		],
-
-		[		
-				"name" => "blog", 
-				"min" => 1, 
-				"max" => 10,
-				"level" => 50
-		],
-
-	];
-
-	protected $prizes = [
-  		
-		[	
-				"name" => "badges", 
-				"min" => 1, 
-				"max" => 1, 
-				"level"=> 200
-		],
-		// [
-		// 		"name" => "presentation", 
-		// 		"min" => 1, 
-		// 		"max" => 2, 
-		// 		"level" => 200
-		// ],
-		// [		
-		// 		"name" => "floor", 
-		// 		"min" => 1, 
-		// 		"max" => 3, 
-		// 		"level" => 50
-		// ],
-		// [
-		// 		"name" => "leaflets", 
-		// 		"min" => 1, 
-		// 		"max" => 10,  
-		// 		"level" => 20
-		// ],
-	
-	
-		[		
-				"name" => "video_interview", 
-				"min" => 1, 
-				"max" => 5,
-				"level" => 50
-		],
-
-		[		
-				"name" => "earlybird", 
-				"min" => 1, 
-				"max" => 30, 
-				"level" => 30
-		],
-
-		[		
-				"name" => "meetups", 
-				"min" => 1, 
-				"max" => 50, 
-				"level" => 20
-		],
-
-		[
-				"name" => "brand_highlight", 
-				"min" => 1, 
-				"max" => 6,  
-				"level" => 40
-		],
-
-	
-		// [		
-		// 		"name" => "scanner", 
-		// 		"min" => 1, 
-		// 		"max" => 50, 
-		// 		"level" => 10
-		// ],
-
-		[
-				"name" => "rollups", 
-				"min" => 1, 
-				"max" => 8,  
-				"level" => 20
-		],
-
-		[		
-				"name" => "blog", 
-				"min" => 1, 
-				"max" => 10,
-				"level" => 20
-		],
-
-	];
 
 	function __construct(
 			EloquentTicketRepository $repo, 
@@ -215,9 +54,8 @@ class PartnerPerformance {
 
 	}
 
-
 	public function getPrizes($groupId = 0){
-		return $groupId > 1 ? $this->ebe_prizes : $this->prizes;
+		return PromoPrize::where("group_id", $groupId)->where("disabled", 0)->get();
 	}
 
 
