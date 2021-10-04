@@ -22,7 +22,8 @@ class PublicPartnerPerformanceResource extends Resource
         $data["id"] = $this->id;
 
 		$data["company_id"] = $this->company_id;
-        $data["name"] = $cd->getName() ?? $this->company->slug;
+        $data["name"] = $cd->getName() ? $cd->getName() : $this->company->slug;
+        $data["slug"] = $this->company->slug;
         $data["logotype"] = $logotype ? (new CloudinaryImage($logotype))->thumb() : "";
 	    $data["stats"] = isset($this->company->stats) ? $this->company->stats : [];
         $data["creatives"] = (new Creatives($cd))->get();
