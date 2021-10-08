@@ -11,7 +11,7 @@ use Eventjuicer\ValueObjects\EmailAddress;
 class VisitorResource extends Resource
 {
 
-    protected $presenterFields = ["fname", "lname", "cname2", "position"];
+    protected $presenterFields = ["fname", "lname", "cname2", "position", "nip"];
 
     public function toArray($request)
     {
