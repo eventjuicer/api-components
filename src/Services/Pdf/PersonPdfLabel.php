@@ -33,7 +33,7 @@ class PersonPdfLabel {
 			"first"     => mb_strtoupper($profile->fname), 
             "second"    => mb_strtoupper($profile->lname), 
             "third"     => mb_strtoupper($profile->cname2),
-            "code"      => $profile->code,
+            "code"      => "https://expojuicer.com/p/" . $profile->code,
             "ribbon"	=> $profile->isVip() ? "VIP" : null
 		];
 		
