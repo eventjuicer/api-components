@@ -18,8 +18,11 @@ class ReportTicketResource extends Resource
         
         $data["id"] = $this->id;
         $data["translation_asset_id"] = $this->translation_asset_id;
+        $data["internal_name"] = $this->internal_name;
         $data["___name"] = array_get($this->names, "en");
         $data["quantity"] = $this->pivot->quantity;
+        $data["formdata"] = $this->pivot->formdata;
+
         $data["role"] = $this->role;
         $data["delayed"] = $this->delayed; 
         $data["internal"] = $this->internal;

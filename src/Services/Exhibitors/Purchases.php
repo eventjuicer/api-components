@@ -7,7 +7,7 @@ use Eventjuicer\Services\Resolver;
 
 class Purchases {
 	
-	static protected $skippedRoles = ["representative", "party", "exhibitor"];
+	static protected $skippedRoles = ["representative", "party", "contestant", "contestant_person", "contestant_company"];
     protected $company;
 
 	function __construct(Company $company) {
