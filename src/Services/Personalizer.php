@@ -30,16 +30,24 @@ class Personalizer implements Arrayable {
 
 	protected $replacements;
 
- 	function __construct(Model $model, $str = "", $replacements = [])
+ 	function __construct($model= null, $str = "", $replacements = [])
 	{
-
-		$this->model = $model;
 
 		$this->original = $str;
 
 		$this->replacements = (array) $replacements;
+
+		if($model && $model instanceof Model){
+
+			$this->setModel($model);
+		}
+
 		
-		//TODO check which fields or fieldpivot is loaded...
+	}/*eom*/
+
+	public function setModel(Model $model){
+
+		$this->model = $model;
 
 		$this->profile = $this->model->fields->mapWithKeys(function($_item){
                 
@@ -47,13 +55,15 @@ class Personalizer implements Arrayable {
 
         })->all();
 
+        //TODO check which fields or fieldpivot is loaded...		
+
 		if(strstr($this->original, "[[")!==false)
 		{
 		
 			$this->translated = $this->translate($str);
 		}
-		
-	}/*eom*/
+
+	}
 
 
 	public function toArray(){
