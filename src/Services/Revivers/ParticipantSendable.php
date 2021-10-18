@@ -47,7 +47,11 @@ class ParticipantSendable {
 	}
 
 	public function excludeFromFile(string $file){
-		$this->file = strtolower( trim( file_get_contents($file) ) );
+
+		if(file_exists($file)){
+			$this->file = strtolower( trim( file_get_contents($file) ) );
+		}
+
 	}
 
 	public function setMuteTime($muteTime = 120)
