@@ -7,7 +7,7 @@ use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Eventjuicer\Resources\PublicPreBookingResource;
-use Illuminate\Support\Model;
+use Illuminate\Database\Eloquent\Model;
 
 class NewItemPurchased extends Event implements ShouldBroadcast{
 
