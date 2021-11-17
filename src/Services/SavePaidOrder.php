@@ -86,7 +86,8 @@ class SavePaidOrder implements SavesPaidOrder {
 
 
 		/**
-		 * + purge outdated locks
+		 * purge outdated locks
+		 * otherwise we could not set up new lock for next owners
 		 */
 		$this->removeOldLocks();
 		
