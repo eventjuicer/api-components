@@ -12,9 +12,15 @@ class SendSlackNotificationListener {
 
     public function handle(NewItemPurchased $event){    
 
+        $participant = $event->data;
+
+        if($participant->organizer_id > 1){
+            return;
+        }
+
         dispatch( new SendSlackNotificationJob( 
 
-            json_encode($event->data->email)
+            json_encode($participant->email)
 
         ) );
     }
