@@ -23,13 +23,9 @@ class SavePaidOrder implements SavesPaidOrder {
 	protected $locksFailed = [];
 	protected $newLocksCreated = [];
 	protected $locksRemoved = [];
-	protected $ticketdata;
-     
 
-	function __construct(Request $request, TicketsSold $ticketdata){
+	function __construct(Request $request){
 		$this->request = $request;
-		$this->ticketdata = $ticketdata;
-
 	}
 	
 	public function setUUID($raw = ""){
@@ -43,7 +39,7 @@ class SavePaidOrder implements SavesPaidOrder {
 	public function setEventId($event_id){
 		if(is_numeric($event_id)){
 			$this->event_id = (int) $event_id;
-			$this->tickets->setEventId((int) $event_id);
+			
 		}
 	}
 
@@ -192,7 +188,9 @@ class SavePaidOrder implements SavesPaidOrder {
 
 		//check ticket state....
 		$ticket = Ticket::findOrFail($ticket_id);
-		$ticket = $this->ticketdata->enrichTicket($ticket);
+		$ticketdata = App::make(TicketsSold::class);
+		$ticketdata->setEventId((int) $this->event_id);
+		$ticket = $ticketdata->enrichTicket($ticket);
 
 		if(!$ticket->bookable){
 			return false;
