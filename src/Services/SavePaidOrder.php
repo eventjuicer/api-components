@@ -2,7 +2,7 @@
 
 namespace Eventjuicer\Services;
 
-use Eventjuicer\Contracts\SavesPaidOrder as SavesPaidOrderInterface ;
+use Eventjuicer\Contracts\SavesPaidOrder;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Model;
 use Uuid;
