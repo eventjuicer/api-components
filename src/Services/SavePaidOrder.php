@@ -2,7 +2,7 @@
 
 namespace Eventjuicer\Services;
 
-use Eventjuicer\Contracts\SavesPaidOrder;
+use Eventjuicer\Contracts\SavesPaidOrder as SavesPaidOrderInterface ;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Model;
 use Uuid;
@@ -23,12 +23,12 @@ class SavePaidOrder implements SavesPaidOrder {
 	protected $locksFailed = [];
 	protected $newLocksCreated = [];
 	protected $locksRemoved = [];
-	protected $tickets;
+	protected $ticketdata;
      
 
-	function __construct(Request $request, TicketsSold $tickets){
+	function __construct(Request $request, TicketsSold $ticketdata){
 		$this->request = $request;
-		$this->tickets = $tickets;
+		$this->ticketdata = $ticketdata;
 
 	}
 	
@@ -191,8 +191,8 @@ class SavePaidOrder implements SavesPaidOrder {
 
 
 		//check ticket state....
-		$ticket = Ticket::find($ticket_id);
-		$ticket = $this->tickets->enrichTicket($ticket);
+		$ticket = Ticket::findOrFail($ticket_id);
+		$ticket = $this->ticketdata->enrichTicket($ticket);
 
 		if(!$ticket->bookable){
 			return false;
