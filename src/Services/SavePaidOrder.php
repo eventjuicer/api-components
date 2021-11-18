@@ -188,7 +188,7 @@ class SavePaidOrder implements SavesPaidOrder {
 
 		//check ticket state....
 		$ticket = Ticket::findOrFail($ticket_id);
-		$ticketdata = App::make(TicketsSold::class);
+		$ticketdata = app(TicketsSold::class);
 		$ticketdata->setEventId((int) $this->event_id);
 		$ticket = $ticketdata->enrichTicket($ticket);
 
