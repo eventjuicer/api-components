@@ -9,7 +9,9 @@ use Uuid;
 use Carbon\Carbon;
 use Eventjuicer\Models\PreBooking;
 use Eventjuicer\Models\ParticipantTicket;
+use Eventjuicer\Models\Ticket;
 use Arr;
+use Eventjuicer\Services\TicketsSold;
 
 class SavePaidOrder implements SavesPaidOrder {
 
@@ -21,11 +23,13 @@ class SavePaidOrder implements SavesPaidOrder {
 	protected $locksFailed = [];
 	protected $newLocksCreated = [];
 	protected $locksRemoved = [];
+	protected $tickets;
+     
 
-
-	function __construct(Request $request){
+	function __construct(Request $request, TicketsSold $tickets){
 		$this->request = $request;
-		
+		$this->tickets = $tickets;
+
 	}
 	
 	public function setUUID($raw = ""){
@@ -39,6 +43,7 @@ class SavePaidOrder implements SavesPaidOrder {
 	public function setEventId($event_id){
 		if(is_numeric($event_id)){
 			$this->event_id = (int) $event_id;
+			$this->tickets->setEventId((int) $event_id);
 		}
 	}
 
@@ -182,6 +187,15 @@ class SavePaidOrder implements SavesPaidOrder {
 			}
 			//there is an active lock but it belongs to same user
 			return true;
+		}
+
+
+		//check ticket state....
+		$ticket = Ticket::find($ticket_id);
+		$ticket = $this->tickets->enrichTicket($ticket);
+
+		if(!$ticket->bookable){
+			return false;
 		}
 
 		$lock = new PreBooking;
