@@ -60,8 +60,8 @@ class Creatives {
             $lang = trim(strval(array_get($cd, "lang"))) ? array_get($cd, "lang") : "en";
 
 
-            $logotype_cdn_en = $logotype_cdn->wrapped("ebe5(2)_template_en");
-            $logotype_cdn_de = $logotype_cdn->wrapped("ebe5(2)_template_de");
+            $logotype_cdn_en = $logotype_cdn->wrapped("ebe5_2__template_en");
+            $logotype_cdn_de = $logotype_cdn->wrapped("ebe5_2__template_de");
 
             //BERLIN!
             
