@@ -41,7 +41,7 @@ class CloudinaryImage {
 
 	}
 
-	public function wrapped($template = "ebe5_template_en", $constraints = "c_fit,h_210,w_800", $placing = "y_10")
+	public function wrapped($template = "ebe5(2)_template_en", $constraints = "c_fit,h_210,w_800", $placing = "y_10")
 	{
 
 		if(!$this->isValid()){
