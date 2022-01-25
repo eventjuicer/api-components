@@ -89,11 +89,11 @@ class Email {
 
 		return "
 
-		" . $this->getSender() . "
+". $this->getSender() . "
 
-		" . $this->getPosition() . "
+" . $this->getPosition() . "
 
-		" . $this->getEmail() . " " . $this->getPhone() . "
+" . $this->getEmail() . " " . $this->getPhone() . "
 
 ";
 	}
