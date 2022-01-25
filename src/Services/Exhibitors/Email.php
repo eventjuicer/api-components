@@ -7,14 +7,14 @@ use Eventjuicer\Models\Participant as Model;
 class Email {
 	
 	protected $model;
+	protected $admin = null;
 
 	function __construct(Model $model){
-		
 		$this->model = $model;
 	}
 
 	function getAdmin(){
-		
+	
 		if($this->model->company->admin_id){
 			return $this->model->company->admin->toArray();
 		}
@@ -32,12 +32,7 @@ class Email {
 
 	}
 
-	function getCalendarUrl(){
-		
-		$admin = $this->getAdmin();
 
-		return array_get($admin, "calendar");
-	}
 
 	function getPollUrl(){
 
@@ -62,17 +57,43 @@ class Email {
 		return array_get($admin, "fname") . " " . array_get($admin, "lname");
 	}
 
-	function getFooter(){
+	function getEmail(){
+
+		$admin = $this->getAdmin();
+
+		return array_get($admin, "email");
+	}
+
+	function getPhone(){
+
+		$admin = $this->getAdmin();
+
+		return array_get($admin, "phone");
+	}
+
+	function getPosition(){
+
+		$admin = $this->getAdmin();
+
+		return array_get($admin, "position");
+	}
+
+	function getCalendarUrl(){
 		
 		$admin = $this->getAdmin();
 
+		return array_get($admin, "calendar");
+	}
+
+	function getFooter(){		
+
 		return "
 
-" . array_get($admin, "fname") . " " . array_get($admin, "lname") . "
+		" . $this->getSender() . "
 
-" . array_get($admin, "position") . "
+		" . $this->getPosition() . "
 
-" . array_get($admin, "email") . " " . array_get($admin, "phone") . "
+		" . $this->getEmail() . " " . $this->getPhone() . "
 
 ";
 	}
