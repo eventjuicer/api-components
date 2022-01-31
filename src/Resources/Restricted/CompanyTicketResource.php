@@ -31,6 +31,7 @@ class CompanyTicketResource extends Resource
             "_price"  => $this->price,
             "price_currency" => (string) $this->price_currency,
             "_name"  => (string) array_get($this->names, "pl"),
+            "names"  => $this->names,
 
             "role" => $this->role,
 
