@@ -27,6 +27,11 @@ class Company extends Model
         return $this->hasMany(Participant::class);
     }
 
+    public function people()
+    {   
+        return $this->hasMany(CompanyPeople::class);
+    }
+
     public function meetups()
     {   
         return $this->hasMany(Meetup::class);
