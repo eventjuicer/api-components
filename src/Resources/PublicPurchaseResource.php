@@ -15,6 +15,7 @@ class PublicPurchaseResource extends Resource {
         $data["domain"] = (new EmailAddress($this->email))->domain();
         $data["slug"] = $this->company ? $this->company->slug: null;
         $data["created_at"] = (string) $this->createdon;
+        $data["booths"] = $this->ticketpivot->pluck("formdata")->filter();
 
         return $data;
     }
