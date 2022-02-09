@@ -6,17 +6,17 @@ use Eventjuicer\Models\Participant;
 
 class ParticipantRoles {
 
-    protected $model;
+    protected $model, $roles;
 
     function __construct(Participant $model){
+
         $this->model = $model;
-    }
 
-    function toArray(){
+        if(!$this->model->relationLoaded("purchases")){
+            $this->model->load("purchases.tickets");
+        }
 
-        $this->model->load("purchases.tickets");
-
-        return $this->model->purchases->filter(function($item){
+        $this->roles = $this->model->purchases->filter(function($item){
 
             return $item->status != "cancelled" ;
 
@@ -24,8 +24,12 @@ class ParticipantRoles {
 
     }
 
+    function toArray(){
+        return $this->roles;
+    }
+
     function hasRole(string $role){
-        return in_array($role, $this->toArray());
+        return in_array($role, $this->roles);
     }
 
 }
