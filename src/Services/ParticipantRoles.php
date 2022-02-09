@@ -32,4 +32,8 @@ class ParticipantRoles {
         return in_array($role, $this->roles);
     }
 
+    function __toString(){
+        return implode(", ", $this->roles);
+    }
+
 }

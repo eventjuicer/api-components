@@ -14,12 +14,11 @@ class SendSlackNotificationListener {
     public function handle(NewItemPurchased $event){    
 
         $participant = $event->data;
+        $roles = new ParticipantRoles($event->data);
 
         //check ticket role!
 
-        $isVisitor = (new ParticipantRoles($event->data))->hasRole("visitor");
-
-        if($isVisitor){
+        if( $roles->hasRole("visitor") ){
             return;
         }
 
@@ -29,7 +28,7 @@ class SendSlackNotificationListener {
 
         dispatch( new SendSlackNotificationJob( 
 
-            json_encode($participant->email)
+            $participant->email . " " . strval($roles)
 
         ) );
     }
