@@ -36,6 +36,15 @@ class Repository extends BaseRepository
     }
 
 
+    final public function paginator($start, $end)
+    {        
+        $perPage = $end - $start;
+
+
+        $this->applyCriteria();
+        return $this->model->paginate($perPage, ["*"], "page",  ($start / $perPage) + 1 );
+    }
+
 
     public function resetCriteria()
     {
