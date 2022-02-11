@@ -10,7 +10,7 @@ class SortByDesc extends Criteria {
 
     protected $orderby, $allowed_vars;
 
-    function __construct($orderby = "", $allowed_vars = [])
+    function __construct($orderby = "id", $allowed_vars = [])
     {
         $this->orderby = $orderby;
         $this->allowed_vars = $allowed_vars;
