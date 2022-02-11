@@ -29,6 +29,11 @@ class SocialVote extends Model
         return $this->morphTo();
     }
 
+  public function linkedin()
+  {
+    return $this->morphInstanceTo(SocialLinkedin::class, 'voteable', 'voteable_type', 'voteable_id', 'key');
+  }
+
 }
 
 /*
