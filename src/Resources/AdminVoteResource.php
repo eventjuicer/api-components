@@ -18,7 +18,7 @@ class AdminVoteResource extends Resource
       
         
         $data["id"] = $this->id;
-        $data["created_at"] = (string) $this->created_at;
+        $data["voted_at"] = (string) $this->created_at;
         
         $data["account"] = new AdminSocialLinkedinResource($this->voteable);
         $data["contestant"] = new AdminVotedParticipantResource($this->participant);

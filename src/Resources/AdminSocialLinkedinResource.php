@@ -19,7 +19,6 @@ class AdminSocialLinkedinResource extends Resource
         
         $profile["id"] = $this->id;
         $profile["email"] = $this->email;
-        $profile["avatar"] = $this->avatar;
         $profile["fname"] = $this->fname;
         $profile["lname"] = $this->lname;
         $profile["locale"] = $this->locale;
