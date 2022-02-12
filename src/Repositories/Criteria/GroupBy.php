@@ -6,6 +6,13 @@ use Bosnadev\Repositories\Criteria\Criteria;
 use Bosnadev\Repositories\Contracts\RepositoryInterface as Repository;
 use DB;
 
+/**
+ * 
+ * AVG DATE - SELECT  FROM table
+ * 
+ */
+
+
 class GroupBy extends Criteria {
 
     protected $column;
@@ -32,7 +39,8 @@ class GroupBy extends Criteria {
                     [$this->column], 
                     ($this->total ? [DB::raw(sprintf("count(*) as %s", $this->total))]: []),
                     ($this->minmax ? [DB::raw(sprintf("min(%s) as %s", $this->minmax, "min_".$this->minmax))]: []),
-                    ($this->minmax ? [DB::raw(sprintf("max(%s) as %s", $this->minmax, "max_".$this->minmax))]: [])
+                    ($this->minmax ? [DB::raw(sprintf("max(%s) as %s", $this->minmax, "max_".$this->minmax))]: []),
+                    ($this->minmax && strpos($this->minmax, "_at")!==false ? [DB::raw(sprintf("FROM_UNIXTIME(AVG(UNIX_TIMESTAMP(%s))) as %s", $this->minmax, "avg_".$this->minmax))]: [])
                 ));
         }else{
             $model = $model->groupBy($this->column);
