@@ -10,11 +10,13 @@ class GroupBy extends Criteria {
 
     protected $column;
     protected $total;
+    protected $minmax;
 
-    function __construct($column = "", $total=null)
+    function __construct($column = "", $total=null, $minmax=null)
     {
        $this->column = (string) $column;
        $this->total = $total;
+       $this->minmax = $minmax;
     }
 
     /**
@@ -24,8 +26,14 @@ class GroupBy extends Criteria {
      */
     public function apply($model, Repository $repository){
 
-        if($this->total){
-            $model = $model->groupBy($this->column)->select([$this->column, DB::raw(sprintf("count(*) as %s", $this->total))] );
+        if($this->total || $this->minmax){
+            $model = $model->groupBy($this->column)->select(
+                array_merge(
+                    [$this->column], 
+                    ($this->total ? [DB::raw(sprintf("count(*) as %s", $this->total))]: []),
+                    ($this->minmax ? [DB::raw(sprintf("min(%s) as %s", $this->minmax, "min_".$this->minmax))]: []),
+                    ($this->minmax ? [DB::raw(sprintf("max(%s) as %s", $this->minmax, "max_".$this->minmax))]: [])
+                ));
         }else{
             $model = $model->groupBy($this->column);
         }
