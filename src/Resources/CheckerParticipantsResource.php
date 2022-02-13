@@ -4,7 +4,7 @@ namespace Eventjuicer\Resources;
 
 use Illuminate\Http\Resources\Json\Resource;
 
-class TicketResource extends Resource
+class CheckerParticipantsResource extends Resource
 {
     /**
      * Transform the resource into an array.
@@ -16,10 +16,10 @@ class TicketResource extends Resource
     {
        return [
             "id"    => (int) $this->id,
-            "name" => array_get($this->names, "pl"),
-            "names" => $this->names,
-            "translation_asset_id" => $this->translation_asset_id,
-            "role" => $this->role
+            // "name" => array_get($this->names, "pl"),
+            // "names" => $this->names,
+            // "translation_asset_id" => $this->translation_asset_id,
+            // "role" => $this->role
         ];
     }
 }

@@ -4,7 +4,7 @@ namespace Eventjuicer\Resources;
 
 use Illuminate\Http\Resources\Json\Resource;
 
-class TicketResource extends Resource
+class CheckerPurchasesResource extends Resource
 {
     /**
      * Transform the resource into an array.
