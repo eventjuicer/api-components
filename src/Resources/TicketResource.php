@@ -19,7 +19,12 @@ class TicketResource extends Resource
             "name" => array_get($this->names, "pl"),
             "names" => $this->names,
             "translation_asset_id" => $this->translation_asset_id,
-            "role" => $this->role
+            "role" => $this->role,
+
+           
+            "delayed" 	=> (int) $this->delayed,
+            "featured" 	=> (int) $this->featured,
+
         ];
     }
 }

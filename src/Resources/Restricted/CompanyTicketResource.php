@@ -33,6 +33,10 @@ class CompanyTicketResource extends Resource
             "_name"  => (string) array_get($this->names, "pl"),
             "names"  => $this->names,
 
+         
+            "delayed" 	=> (int) $this->delayed,
+            "featured" 	=> (int) $this->featured,
+
             "role" => $this->role,
 
             // "tags" =>  AdminTagResource::collection($this->oldtags),

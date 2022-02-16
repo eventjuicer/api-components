@@ -23,10 +23,14 @@ class ReportTicketResource extends Resource
         $data["quantity"] = $this->pivot->quantity;
         $data["formdata"] = is_array($this->pivot->formdata)? $this->pivot->formdata: json_decode($this->pivot->formdata, true);
 
+
         $data["role"] = $this->role;
-        $data["delayed"] = $this->delayed; 
-        $data["internal"] = $this->internal;
         
+        $data["delayed"] = (int) $this->delayed; 
+        $data["internal"] = (int) $this->internal; 
+        $data["featured"]	= (int) $this->featured;
+      
+
         return $data;
 
     }

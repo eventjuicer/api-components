@@ -23,6 +23,9 @@ class CompanyUpgradeResource extends Resource
         $data["names"] = $this->names;
         $data["translation_asset_id"] = $this->translation_asset_id;
         
+        $data["delayed"] 	= (int) $this->delayed;
+        $data["featured"]	= (int) $this->featured;
+       
         $data["price"] = $this->price;
         
         //these are bare ticket info so we do not actually need it!

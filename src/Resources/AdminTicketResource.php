@@ -35,6 +35,9 @@ class AdminTicketResource extends Resource
             "price_currency" => (string) $this->price_currency,
             "_name"  => (string) array_get($this->names, "pl"),
 
+            "delayed" 	=> (int) $this->delayed,
+            "featured" 	=> (int) $this->featured,
+
             "role" => $this->role,
 
             "tags" =>  AdminTagResource::collection($this->oldtags),

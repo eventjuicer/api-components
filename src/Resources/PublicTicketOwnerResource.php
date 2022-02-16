@@ -29,6 +29,10 @@ class PublicTicketOwnerResource extends Resource {
 
         $data["owners"] = NonVisitorResource::collection($this->participantsNotCancelled);    
 
+        $data["delayed"] 	= (int) $this->delayed;
+        $data["featured"]	= (int) $this->featured;
+       
+
         $data["ticket_group"] = $this->group ? array(
 
             "id"                => $this->group->id,        
