@@ -21,6 +21,8 @@ class CompanyUpgradeResource extends Resource
 
         $data["event_id"] = $this->event_id;
         $data["names"] = $this->names;
+        $data["translation_asset_id"] = $this->translation_asset_id;
+        
         $data["price"] = $this->price;
         
         //these are bare ticket info so we do not actually need it!
@@ -36,6 +38,8 @@ class CompanyUpgradeResource extends Resource
         $data["changeable"] = $this->changeable;
 
         $data["in_dates"] = $this->in_dates;
+        $data["date_future"] = $this->date_future;
+        $data["date_past"] = $this->date_past;
 
         $data["remaining"] = $this->remaining;
         $data["bookable"] = $this->bookable;
