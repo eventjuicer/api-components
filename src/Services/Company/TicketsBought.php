@@ -35,7 +35,7 @@ class TicketsBought {
         return $repo->find($id);
     }
 
-    public function get(array $rules = ["delayed" => 1]){
+    public function get(array $rules = []){
 
         if(empty($this->ticket))
 
