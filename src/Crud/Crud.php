@@ -39,14 +39,14 @@ abstract class Crud {
         if(isset($this->data[$key])){
             return $this->data[$key];
         }
-        if(isset($this->payload[$key])){
+        if(is_array($this->payload) && isset($this->payload[$key])){
             return $this->payload[$key];
         }
         return $replacement;
     }
 
     public function getParams(){
-        return array_merge($this->data, $this->payload);
+        return is_array($this->payload) ? array_merge($this->data, $this->payload) : $this->data;
     }
 
     public function setTransform($obj){
