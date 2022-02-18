@@ -11,7 +11,8 @@ abstract class Crud {
     protected $data = [];
     protected $transforms = [];
     protected $payload = [];
-
+    protected $aggregates = [];
+    
     protected function payload(){
         $this->payload = json_decode(app("request")->getContent(), true);
     }
@@ -34,6 +35,7 @@ abstract class Crud {
 
     }
 
+
     public function getParam($key, $replacement=null){
 
         if(isset($this->data[$key])){
@@ -53,6 +55,8 @@ abstract class Crud {
 
         if(class_exists($obj)){
             $this->transforms[] = $obj;
+        }else{
+            throw new \Exception("Transformer $obj class not found");
         }
     }
 
@@ -60,6 +64,12 @@ abstract class Crud {
 
         return $this->transform($this->get());
     }
+
+    public function getAgg(){
+
+        return $this->aggregates;
+    }
+
 
     protected function transform($coll_or_model){
 
@@ -84,7 +94,16 @@ abstract class Crud {
                 $coll_or_model->transform(function($item) use($coll_or_model, $instance) {
                     return $instance->transform($item);
                  });
+
+                if(method_exists($instance, "getAgg")){
+                    $this->aggregates = array_merge(
+                        $this->aggregates,
+                        $instance->getAgg()
+                    );
+                }
+
             }
+
 
         }
       

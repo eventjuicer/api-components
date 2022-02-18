@@ -11,12 +11,9 @@ use Eventjuicer\Repositories\PostRepository;
 use Eventjuicer\Repositories\Criteria\BelongsToGroup;
 use Eventjuicer\Repositories\Criteria\BelongsToOrganizer;
 use Eventjuicer\Repositories\Criteria\BelongsToCompany;
-use Eventjuicer\Repositories\Criteria\RelTableHas;
 use Eventjuicer\Repositories\Criteria\FlagEquals;
 use Eventjuicer\Repositories\Criteria\Limit;
 use Eventjuicer\Repositories\Criteria\SortBy;
-use Carbon\Carbon;
-use Auth;
 
 class Fetch extends Crud  {
 
@@ -54,7 +51,7 @@ class Fetch extends Crud  {
 
             $this->repo->pushCriteria( new BelongsToCompany( $company_id ) );
         
-        }else {
+        }else if( $group_id > 0) {
             
             //we should append currently selected event_id and get group_id or organizer_id
             $this->repo->pushCriteria( new BelongsToOrganizer( Group::findOrFail($group_id)->organizer_id ) );
