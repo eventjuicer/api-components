@@ -95,6 +95,8 @@ class Email {
 
 " . $this->getEmail() . " " . $this->getPhone() . "
 
+" . $this->getCalendarUrl() . "
+
 ";
 	}
 
