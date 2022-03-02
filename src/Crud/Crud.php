@@ -22,19 +22,17 @@ abstract class Crud {
     }
 
     public function setData($data=null){
-       
-        if(is_array($data)){
-            $this->data = array_merge($this->data, $data);
-        }else{
-            $this->data = array_merge($this->data, app("request")->all() );
-        }
 
         if(!app()->runningInConsole()){
+            $this->data = array_merge($this->data, app("request")->all() );
             $this->payload();
         }
 
-    }
+        if(is_array($data)){
+            $this->data = array_merge($this->data, $data);
+        }
 
+    }
 
     public function getParam($key, $replacement=null){
 
@@ -51,6 +49,8 @@ abstract class Crud {
         return is_array($this->payload) ? array_merge($this->data, $this->payload) : $this->data;
     }
 
+
+   
     public function setTransform($obj){
 
         if(class_exists($obj)){
@@ -62,7 +62,15 @@ abstract class Crud {
 
     public function getTransformed(){
 
-        return $this->transform($this->get());
+        return $this->transform(
+            $this->get()
+        );
+    }
+
+    public function showTransformed($id){
+        return $this->transform(
+            $this->get($id)
+        );
     }
 
     public function getAgg(){
@@ -71,7 +79,7 @@ abstract class Crud {
     }
 
 
-    protected function transform($coll_or_model){
+    public function transform($coll_or_model){
 
         if(empty($this->transforms) || !is_array($this->transforms)){
             return $coll_or_model;
