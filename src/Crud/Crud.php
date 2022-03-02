@@ -69,7 +69,7 @@ abstract class Crud {
 
     public function showTransformed($id){
         return $this->transform(
-            $this->get($id)
+            $this->show($id)
         );
     }
 
