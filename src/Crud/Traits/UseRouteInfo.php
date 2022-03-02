@@ -4,12 +4,12 @@ namespace Eventjuicer\Crud\Traits;
 
 use Eventjuicer\Services\Resolver;
 
-
 trait UseRouteInfo {
 
     protected $routeParams = [];
     protected $host = "";
-    
+    protected $resolver_instances = [];
+
     public function routeParams(){
         $routeInfo = app("request")->route();
         if(!empty($routeInfo[2])){
@@ -27,8 +27,14 @@ trait UseRouteInfo {
     }
 
     public function getContextFromHost(){
-       $host = $this->getRouteParam("host");
-       return $host? new Resolver($host): null;
+
+        $host = $this->getRouteParam("host");
+
+        if(!isset($this->resolver_instances[$host])){
+           $this->resolver_instances[$host] = new Resolver($host);
+        }
+
+        return $this->resolver_instances[$host];
 
        if(!app()->runningInConsole()){
 

@@ -79,7 +79,7 @@ class Fetch extends Crud  {
 
     public function show($id){
 
-        $this->repo->with(["participants.ticketpivot", "data"]);
+        $this->repo->with(["participants.ticketpivot.ticket", "data"]);
 
         if(is_numeric($id)){
             return $this->repo->find($id);
