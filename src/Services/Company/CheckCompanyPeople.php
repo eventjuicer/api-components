@@ -18,18 +18,9 @@ class CheckCompanyPeople extends Checkers {
 
         $res = $this->repo->get()->filter(function($item){
             return !$item->disabled;
-        })->mapToGroups(function($item){
-            return [$item["role"] => $item["id"]];
-        });
+        })->keyBy("role");
 
-        if(!$res->count()){
-            
-        }
-
-       
-        
-
-        return $res;
+        return ["max" => 3, "current" => $res->count()];
     }
 
 }
