@@ -54,7 +54,9 @@ class Repository extends BaseRepository
         return $this;
     }
 
-
+    public function getId(){
+        return $this->model->id;
+    }
 
     public function model(){}  
 
