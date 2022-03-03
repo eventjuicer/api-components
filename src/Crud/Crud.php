@@ -46,6 +46,13 @@ abstract class Crud {
 
     }
 
+    public function find($id){
+        
+        $model = $this->repo->find($id);
+
+        return $this->canAccess($model)? $model: null;
+    }
+
     public function setData($data=null){
 
         if(!app()->runningInConsole()){

@@ -16,12 +16,10 @@ class Create extends Crud  {
 
     //use UseRouteInfo;
 
-    private $repo;
-    private $fetch;
+    protected $repo;
     
-    function __construct(Fetch $fetch, CompanyPeopleRepository $repo){
+    function __construct(CompanyPeopleRepository $repo){
         $this->repo = $repo;
-        $this->fetch = $fetch;
     }
 
     function validates(){
@@ -43,34 +41,53 @@ class Create extends Crud  {
             return null;
         }
 
+       $data = $this->getData();
+
+        //resolved by AppServiceProvider
+        $data["group_id"] = (int) $this->getParam("x-group_id", 0);
+        $data["company_id"] = (int) $this->getParam("x-company_id", 0);
+
+        $this->repo->saveModel($data);
+
+        return $this->find( $this->repo->getId() );
+    }
+
+
+    public function update($id){
+
+        if(!$this->validates()){
+            return null;
+        }
+
+        $this->repo->update($this->getData(), $id);
+        return $this->find($id);
+    }
+
+    public function delete($id){
+
+        $this->repo->update(["disabled"=>1], $id);
+        return $this->find($id);
+    }
+
+
+    protected function getData(){
+        
         $fname = $this->getParam("fname", "");
         $lname = $this->getParam("lname", "");
         $email = $this->getParam("email", "");
         $role = $this->getParam("role", "");
         $phone = (int) $this->getParam("phone", 0);
 
-        //resolved by AppServiceProvider
-        $group_id = (int) $this->getParam("x-group_id", 0);
-        $company_id = (int) $this->getParam("x-company_id", 0);
-
-        $this->repo->saveModel(compact(
+        return compact(
             "fname",
             "lname",
             "email",
             "phone",
-            "role",
-            "group_id",
-            "company_id"
-        ));
-
-        return $this->fetch->show( $this->repo->getId() );
-
-
-
+            "role"
+        );
     }
 
-  
-    
+
 
 }
 

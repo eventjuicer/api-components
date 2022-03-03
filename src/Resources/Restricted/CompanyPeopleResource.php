@@ -21,7 +21,9 @@ class CompanyPeopleResource extends Resource {
       $data["email"] = $this->email;
       $data["phone"] = $this->phone;
       $data["role"] = $this->role;
+      $data["disabled"] = $this->disabled;
 
+      
       $data["created_at"] = (string) $this->created_at;
 
       $data["updated_at"] = (string) $this->updated_at;

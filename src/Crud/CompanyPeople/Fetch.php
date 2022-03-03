@@ -15,7 +15,7 @@ class Fetch extends Crud  {
 
     //use UseRouteInfo;
 
-    private $repo;
+    protected $repo;
  
     
     function __construct(CompanyPeopleRepository $repo){
