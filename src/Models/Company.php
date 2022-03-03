@@ -82,6 +82,10 @@ class Company extends Model
         return $this->morphMany(UserLog::class, 'loggable');
     }
 
+    public function images(){
+        return $this->morphMany(PostImage::class, 'imageable');
+    }
+
 
 
 

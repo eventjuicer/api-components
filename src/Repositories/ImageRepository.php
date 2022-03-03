@@ -4,16 +4,12 @@ namespace Eventjuicer\Repositories;
 
 use Eventjuicer\Services\Repository;
 
-
 use Eventjuicer\Post;
 use Eventjuicer\PostImage;
 
-use Cargon;
-
-use Cache;
 
 
-class PostImages extends Repository
+class ImageRepository extends Repository
 {
 	
 
