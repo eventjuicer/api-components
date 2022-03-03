@@ -33,6 +33,19 @@ abstract class Crud {
         return app("request")->user();
     }
 
+    public function canAccess(Model $model){
+        $this->setData(); //x-company_id
+        $user_company_id = (int) $this->getParam("x-company_id", 0);
+        // $user = $this->getUser();
+
+        if($user_company_id && $model->company_id == $user_company_id){
+            return true;
+        }
+
+        return false;
+
+    }
+
     public function setData($data=null){
 
         if(!app()->runningInConsole()){
