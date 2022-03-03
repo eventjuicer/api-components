@@ -17,10 +17,11 @@ class Create extends Crud  {
     //use UseRouteInfo;
 
     private $repo;
- 
+    private $fetch;
     
-    function __construct(CompanyPeopleRepository $repo){
+    function __construct(Fetch $fetch, CompanyPeopleRepository $repo){
         $this->repo = $repo;
+        $this->fetch = $fetch;
     }
 
     function validates(){
@@ -45,11 +46,14 @@ class Create extends Crud  {
         $fname = $this->getParam("fname", "");
         $lname = $this->getParam("lname", "");
         $email = $this->getParam("email", "");
+        $role = $this->getParam("role", "");
         $phone = (int) $this->getParam("phone", 0);
-        $group_id = (int) $this->getParam("group_id", 0);
-        $company_id = (int) $this->getParam("company_id", 0);
 
-        $id = $this->repo->saveModel(compact(
+        //resolved by AppServiceProvider
+        $group_id = (int) $this->getParam("x-group_id", 0);
+        $company_id = (int) $this->getParam("x-company_id", 0);
+
+        $this->repo->saveModel(compact(
             "fname",
             "lname",
             "email",
@@ -59,7 +63,9 @@ class Create extends Crud  {
             "company_id"
         ));
 
-        dd($id);
+        return $this->fetch->show( $this->repo->getId() );
+
+
 
     }
 

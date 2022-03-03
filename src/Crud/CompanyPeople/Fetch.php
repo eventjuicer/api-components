@@ -25,7 +25,7 @@ class Fetch extends Crud  {
     public function get(){
 
 
-        $company_id = $this->getParam("company_id");
+        $company_id = $this->getParam("x-company_id");
 
         $this->repo->pushCriteria(new BelongsToCompany(  $company_id ));
         $this->repo->pushCriteria(new FlagEquals("disabled", 0));
