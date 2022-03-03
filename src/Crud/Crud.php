@@ -5,6 +5,7 @@ namespace Eventjuicer\Crud;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Validator;
 
 abstract class Crud {
 
@@ -12,9 +13,20 @@ abstract class Crud {
     protected $transforms = [];
     protected $payload = [];
     protected $aggregates = [];
+    protected $errors = [];
     
     protected function payload(){
         $this->payload = json_decode(app("request")->getContent(), true);
+    }
+
+    public function isValid(array $rules = []){
+        $validator = Validator::make($this->getParams(), $rules);
+        $this->errors = $validator->errors();
+        return $validator->passes();
+    }
+
+    public function errors(){
+        return !empty($this->errors)? array_keys($this->errors->toArray()): "";
     }
 
     public function getUser(){
