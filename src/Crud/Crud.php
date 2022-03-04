@@ -33,8 +33,16 @@ abstract class Crud {
         return app("request")->user();
     }
 
+    public function getCompany(){
+        return $this->getUser()->company;
+    }
+
     public function canAccess(Model $model){
+        /**
+         * important!
+         */
         $this->setData(); //x-company_id
+        
         $user_company_id = (int) $this->getParam("x-company_id", 0);
         // $user = $this->getUser();
 
@@ -55,6 +63,13 @@ abstract class Crud {
 
     public function setData($data=null){
 
+        /**
+         * was already populated?
+         */
+        if(!empty($this->data) && empty($data)){
+            return;
+        }
+
         if(!app()->runningInConsole()){
             $this->data = array_merge($this->data, app("request")->all() );
             $this->payload();
@@ -63,10 +78,13 @@ abstract class Crud {
         if(is_array($data)){
             $this->data = array_merge($this->data, $data);
         }
+       
 
     }
 
     public function getParam($key, $replacement=null){
+
+        $this->setData();
 
         if(isset($this->data[$key])){
             return $this->data[$key];
@@ -78,6 +96,9 @@ abstract class Crud {
     }
 
     public function getParams(){
+        
+        $this->setData();
+        
         return is_array($this->payload) ? array_merge($this->data, $this->payload) : $this->data;
     }
 
