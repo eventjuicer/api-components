@@ -44,7 +44,8 @@ class Update extends Crud  {
         $companydata = $this->find($id);
         $name = $companydata->name;
 
-        $value = trim( $this->getParam("value", "") );
+        //value may be an array!!!
+        $value = $this->getParam("value", "");
         $base64 = $this->getParam("base64", null);
         // $data["group_id"] = (int) $this->getParam("x-group_id", 0);
         // $data["company_id"] = (int) $this->getParam("x-company_id", 0);
