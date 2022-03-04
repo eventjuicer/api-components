@@ -2,17 +2,24 @@
 
 namespace Eventjuicer\Services\Company;
 
-use Eventjuicer\Services\Exhibitors\CompanyReps;
-use Eventjuicer\Resources\CheckerParticipantsResource;
+use Eventjuicer\Crud\CompanyRepresentatives\Fetch;
 
 class CheckCompanyRepresentatives extends Checkers {
 
+    protected $repo;
+
+    function __construct(Fetch $repo){
+        $this->repo = $repo;
+    }
 
     function getStatus(){
-        $reps = new CompanyReps($this->company);
-        $reps->setEventId($this->active_event_id);
-        $res = $reps->get("representative", false);
-        return CheckerParticipantsResource::collection( $res );
+        
+        $this->repo->setData();
+
+        $res = $this->repo->get();
+      
+        return ["count" => $res->count()];
+
     }
 
 }
