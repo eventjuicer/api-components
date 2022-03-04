@@ -8,9 +8,11 @@ use Exception;
 class SendSlackNotificationJob extends Job implements ShouldQueue {
 
     protected $message;
+    protected $organizer_id;
 
-    public function __construct($message = ""){
+    public function __construct($message = "", $organizer_id=1){
         $this->message = $message;
+        $this->organizer_id = $organizer_id;
     }
 
     public function handle(){

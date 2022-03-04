@@ -1,6 +1,6 @@
 <?php
 
-namespace Eventjuicer\Services;
+namespace Eventjuicer\Crud\Participants;
 
 use Eventjuicer\Models\Participant;
 

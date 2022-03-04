@@ -4,7 +4,7 @@ namespace Eventjuicer\Listeners;
 
 use Eventjuicer\Jobs\SendSlackNotificationJob;
 use Eventjuicer\Events\NewItemPurchased;
-use Eventjuicer\Services\ParticipantRoles;
+use Eventjuicer\Crud\Participants\ParticipantRoles;
 
 class SendSlackNotificationListener {
 
