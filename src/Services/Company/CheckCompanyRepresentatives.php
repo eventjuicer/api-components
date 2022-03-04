@@ -18,7 +18,7 @@ class CheckCompanyRepresentatives extends Checkers {
 
         $res = $this->repo->get();
       
-        return ["count" => $res->count()];
+        return ["current" => $res->count()];
 
     }
 
