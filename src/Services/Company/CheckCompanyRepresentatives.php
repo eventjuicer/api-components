@@ -5,7 +5,7 @@ namespace Eventjuicer\Services\Company;
 use Eventjuicer\Services\Exhibitors\CompanyReps;
 use Eventjuicer\Resources\CheckerParticipantsResource;
 
-class CheckReps extends Checkers {
+class CheckCompanyRepresentatives extends Checkers {
 
 
     function getStatus(){
