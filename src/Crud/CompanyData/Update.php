@@ -37,8 +37,9 @@ class Update extends Crud  {
     
     public function update($id){
 
+
         if(!$this->validates()){
-            return $companydata;
+            return null;
         }
       
         $companydata = $this->find($id);
