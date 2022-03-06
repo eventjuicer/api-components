@@ -24,7 +24,7 @@ class CompanyDataResource extends Resource
 
             $data["id"]     = $this->id;
             $data["name"]   = $this->name;
-            $data["value"]  = $this->value;
+            $data["value"]  = strip_tags($this->value);
             $data["summary"]  = is_string($this->value) ? mb_substr(strip_tags($this->value), 0, 50) : $this->value;
             $data["created_at"] = (string) $this->created_at;
             $data["updated_at"] = (string) $this->updated_at;
