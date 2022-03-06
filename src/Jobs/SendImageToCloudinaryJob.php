@@ -2,21 +2,11 @@
 
 namespace Eventjuicer\Jobs;
 
-
-use Illuminate\Contracts\Queue\ShouldQueue;
 //use Illuminate\Foundation\Bus\Dispatchable;
-
-use Eventjuicer\Models\CompanyData as Model;
+use Eventjuicer\Models\CompanyData;
 use Eventjuicer\Services\Cloudinary;
-use Eventjuicer\Repositories\CompanyDataRepository;
-
-
-
-use Eventjuicer\Repositories\Criteria\BelongsToCompany;
-use Eventjuicer\Repositories\Criteria\FlagEquals;
-use Eventjuicer\Services\CompanyData;
-
-
+use Eventjuicer\Crud\CompanyData\Fetch;
+use Eventjuicer\Events\RestrictedImageUploaded;
 
 
 class SendImageToCloudinaryJob extends Job //implements ShouldQueue
@@ -31,7 +21,7 @@ class SendImageToCloudinaryJob extends Job //implements ShouldQueue
 
     public $companydata;
 
-    public function __construct(Model $companydata){
+    public function __construct(CompanyData $companydata){
         $this->companydata = $companydata;
     }
 
@@ -40,26 +30,17 @@ class SendImageToCloudinaryJob extends Job //implements ShouldQueue
      *
      * @return void
      */
-    public function handle(
-        Cloudinary $image, 
-        CompanyDataRepository $companydataRepo, 
-        CompanyData $companydataPrepare
-    ){
+    public function handle(Cloudinary $image, Fetch $fetch){
 
         $company        = $this->companydata->company;
      
-        if(stristr($this->companydata->value, "http") === false && empty($this->companydata->base64) ){
+        if( stristr($this->companydata->value, "http") === false && stristr($this->companydata->value, "data:image/") === false ){
             //nothing to do!!!!
             return;
         }
 
-        $pubName        = "c_" . $company->id . "_" . $this->companydata->name;
-
-        if(!empty($this->companydata->base64)){
-            $response = $image->uploadBase64($this->companydata->base64, $pubName);
-        }else{
-            $response = $image->upload($this->companydata->value, $pubName);
-        }
+        $pubName = "c_" . $company->id . "_" . $this->companydata->name;
+        $response = $image->uploadUrlOrBase64($this->companydata->value, $pubName);
 
         if(empty($response))
         {
@@ -68,27 +49,16 @@ class SendImageToCloudinaryJob extends Job //implements ShouldQueue
 
         $secureUrl = array_get($response, "secure_url", "");
 
-        //just in case :D
+        $cdn = $fetch->getByCompanyIdAndName($company->id, $this->companydata->name . "_cdn");
+        $cdn->value = $secureUrl;
+        $cdn->save();
 
-        $companydataPrepare->make($company);
-
-        //CDN!!!
-
-        $companydataRepo->pushCriteria(new BelongsToCompany($company->id));
-        $companydataRepo->pushCriteria(new FlagEquals("name", $this->companydata->name . "_cdn"));
-        $cdn = $companydataRepo->all()->first();
-
-        if($cdn){
-            $cdn->value = $secureUrl;
-            $cdn->save();
-        }
-
-        
-        if(!empty($this->companydata->base64)){
-            $this->companydata->value = $secureUrl;
-            $this->companydata->base64 = "";
+        if($image->isBase64($this->companydata->value)){
+            $this->companydata->value = $secureUrl; //remove base64 string as it is not needed!
             $this->companydata->save();
         }
 
+        event(new RestrictedImageUploaded($cdn->fresh()));
+      
     }
 }

@@ -49,15 +49,22 @@ class Fetch extends Crud  {
 
     public function show($id){
 
-        $this->repo->with(["company"]);
-
-        return $this->repo->find($id);
+        return $this->find($id);
 
     }
 
+
+    public function getByCompanyIdAndName($company_id, $name){
+
+        $this->repo->pushCriteria(new BelongsToCompany((int) $company_id));
+        $this->repo->pushCriteria(new FlagEquals("name", (string) $name));
+        return $this->repo->all()->first();
+
+    }
   
     
 
 }
+
 
 

@@ -58,10 +58,24 @@ class Cloudinary {
         ]);
 	}
 
+	public function isBase64($data){
 
-	public function uploadBase64($data, $name = "", array $options = [])
-	{
+		return  stristr($data, "data:image/") !== false;
+	}
 
+	public function uploadUrlOrBase64($data, $name = ""){
+
+		if($this->isBase64($data) ){
+			return $this->uploadBase64($data, $name);
+		}
+		
+		return $this->upload($data, $name);
+	}
+
+
+	public function uploadBase64($data, $name = ""){
+
+		$options = [];
 		// if(! imagecreatefromstring(base64_decode($data))){
 		// 	return false;
 		// }
