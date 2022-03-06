@@ -31,53 +31,6 @@ class CompanyDataResource extends Resource
 
             return $data;
 
-           //  $parentProfile = [];
-
-           //  $data = [];
-
-           //  $data["id"] = (int) $this->id;
-
-           //  $profile = $this->remapFields($this->fields);
-
-           //  if($this->parent_id)
-           //  {
-           //      $parentProfile = $this->remapFields($this->parent->fields);
-
-           //  }
-
-           //  $data["is_subaccount"] = intval($this->parent_id > 0);
-
-           //  $data["profile"] = isset($parentProfile) ? array_merge($parentProfile, $profile) : $profile;
-
-
-           //  $data["parent"] = $this->parent_id ?  new self($this->parent) : [];
-
-           //  $data["company"] = [];
-
-
-           //  if($this->company_id)
-           //  {
-           //      if(!$this->skipParentCompany)
-           //      {
-           //          $data["company"] = new ApiUserCompanyResource($this->company);
-
-           //      }
-           //  }
-           //  else
-           //  {
-           //      if($this->parent_id && $this->parent->company_id)
-           //      {
-           //          $data["company"] = new ApiUserCompanyResource($this->parent->company, true);
-           //      }
-           //  }
-
-            
-           //  $data["email"] = $this->email;
-
-           //  $data["domain"] = (new EmailAddress($this->email))->domain();
-
-
-           // return $data;
     }
 
 

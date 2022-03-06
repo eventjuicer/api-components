@@ -12,7 +12,7 @@ class RestrictedImageUploaded extends Event implements ShouldBroadcast{
 
     use SerializesModels;
 
-    public $model;
+    public $data;
 
     public function __construct(CompanyData $model){
         $this->data = $model;

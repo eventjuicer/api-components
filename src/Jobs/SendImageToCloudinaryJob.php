@@ -58,7 +58,7 @@ class SendImageToCloudinaryJob extends Job //implements ShouldQueue
             $this->companydata->save();
         }
 
-        event(new RestrictedImageUploaded($cdn->fresh()));
+        event(new RestrictedImageUploaded( $cdn->fresh() ));
       
     }
 }
