@@ -52,13 +52,14 @@ class SendImageToCloudinaryJob extends Job //implements ShouldQueue
         $cdn = $fetch->getByCompanyIdAndName($company->id, $this->companydata->name . "_cdn");
         $cdn->value = $secureUrl;
         $cdn->save();
+        $cdn->fresh();
 
         if($image->isBase64($this->companydata->value)){
             $this->companydata->value = $secureUrl; //remove base64 string as it is not needed!
             $this->companydata->save();
         }
 
-        event(new RestrictedImageUploaded( $cdn->fresh() ));
+        event(new RestrictedImageUploaded( $cdn ));
       
     }
 }
