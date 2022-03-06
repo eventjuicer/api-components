@@ -7,6 +7,7 @@ use Illuminate\Broadcasting\Channel;
 // use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Eventjuicer\Models\CompanyData;
+use Eventjuicer\Resources\Restricted\CompanyDataResource;
 
 class RestrictedImageUploaded extends Event implements ShouldBroadcast{
 
@@ -15,7 +16,7 @@ class RestrictedImageUploaded extends Event implements ShouldBroadcast{
     public $data;
 
     public function __construct(CompanyData $model){
-        $this->data = $model;
+        $this->data = (new CompanyDataResource($model))->toArray( app("request") );
     }
 
     public function handle(){}
