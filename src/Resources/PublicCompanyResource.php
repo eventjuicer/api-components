@@ -80,7 +80,7 @@ class PublicCompanyResource extends Resource
 
         $profile = array_merge(array_flip(self::$presenterFields), $this->data->whereIn("name", self::$presenterFields)->mapWithKeys(function($item){     
 
-                    return [$item->name => is_string($item->value)? strip_tags($item->value): $item->value];
+                    return [$item->name => intval($this->group_id)===1 && is_string($item->value)? strip_tags($item->value): $item->value];
 
         })->all());
 
