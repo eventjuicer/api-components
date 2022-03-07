@@ -2,7 +2,6 @@
 
 namespace Eventjuicer\Crud;
 
-use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Validator;
@@ -10,6 +9,7 @@ use Validator;
 abstract class Crud {
 
     protected $data = [];
+    protected $filters = [];
     protected $transforms = [];
     protected $payload = [];
     protected $aggregates = [];
@@ -26,7 +26,7 @@ abstract class Crud {
     }
 
     public function errors(){
-        return !empty($this->errors)? array_keys($this->errors->toArray()): "";
+        return !empty($this->errors)? array_keys( $this->errors->toArray() ): [];
     }
 
     public function getUser(){
@@ -37,16 +37,22 @@ abstract class Crud {
         return $this->getUser()->company;
     }
 
-    public function canAccess(Model $model){
-        /**
-         * important!
-         */
-        $this->setData(); //x-company_id
-        
-        $user_company_id = (int) $this->getParam("x-company_id", 0);
-        // $user = $this->getUser();
+    public function getCompanyParticipants(){
+        return $this->getCompany()->participants->pluck("id")->all();
+    }
 
-        if($user_company_id && $model->company_id == $user_company_id){
+    public function canAccess(Model $model){
+        
+        $company_id = (int) $this->getCompany()->id;
+
+        /**
+         * we cannot determine owner...
+         */
+        if(!isset($model->company_id)){
+            return true;
+        }
+
+        if($company_id && $model->company_id == $company_id){
             return true;
         }
 
@@ -55,7 +61,7 @@ abstract class Crud {
     }
 
     public function find($id){
-        
+
         $model = $this->repo->find($id);
 
         return $this->canAccess($model)? $model: null;
@@ -103,6 +109,14 @@ abstract class Crud {
     }
 
 
+    public function setFilter($obj){
+
+        if(class_exists($obj)){
+            $this->filters[] = $obj;
+        }else{
+            throw new \Exception("Filter $obj class not found");
+        }
+    }
    
     public function setTransform($obj){
 
@@ -114,16 +128,28 @@ abstract class Crud {
     }
 
     public function getTransformed(){
+        
+        $res = $this->get();
 
-        return $this->transform(
-            $this->get()
-        );
+        $res = $this->filter($res);
+
+        $res = $this->transform($res);
+
+        return $res->values();
     }
 
     public function showTransformed($id){
+
+        if(method_exists($this, "show")){
+            return $this->transform(
+                $this->show($id)
+            );
+        }
+
         return $this->transform(
-            $this->show($id)
+            $this->find($id)
         );
+        
     }
 
     public function getAgg(){
@@ -131,10 +157,33 @@ abstract class Crud {
         return $this->aggregates;
     }
 
+    public function filter(Collection $coll){
+
+        if( empty($this->filters) || !is_array($this->filters) ){
+            return $coll;
+        }
+
+        foreach($this->filters as $filter){
+         
+            $instance = app()->make($filter);
+
+            if(!method_exists($instance, "filter")){
+                throw new \Exception("No filter method on " . $filter);
+            }
+
+            $coll = $coll->filter(function($item) use ($instance) {
+                return $instance->filter($item);
+             });
+
+        }
+
+        return $coll;
+
+    }
 
     public function transform($coll_or_model){
 
-        if(empty($this->transforms) || !is_array($this->transforms)){
+        if( empty($this->transforms) || !is_array($this->transforms) ){
             return $coll_or_model;
         }
 
@@ -143,7 +192,7 @@ abstract class Crud {
             $instance = app()->make($transformer);
 
             if(!method_exists($instance, "transform")){
-                throw new \Exception("No transform method");
+                throw new \Exception("No transform method on " . $transformer);
             }
 
             if(is_a($coll_or_model, Model::class)){
@@ -152,7 +201,7 @@ abstract class Crud {
             }
 
             if($coll_or_model instanceof Collection){
-                $coll_or_model->transform(function($item) use($coll_or_model, $instance) {
+                $coll_or_model->transform(function($item) use($instance) {
                     return $instance->transform($item);
                  });
 
