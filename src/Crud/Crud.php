@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Validator;
 
+
 abstract class Crud {
 
     protected $data = [];
@@ -37,22 +38,25 @@ abstract class Crud {
         return $this->getUser()->company;
     }
 
+    public function getCompanyId(){
+        $company = $this->getUser()->company;
+        return $company? $company->id : 0;
+    }
+
     public function getCompanyParticipants(){
         return $this->getCompany()->participants->pluck("id")->all();
     }
 
     public function canAccess(Model $model){
         
-        $company_id = (int) $this->getCompany()->id;
-
         /**
          * we cannot determine owner...
          */
-        if(!isset($model->company_id)){
+        if(!isset($model->company_id) || !app("request")->user() ){
             return true;
         }
 
-        if($company_id && $model->company_id == $company_id){
+        if($model->company_id == $this->getCompanyId() ){
             return true;
         }
 
@@ -140,7 +144,7 @@ abstract class Crud {
 
     public function showTransformed($id){
 
-        if(method_exists($this, "show")){
+        if(is_callable(array($this, "show"))){
             return $this->transform(
                 $this->show($id)
             );
