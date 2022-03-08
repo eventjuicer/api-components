@@ -75,12 +75,13 @@ class PublicCompanyResource extends Resource
 
     public function toArray($request)
     {   
+        $group_id = intval($this->group_id);
 
         $defaultLang = $this->group_id > 1 ? "en" : "pl";
 
-        $profile = array_merge(array_flip(self::$presenterFields), $this->data->whereIn("name", self::$presenterFields)->mapWithKeys(function($item){     
+        $profile = array_merge(array_flip(self::$presenterFields), $this->data->whereIn("name", self::$presenterFields)->mapWithKeys(function($item)use($group_id) {     
 
-                    return [$item->name => intval($this->group_id)===1 && is_string($item->value)? strip_tags($item->value): $item->value];
+                    return [$item->name => $group_id === 1 && is_string($item->value)? strip_tags($item->value): $item->value];
 
         })->all());
 
