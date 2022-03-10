@@ -9,11 +9,11 @@ use Eventjuicer\Repositories\Criteria\BelongsToEvent;
 // use Eventjuicer\Repositories\Criteria\FlagEquals;
 use Eventjuicer\Repositories\Criteria\ColumnMatches;
 use Eventjuicer\Repositories\Criteria\SortBy;
-use Eventjuicer\Crud\Traits\UseActiveEvent;
+
 
 class Fetch extends Crud  {
 
-    use UseActiveEvent;
+
 
     protected $repo;
  
