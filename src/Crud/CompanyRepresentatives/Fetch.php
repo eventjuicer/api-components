@@ -38,6 +38,11 @@ class Fetch extends Crud  {
             $q->where("role", "representative");
             // $q->where("event_id", $this->eventId);
          }));
+
+         $this->repo->pushCriteria( new WhereHas("ticketpivot", function($q){
+            $q->where("sold", 1);
+            // $q->where("event_id", $this->eventId);
+         }));
         
         $this->repo->pushCriteria( new SortBy("id", "DESC"));
         $this->repo->with(["fields","tickets"]);
