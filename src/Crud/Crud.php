@@ -4,65 +4,23 @@ namespace Eventjuicer\Crud;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
-use Validator;
+
+use Eventjuicer\Crud\Traits\UseRequestInfo;
+use Eventjuicer\Crud\Traits\UseActiveEvent;
+use Eventjuicer\Crud\Traits\UseRouteInfo;
 
 
 abstract class Crud {
 
-    protected $data = [];
+    use UseRequestInfo;
+    use UseActiveEvent;
+    use UseRouteInfo;
+
     protected $filters = [];
     protected $transforms = [];
-    protected $payload = [];
     protected $aggregates = [];
-    protected $errors = [];
-    
-    protected function payload(){
-        $this->payload = json_decode(app("request")->getContent(), true);
-    }
 
-    public function isValid(array $rules = []){
-        $validator = Validator::make($this->getParams(), $rules);
-        $this->errors = $validator->errors();
-        return $validator->passes();
-    }
 
-    public function errors(){
-        return !empty($this->errors)? array_keys( $this->errors->toArray() ): [];
-    }
-
-    public function getUser(){
-        return app("request")->user();
-    }
-
-    public function getCompany(){
-        return $this->getUser()->company;
-    }
-
-    public function getCompanyId(){
-        $company = $this->getUser()->company;
-        return $company? $company->id : 0;
-    }
-
-    public function getCompanyParticipants(){
-        return $this->getCompany()->participants->pluck("id")->all();
-    }
-
-    public function canAccess(Model $model){
-        
-        /**
-         * we cannot determine owner...
-         */
-        if(!isset($model->company_id) || !app("request")->user() ){
-            return true;
-        }
-
-        if($model->company_id == $this->getCompanyId() ){
-            return true;
-        }
-
-        return false;
-
-    }
 
     public function find($id){
 
@@ -71,47 +29,7 @@ abstract class Crud {
         return $this->canAccess($model)? $model: null;
     }
 
-    public function setData($data=null){
-
-        /**
-         * was already populated?
-         */
-        if(!empty($this->data) && empty($data)){
-            return;
-        }
-
-        if(!app()->runningInConsole()){
-            $this->data = array_merge($this->data, app("request")->all() );
-            $this->payload();
-        }
-
-        if(is_array($data)){
-            $this->data = array_merge($this->data, $data);
-        }
-       
-
-    }
-
-    public function getParam($key, $replacement=null){
-
-        $this->setData();
-
-        if(isset($this->data[$key])){
-            return $this->data[$key];
-        }
-        if(is_array($this->payload) && isset($this->payload[$key])){
-            return $this->payload[$key];
-        }
-        return $replacement;
-    }
-
-    public function getParams(){
-        
-        $this->setData();
-        
-        return is_array($this->payload) ? array_merge($this->data, $this->payload) : $this->data;
-    }
-
+  
 
     public function setFilter($obj){
 
