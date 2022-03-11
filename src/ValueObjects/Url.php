@@ -148,15 +148,13 @@ class Url {
 		return false;  // Problem with url
 
 		$meta = stream_get_meta_data($fp);
-		if ($meta === false)
-		{
+
+		if (empty($meta)){
 			fclose($fp);
 			return false;  // Problem reading data from url
 		}
 
-		$wrapper_data = $meta["wrapper_data"];
-
-		$this->headers = is_array($wrapper_data) ? array_reverse($wrapper_data) : [];
+		$this->headers = isset($meta["wrapper_data"]) && is_array($meta["wrapper_data"]) ? array_reverse($meta["wrapper_data"]) : [];
 
 		fclose($fp);
 		
