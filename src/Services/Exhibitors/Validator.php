@@ -24,7 +24,7 @@ class Validator {
         "logotype"              => 1,
         "countries"             => 0,
         "opengraph_image"       => 0,
-        "lang"                  => 0,
+        // "lang"                  => 0,
 
         // "event_manager"         => 0,
         // "pr_manager"            => 0,
