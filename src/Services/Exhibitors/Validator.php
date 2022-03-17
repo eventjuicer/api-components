@@ -11,7 +11,7 @@ class Validator {
         "name"                  => 1,
         "about"                 => 1, 
         "products"              => 1,
-        "expo"                  => 0, 
+        // "expo"                  => 0, 
         "keywords"              => 1,
         "website"               => 1,
 
@@ -26,9 +26,9 @@ class Validator {
         "opengraph_image"       => 0,
         "lang"                  => 0,
 
-        "event_manager"         => 0,
-        "pr_manager"            => 0,
-        "sales_manager"         => 0,
+        // "event_manager"         => 0,
+        // "pr_manager"            => 0,
+        // "sales_manager"         => 0,
    
         //"marketing_person"      => 0,
         "invitation_template"   => 0
@@ -89,26 +89,26 @@ class Validator {
                    
                 break;
 
-                case "event_manager":
-                case "pr_manager":
-                case "sales_manager":
+                // case "event_manager":
+                // case "pr_manager":
+                // case "sales_manager":
 
-                    if(!trim($value))
-                    {
-                        $errors[$name] = "empty";
+                //     if(!trim($value))
+                //     {
+                //         $errors[$name] = "empty";
 
-                    }else{
+                //     }else{
                         
-                        if(strpos($value, "@")===false) {
-                             $errors[$name] = "noemail";
-                        }
-                    }
+                //         if(strpos($value, "@")===false) {
+                //              $errors[$name] = "noemail";
+                //         }
+                //     }
 
-                break;
+                // break;
 
                 case "about":
                 case "products":
-                case "expo":
+                // case "expo":
 
                     if(!trim($value) || strlen($value) < 20)
                     {
@@ -116,7 +116,7 @@ class Validator {
 
                     }else{
                         
-                        if(strlen($value) > 300 && $value == strip_tags($value)) {
+                        if(strlen($value) > 300 && strpos($value, "*")===false) {
                             $errors[$name] = "nohtml";
                         }
                     }
