@@ -255,7 +255,7 @@ class Creatives {
                 "requires" => ["opengraph_image"],
                 "enabled" => $hasCustomImage,
                 "template" => $opengraph_image_cdn,
-                "sharers" => $this->sharer( $this->companydata->trackingLink("link", "opengraph_image") )
+                "sharers" => $this->sharer( $this->companydata->trackedProfileUrl("link", "opengraph_image") )
             ],
 
             /*
