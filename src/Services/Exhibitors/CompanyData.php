@@ -53,8 +53,8 @@ class CompanyData {
         return "https://".$this->getHostFromGroupId() . "/exhibitors/" .  $this->getCompany()->slug;
     }
 
-    public function accountUrl(){
-    	return "https://account.".$this->getHostFromGroupId()."/#/login?token=" . $this->getModel()->token;
+    public function accountUrl($subpage="login"){
+    	return "https://account.".$this->getHostFromGroupId()."/#/".$subpage."?token=" . $this->getModel()->token;
     }
 
 	public function trackingLink($medium = "banner", $ad = "")
