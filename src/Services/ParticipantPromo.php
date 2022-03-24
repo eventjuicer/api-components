@@ -114,8 +114,6 @@ class ParticipantPromo
                                    );
 
 
-        // $this->promoLink = url("/?utm_source=partner_".$this->participantId."&utm_medium=".str_slug($this->participantName)."&utm_campaign=visitors_TEH13");
-
 
         $this->participantImage = array_get($this->participant, "fields.logotype", 
                                     array_get($this->participant, "fields.avatar")
