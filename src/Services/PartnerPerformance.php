@@ -303,8 +303,8 @@ class PartnerPerformance {
 
         	//ebe5
         	$dt = Period::create(
-        		Carbon::createFromDate(2021, 9, 26), 
-        		Carbon::create(2021, 10, 18, 23, 59, 59)
+        		Carbon::createFromDate(2022, 3, 20), 
+        		Carbon::create(2022, 5, 4, 23, 59, 59)
         	);
 
 			$response = $this->analytics->performQuery(
