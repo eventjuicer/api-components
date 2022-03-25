@@ -36,7 +36,7 @@ class PartnerPerformance {
 	
 	protected $startDate;
 	protected $endDate;
-	protected $prefix = "y4fXdcs4_"; //"th3rCMiM_";
+	protected $prefix = "yy14dcs4_"; //"th3rCMiM_";
 
 	function __construct(
 			EloquentTicketRepository $repo, 
@@ -109,7 +109,7 @@ class PartnerPerformance {
 			if(!is_null($row))
 			{
 
-				$stats = $analytics->get($row->$mergeBy, $this->statsDefault);
+				$stats = $analytics->get($row->$mergeBy, $this->getDefaultStats() );
 
 				$tweakedSessions = $stats["sessions"] + $tweak_value;
 
@@ -142,7 +142,7 @@ class PartnerPerformance {
 
 				$tweak_value = $cd_lookup->count() ? intval( $cd_lookup->first()->value ) : 0;
 	
-				$stats = $analytics->get($row->$mergeBy, $this->statsDefault);
+				$stats = $analytics->get($row->$mergeBy, $this->getDefaultStats() );
 
 				$tweakedSessions = $stats["sessions"] + $tweak_value;
 
@@ -267,7 +267,7 @@ class PartnerPerformance {
 			{
 				$stats = [ 
 					"position" 	=> $position, 
-					"points" 	=> array_get($company->stats, "sessions"),
+					"points" 	=> array_get($company->stats, "conversions"),
 					"sessions" 	=> array_get($company->stats, "sessions")
 				];
 			}
@@ -286,6 +286,15 @@ class PartnerPerformance {
 	Period::create($startDate, $endDate);
 
 	*/
+
+
+/**
+ * 
+ * 
+ 
+ https://developers.google.com/analytics/devguides/reporting/core/v3/reference?hl=en#filters
+ https://analytics.google.com/analytics/web/?authuser=1#/report/trafficsources-campaigns/a34532684w62106751p63645499/_u.date00=20220324&_u.date01=20220324&_r.drilldown=analytics.campaign:promoninja&explorer-graphOptions.selected=analytics.nthDay/
+ */
 
 	public function getAnalyticsForSource($search="", $period = 90) : Collection
 	{
@@ -311,17 +320,24 @@ class PartnerPerformance {
 				$dt, 
 				"ga:sessions",  
 				[
+				// 'metrics' => 'ga:sessions,ga:sessionDuration',
+				// 'dimensions' 	=> 'ga:pagePath',
 				'dimensions' 	=> 'ga:source',
 				'sort' 			=> '-ga:sessions',
-				'filters'		=> 'ga:source=@' . $search// . '&ga:sessionDuration>'
+			    'filters'		=> 'ga:source=@' . $search,
+				// 'filters'		=> 'ga:pagePath=~exhibitors/[a-z0-9\-]+$',
+				"max-results" => 500
 				]
 			);
+
+			// dd($response["rows"]);
 
 			return collect($response['rows'] ?? [])->map(function (array $pageRow, $position) use ($search) {
 				return [
 					'id' 			=> (int) str_replace($search, "", $pageRow[0]),
 					'sessions' 		=> (int) $pageRow[1],
-					'conversions' 	=> 0
+					'conversions' 	=> 0,
+					// "duration"		=> $pageRow[2]
 				];
 			});
 		};
