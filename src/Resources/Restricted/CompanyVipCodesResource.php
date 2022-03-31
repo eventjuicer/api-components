@@ -3,7 +3,6 @@
 namespace Eventjuicer\Resources\Restricted;
 
 use Illuminate\Http\Resources\Json\Resource;
-use Carbon\Carbon;
 
 class CompanyVipCodesResource extends Resource {
 

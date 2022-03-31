@@ -3,10 +3,8 @@
 namespace Eventjuicer\Crud\CompanyVipcodes;
 
 use Eventjuicer\Crud\Crud;
-use Eventjuicer\Models\CompanyVipcode;
 use Eventjuicer\Repositories\CompanyVipcodeRepository;
 use Eventjuicer\Repositories\Criteria\BelongsToCompany;
-use Eventjuicer\Repositories\Criteria\FlagEquals;
 use Eventjuicer\Repositories\Criteria\SortBy;
 
 
@@ -15,8 +13,8 @@ class Fetch extends Crud  {
 
     protected $repo;
     protected $create;
-    protected $howmany = 8;
-    
+    protected $howmany = 10;
+
 
     function __construct(CompanyVipcodeRepository $repo, Create $create){
         $this->repo = $repo;
