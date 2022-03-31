@@ -7,7 +7,7 @@ use Eventjuicer\Jobs\Job;
 use Eventjuicer\Models\CompanyVipCode;
 use Eventjuicer\Services\SparkPost;
 use Eventjuicer\Crud\CompanyVipcodes\Create;
-
+use Eventjuicer\Crud\CompanyData\Fetch as CompanyData;
 
 class SendInvite extends Job //implements ShouldQueue
 {
@@ -30,9 +30,18 @@ class SendInvite extends Job //implements ShouldQueue
      *
      * @return void
      */
-    public function handle(SparkPost $mail, Create $fetch){
+    public function handle(SparkPost $mail, CompanyData $cd, Create $fetch){
 
         $code = $this->vipcode->code;
+        $company = $this->vipcode->company;
+        $organizer_id = $this->vipcode->organizer_id;
+        $data = $cd->toArray(
+            $cd->get($this->vipcode->company_id, "")
+        );
+        $substitution_data = [
+            "name" => $data["name"],
+            "url" =>  "https://targiehandlu.pl/exhibitors/".$company->slug."?vipcode=".$code
+        ];
 
         $mail->send([
             "template_id" => "admin-report-message",
@@ -40,9 +49,7 @@ class SendInvite extends Job //implements ShouldQueue
                 "name"  => "adam zygadlewicz",
                 "email" => "adam@zygadlewicz.com"
             ],
-            "substitution_data" => [
-                "code" => $code
-            ],                
+            "substitution_data" => $substitution_data,                
             "locale" => "en"
         ]);
 

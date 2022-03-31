@@ -6,7 +6,7 @@ use Eventjuicer\Crud\Crud;
 use Eventjuicer\Models\CompanyData;
 use Eventjuicer\Repositories\CompanyDataRepository;
 use Eventjuicer\Services\CompanyData as CompanyDataPopulate;
-
+use Illuminate\Support\Collection;
 
 
 
@@ -31,20 +31,21 @@ class Fetch extends Crud  {
   
     }
 
-    public function get($company_id=0){
+    public function get($company_id=0, string $access="company"){
 
         /**
          * populate with empty items.... 
          */
 
         $company_id = (int) $this->getParam("x-company_id", $company_id);
-
         $this->repo->pushCriteria(new BelongsToCompany(  $company_id ));
-
         $this->repo->pushCriteria( new SortByAsc("name") );
-        $this->repo->pushCriteria( new FlagEquals("access", "company") );
-        return $this->repo->all();
 
+        if($access){
+            $this->repo->pushCriteria( new FlagEquals("access", $access) );
+        }
+
+        return $this->repo->all();
     }
 
     public function show($id){
@@ -53,6 +54,13 @@ class Fetch extends Crud  {
 
     }
 
+    public function toArray(Collection $coll){
+
+        return $coll->mapWithKeys(function($item){
+            return [$item->name => $item->value];
+        })->all();
+
+    }
 
     public function getByCompanyIdAndName($company_id, $name){
 
