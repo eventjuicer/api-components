@@ -19,7 +19,13 @@ class Create extends Crud  {
         $this->repo = $repo;
     }
 
-    public function create($i=0){
+    function validates(){
+        return $this->isValid([
+            'email' => 'required|email:rfc,dns',
+        ]);
+    }
+
+    public function create(){
 
         $data = [
             "organizer_id" => $this->activeGroup()->organizer_id,
@@ -36,7 +42,21 @@ class Create extends Crud  {
 
     }
 
-    public function generateCode(){
+    public function update($id){
+
+        if(!$this->validates()){
+            return null;
+        }
+
+        $email = $this->getParam("email");
+
+        $this->repo->update(["email"=> $email ], $id);
+        
+        return $this->find($id);
+
+    }
+
+    protected function generateCode(){
 
         return sha1(implode("_", array(
             $this->getUser()->token, 

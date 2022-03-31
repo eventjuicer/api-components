@@ -57,7 +57,7 @@ class Fetch extends Crud  {
 
         $this->repo->pushCriteria(new BelongsToCompany(  $company_id ));
         $this->repo->pushCriteria( new SortBy("participant_id", "ASC"));
-        $this->repo->with(["participant"]);
+        $this->repo->with(["participant.fields"]);
         return $this->repo->all();
 
     }
