@@ -3,6 +3,7 @@
 namespace Eventjuicer\Resources\Restricted;
 
 use Illuminate\Http\Resources\Json\Resource;
+use Carbon\Carbon;
 
 class CompanyVipCodesResource extends Resource {
 
@@ -19,15 +20,16 @@ class CompanyVipCodesResource extends Resource {
       $data["company_id"] = (int) $this->company_id;
       $data["participant_id"] = (int) $this->participant_id;
       $data["code"] = $this->code;
-      $data["email"] = $this->email;
+      $data["email"] = trim($this->email);
 
       $data["participant"] = new CompanyVipcodeVisitorResource($this->participant);
 
-      
       $data["created_at"] = (string) $this->created_at;
       $data["updated_at"] = (string) $this->updated_at;
-
-        return $data;
+      
+      $data["blocked_till"] = $data["email"] ? (string) $this->updated_at->addDay() : "";
+      
+      return $data;
 
     }
 
