@@ -6,6 +6,7 @@ use Eventjuicer\Crud\Crud;
 use Eventjuicer\Repositories\CompanyVipcodeRepository;
 use Eventjuicer\Repositories\Criteria\BelongsToCompany;
 use Eventjuicer\Repositories\Criteria\SortBy;
+use Eventjuicer\Repositories\Criteria\FlagEquals;
 
 
 class Fetch extends Crud  {
@@ -54,6 +55,7 @@ class Fetch extends Crud  {
     public function _get($company_id=0){
 
         $this->repo->pushCriteria(new BelongsToCompany(  $company_id ));
+        $this->repo->pushCriteria(new FlagEquals("expired", 0));
         $this->repo->pushCriteria( new SortBy("participant_id", "ASC"));
         $this->repo->with(["participant.fields"]);
         return $this->repo->all();
