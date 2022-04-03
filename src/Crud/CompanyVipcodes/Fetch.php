@@ -62,6 +62,13 @@ class Fetch extends Crud  {
 
     }
 
+    public function getByCode($code){
+        $this->repo->pushCriteria(new FlagEquals("code", (string) $code));
+        return $this->repo->all()->first();
+
+    }
+
+
     public function show($id){
 
         $this->repo->with(["company"]);
