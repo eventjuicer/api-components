@@ -19,7 +19,7 @@ class CheckCompanyMeetups extends Checkers {
         
         $limit = $this->limits->meetups($this->repo->getRepo());
         $res = $this->repo->get();
-        return ["max" => $limit, "current" => $res->count()];
+        return ["max" => $limit + $res->count(), "current" => $res->count()];
     }
 
 }
