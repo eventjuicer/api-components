@@ -42,7 +42,7 @@ class Repository extends BaseRepository
 
 
         $this->applyCriteria();
-        return $this->model->paginate($perPage, ["*"], "page",  ($start / $perPage) + 1 );
+        return $this->model->paginate($perPage, ["*"], "page",  intval($start / $perPage) + 1 );
     }
 
 
