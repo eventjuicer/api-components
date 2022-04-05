@@ -8,12 +8,11 @@ class CloudinaryImage {
 
 	protected $path;
 
-	function __construct(string $path = "")
+	function __construct( $path = "")
 	{
-
-		$this->path = new UrlImage( new Url( $path ));
-
-
+		if($path){
+			$this->path = new UrlImage( new Url( $path ));
+		}
 	}
 
 	public function isValid(){
