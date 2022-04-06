@@ -106,6 +106,10 @@ class ParticipantSendable {
 
 			$email = trim( strtolower($email) );
 
+			if($this->validateEmails && ! (new EmailAddress($email))->isValid() ) {
+				return false;
+			}	
+
 			if($this->checkUniqueness && in_array($email, $this->unique))
 			{
 				return false;
@@ -130,9 +134,7 @@ class ParticipantSendable {
 				return false;
 			}
 
-			if($this->validateEmails && ! (new EmailAddress($email))->isValid() ) {
-				return false;
-			}		
+				
 
 			$this->unique[] = $email;
 
