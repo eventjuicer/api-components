@@ -110,26 +110,26 @@ class ParticipantSendable {
 				return false;
 			}	
 
-			if($this->checkUniqueness && in_array($email, $this->unique))
+			if($email && $this->checkUniqueness && in_array($email, $this->unique))
 			{
 				return false;
 			}
 
-			if(!empty($excludes) && in_array($email, $excludes) )
+			if($email && !empty($excludes) && in_array($email, $excludes) )
 			{
 				return false;
 			}
 
-			if(!empty($this->file) && strpos($this->file, $email)!==false ){
+			if($email && !empty($this->file) && strpos($this->file, $email)!==false ){
 				return false;
 			}
 
-			if($this->checkDeliveries && in_array($email, $deliveries) )
+			if($email && $this->checkDeliveries && in_array($email, $deliveries) )
 			{
 				return false;
 			}
 
-			if($this->checkMutes && in_array($email, $mutes) )
+			if($email && $this->checkMutes && in_array($email, $mutes) )
 			{
 				return false;
 			}
