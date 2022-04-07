@@ -92,29 +92,25 @@ class PartnerPerformance {
 		return $this->statsDefault;
 	}
 
-	public function merge(Collection $participants, 
-						Collection $analytics, 
-						string $glue = "sessions", 
-						string $mergeBy = "slug"){
+	public function mergeBySlug(Collection $participants, Collection $analytics){
 
-		$analytics = $analytics->keyBy($mergeBy);
+		$analytics = $analytics->keyBy("slug");
 
-		$participants->map(function($row) use ($analytics, $glue, $mergeBy){
+		$participants->map(function($row) use ($analytics){
 
 			$cd_lookup = $row->data->where("name", "ranking_tweak");
 
 			$tweak_value = $cd_lookup->count() ? intval( $cd_lookup->first()->value ) : 0;
 
-			if(!is_null($row))
-			{
+			if(!is_null($row)){
 
-				$stats = $analytics->get($row->$mergeBy, $this->getDefaultStats() );
+				$stats = $analytics->get($row->slug, $this->getDefaultStats() );
 
 				$tweakedSessions = $stats["sessions"] + $tweak_value;
 
 				$stats["sessions"] = $tweakedSessions? $tweakedSessions : 0;
 
-				$row->{$glue} = $stats;
+				$row->stats = $stats;
 			}
 
 
@@ -234,7 +230,7 @@ class PartnerPerformance {
 
 
 		//we used glue company_id when we matched with participants.. => plucking companies!
-		return $this->merge($companies, $ga, "stats", "id");
+		return $this->mergeBySlug($companies, $ga);
 
 	}
 
