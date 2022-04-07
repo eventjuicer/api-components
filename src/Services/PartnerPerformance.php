@@ -37,6 +37,7 @@ class PartnerPerformance {
 	protected $startDate;
 	protected $endDate;
 	protected $prefix = "yy14dcs4_"; //"th3rCMiM_";
+	protected $eventName = "promoninja";
 
 	function __construct(
 			EloquentTicketRepository $repo, 
@@ -93,14 +94,12 @@ class PartnerPerformance {
 
 	public function merge(Collection $participants, 
 						Collection $analytics, 
-						string $glue = "stats", 
-						string $mergeBy = "company_id")
-	{
+						string $glue = "sessions", 
+						string $mergeBy = "slug"){
 
-		$analytics = $analytics->keyBy("id");
+		$analytics = $analytics->keyBy($mergeBy);
 
-		$participants->map(function($row) use ($analytics, $glue, $mergeBy)
-		{
+		$participants->map(function($row) use ($analytics, $glue, $mergeBy){
 
 			$cd_lookup = $row->data->where("name", "ranking_tweak");
 
@@ -125,30 +124,25 @@ class PartnerPerformance {
 
    	}
 
-   	public function mergeExhibitors(Collection $participants, 
-						Collection $analytics, 
-						string $glue = "stats", 
-						string $mergeBy = "company_id")
-	{
+   	public function mergeExhibitorsBySlug(Collection $participants, Collection $analytics) {
 
-		$analytics = $analytics->keyBy("id");
+		$analytics = $analytics->keyBy("slug");
 
-		$participants->map(function($row) use ($analytics, $glue, $mergeBy)
-		{
+		$participants->map(function($row) use ($analytics){
 
 			if($row->company_id && $row->company){
-				
+
 				$cd_lookup = $row->company->data->where("name", "ranking_tweak");
 
 				$tweak_value = $cd_lookup->count() ? intval( $cd_lookup->first()->value ) : 0;
 	
-				$stats = $analytics->get($row->$mergeBy, $this->getDefaultStats() );
+				$stats = $analytics->get( $row->company->slug, $this->getDefaultStats() );
 
 				$tweakedSessions = $stats["sessions"] + $tweak_value;
 
 				$stats["sessions"] = $tweakedSessions > 0 ? $tweakedSessions : 0;
 
-				$row->company->{$glue} = $stats;
+				$row->company->stats = $stats;
 			
 			}
 
@@ -178,14 +172,16 @@ class PartnerPerformance {
 		$participants = $participants->unique("company_id");
 
 		//enrich with GA data....
-		$mapped = $this->mergeExhibitors($participants, $ga);
+		$mapped = $this->mergeExhibitorsBySlug($participants, $ga);
 
 		$sorted = $mapped->sortByDesc("company.stats.sessions")->values();
+
 
 		$position = 1;
 
 		return $sorted->map(function($exh) use (&$position) {
 
+			
 			$stats = isset($exh->company->stats) ? $exh->company->stats: $this->getDefaultStats();
 			$stats["position"] = $stats["sessions"] > 0 ? $position : 0;
 			
@@ -257,19 +253,19 @@ class PartnerPerformance {
 
 		$position = 0;
 
-		$stats = ["position" => 0, "points" => 0, "sessions" => 0];
-
 		foreach($companies AS $company)
 		{	
 			$position++;
 
 			if( $company->id == $apiUser->company()->id )
 			{
-				$stats = [ 
+
+				$stats = array_merge($this->getDefaultStats(), [ 
 					"position" 	=> $position, 
 					"points" 	=> array_get($company->stats, "conversions"),
 					"sessions" 	=> array_get($company->stats, "sessions")
-				];
+				]);
+
 			}
 		}
 
@@ -285,6 +281,30 @@ class PartnerPerformance {
 
 	Period::create($startDate, $endDate);
 
+	$response = $this->analytics->performQuery(
+			$dt, 
+			"ga:sessions",  
+			[
+			'dimensions' 	=> 'ga:source',
+			'sort' 			=> '-ga:sessions',
+			'filters'		=> 'ga:source=@' . $search,
+			"max-results" => 500
+			]
+	);
+
+
+		"ga:totalEvents,ga:sessions",  
+				[
+				// 'metrics' => 'ga:sessions,ga:sessionDuration',
+				'dimensions' 	=> 'ga:pagePath,ga:eventCategory,ga:source',
+				// 'dimensions' 	=> 'ga:source',
+				// 'sort' 			=> '-ga:sessions',
+			    'filters'		=> 'ga:eventCategory=@promoninja',
+				// 'filters'		=> 'ga:pagePath=~exhibitors/[a-z0-9\-]+$',
+				"max-results" => 500
+
+
+
 	*/
 
 
@@ -294,7 +314,9 @@ class PartnerPerformance {
  
  https://developers.google.com/analytics/devguides/reporting/core/v3/reference?hl=en#filters
  https://analytics.google.com/analytics/web/?authuser=1#/report/trafficsources-campaigns/a34532684w62106751p63645499/_u.date00=20220324&_u.date01=20220324&_r.drilldown=analytics.campaign:promoninja&explorer-graphOptions.selected=analytics.nthDay/
- */
+ https://stackoverflow.com/questions/65668086/google-reporting-api-return-event-actions-for-category
+
+*/
 
 	public function getAnalyticsForSource($search="", $period = 90) : Collection
 	{
@@ -316,34 +338,27 @@ class PartnerPerformance {
         		Carbon::create(2022, 05, 04, 23, 59, 59)
         	);
 
-			$response = $this->analytics->performQuery(
-				$dt, 
-				"ga:sessions",  
-				[
-				// 'metrics' => 'ga:sessions,ga:sessionDuration',
-				// 'dimensions' 	=> 'ga:pagePath',
-				'dimensions' 	=> 'ga:source',
-				'sort' 			=> '-ga:sessions',
-			    'filters'		=> 'ga:source=@' . $search,
-				// 'filters'		=> 'ga:pagePath=~exhibitors/[a-z0-9\-]+$',
-				"max-results" => 500
-				]
-			);
 
-			// dd($response["rows"]);
+			//2nd param - metrics...
+			$response = $this->analytics->performQuery($dt, 
+			"ga:totalEvents", 
+			['dimensions' 	=> 'ga:eventAction',
+			'sort' 			=> '-ga:totalEvents',
+			'filters'		=> 'ga:eventCategory=@' . $this->eventName,
+			"max-results" => 500]);
 
 			return collect($response['rows'] ?? [])->map(function (array $pageRow, $position) use ($search) {
 				return [
-					'id' 			=> (int) str_replace($search, "", $pageRow[0]),
-					'sessions' 		=> (int) $pageRow[1],
-					'conversions' 	=> 0,
-					// "duration"		=> $pageRow[2]
+
+					"slug" => $pageRow[0],
+					'sessions' => (int) $pageRow[1],
+
 				];
 			});
 		};
 
 		return env("USE_CACHE", false) ? 
-			$this->cache->remember($this->gaView . $search . "new", 10, $query) : 
+			$this->cache->remember($this->gaView . "new", 10, $query) : 
 			$query();
 
 	}
