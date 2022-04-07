@@ -70,6 +70,7 @@ class ApiUserLimits {
 		$this->stats();
 
 		$tweak = intval( $this->user->setting("invitations_tweak") );
+		$tweak = intval( $this->user->setting("vip_tweak") );
 
 		$name = str_singular($name);
 
@@ -89,13 +90,19 @@ class ApiUserLimits {
 			);
 
 			$used = $params[0]->all()->count();
+
 		}
 
 		switch($name){
 
 			case "meetup":
 
-				$base = 10 + $tweak;
+				if($this->user->company()->organizer_id > 1){
+					$base = 30 + $tweak;
+				}else{
+					$base = 10 + $tweak;
+				}
+				
 
 				// if($this->user->company()->id == 1309 || $this->user->company()->id == 1054){
 				// 	$base = 500;
