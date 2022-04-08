@@ -100,20 +100,19 @@ class ApiUserLimits {
 				if($this->user->company()->organizer_id > 1){
 					$base = 30 + $i_tweak;
 				}else{
-					$base = 15 + $i_tweak;
+					$base = 10 + $i_tweak;
 				}
 				
 				if($this->points() > 19){
-					$earned = $earned + 50;
+					$earned = 50;
 				}
 				
-				$howMany50 = intval($this->points() / 50);
-				$earned = $howMany50 * 50;
+				$earned = $earned + intval($this->points() / 50) * 50;
 		
 				if($base + $earned > 200){
 					$earned = 200 - $base;
 				}
-				
+
 			break;
 		}
 
