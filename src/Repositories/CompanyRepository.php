@@ -45,7 +45,7 @@ class CompanyRepository extends Repository
 			return $company;
 		}
 
-		$points =  array_get($exhibitor->company->stats, "points", 0);
+		$points =  array_get($exhibitor->company->stats, "sessions", 0);
 		$position = array_get($exhibitor->company->stats, "position", 0);
 
 		$this->update([
