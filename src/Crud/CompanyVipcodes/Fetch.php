@@ -7,6 +7,10 @@ use Eventjuicer\Repositories\CompanyVipcodeRepository;
 use Eventjuicer\Repositories\Criteria\BelongsToCompany;
 use Eventjuicer\Repositories\Criteria\SortBy;
 use Eventjuicer\Repositories\Criteria\FlagEquals;
+use Eventjuicer\Services\ApiUserLimits;
+
+
+
 
 
 class Fetch extends Crud  {
@@ -15,18 +19,17 @@ class Fetch extends Crud  {
     protected $repo;
     protected $create;
     protected $howmany = 10;
+    protected $limtis;
 
-
-    function __construct(CompanyVipcodeRepository $repo, Create $create){
+    function __construct(CompanyVipcodeRepository $repo, Create $create, ApiUserLimits $limits){
         $this->repo = $repo;
         $this->create = $create;
+        $this->limits = $limits;
     }
 
     public function getTargetCount(){
         //handle companydata tweak....
-
-        return (int) $this->howmany;
-
+        return (int)  $this->limits->vip($this->repo);
     }
 
 
@@ -37,7 +40,7 @@ class Fetch extends Crud  {
 
         $res = $this->_get($company_id);
 
-        $missing =  $this->getTargetCount() - $res->count();
+        $missing =  $this->getTargetCount();
 
         if($missing > 0){
 
