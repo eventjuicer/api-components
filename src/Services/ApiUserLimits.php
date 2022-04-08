@@ -49,7 +49,7 @@ class ApiUserLimits {
 
 		return $this->stats = $this->companies->updateStatsIfNeeded($this->user->company()->id, function()
 		{
-			 return $this->performance->getCompanyRankingPosition($this->user, 21);
+			return $this->performance->getExhibitorRankingPosition($this->user->activeEventId() ); 
 		});
 	}
 
