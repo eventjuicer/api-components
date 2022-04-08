@@ -29,31 +29,32 @@ class CompanyRepository extends Repository
     		return [];
     	}
 
-    	if(! is_null($company->stats_updated_at) && 
-    		Carbon::now()->diffInMinutes( $company->stats_updated_at ) < 15
-    	)
-    	{
-    		return $company->only( ["position", "points"] );
+    	if(! is_null($company->stats_updated_at) && Carbon::now()->diffInMinutes( $company->stats_updated_at ) < 15){
+    		
+			//FRESH -> get from database!
+			return $company->only( ["position", "points"] );
     	}
 
-    	$stats = $source();
+    	$exhibitorsWithStats = $source();
 
-		$points =  array_get($stats, "points", 0);
-		$position = array_get($stats, "position", 0);
+		/** Collection of participants */
 
-		if(is_numeric($points) && is_numeric($position)){
+		$exhibitor = $exhibitorsWithStats->where("company_id", $id)->first();
 
-			$this->update([
-    			"stats_updated_at" => Carbon::now(),
-    			"points" => array_get($stats, "points", 0),
-    			"position" => array_get($stats, "position", 0)
-    		], $id);
-			 	
+		if(!$exhibitor){
+			return $company;
 		}
 
-		return $this->find($id);
+		$points =  array_get($exhibitor->company->stats, "points", 0);
+		$position = array_get($exhibitor->company->stats, "position", 0);
 
-        //reload!        
+		$this->update([
+			"stats_updated_at" => Carbon::now(),
+			"points" => $points,
+			"position" => $position
+		], $id);
+
+		return $this->find($id);   
 
     }
 
