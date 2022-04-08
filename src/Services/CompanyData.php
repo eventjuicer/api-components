@@ -47,8 +47,14 @@ class CompanyData {
     protected $namesInternal = [
         "logotype_cdn",
         "opengraph_image_cdn",
+      
+    
+
+        /** api resource limits */
         "ranking_tweak",
         "invitations_tweak",
+        "vip_tweak",
+
         "contributor",
         "password",
         "shared_image"
