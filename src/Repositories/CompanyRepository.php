@@ -38,15 +38,22 @@ class CompanyRepository extends Repository
 
     	$stats = $source();
 
-    	$this->update([
+		$points =  array_get($stats, "points", 0);
+		$position = array_get($stats, "position", 0);
+
+		if(is_numeric($points) && is_numeric($position)){
+
+			$this->update([
     			"stats_updated_at" => Carbon::now(),
     			"points" => array_get($stats, "points", 0),
     			"position" => array_get($stats, "position", 0)
     		], $id);
+			 	
+		}
 
-        //reload!
+		return $this->find($id);
 
-        return $this->find($id);
+        //reload!        
 
     }
 
