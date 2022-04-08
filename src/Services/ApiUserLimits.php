@@ -69,8 +69,8 @@ class ApiUserLimits {
 
 		$this->stats();
 
-		$tweak = intval( $this->user->setting("invitations_tweak") );
-		$tweak = intval( $this->user->setting("vip_tweak") );
+		$i_tweak = intval( $this->user->setting("invitations_tweak") );
+		$v_tweak = intval( $this->user->setting("vip_tweak") );
 
 		$name = str_singular($name);
 
@@ -98,36 +98,22 @@ class ApiUserLimits {
 			case "meetup":
 
 				if($this->user->company()->organizer_id > 1){
-					$base = 30 + $tweak;
+					$base = 30 + $i_tweak;
 				}else{
-					$base = 10 + $tweak;
+					$base = 15 + $i_tweak;
 				}
 				
-
-				// if($this->user->company()->id == 1309 || $this->user->company()->id == 1054){
-				// 	$base = 500;
-				// }
-
-				//TEH!
 				if($this->points() > 19){
 					$earned = $earned + 50;
 				}
-
-				//liczmy ile mamy "50" w naszych punktach w przyblizeniu do liczby całkowitej
 				
-				//EBE
 				$howMany50 = intval($this->points() / 50);
-
-				//za kazde "50" dajemy 50.... 
 				$earned = $howMany50 * 50;
-				
-
-				//capping
+		
 				if($base + $earned > 200){
 					$earned = 200 - $base;
 				}
-
-
+				
 			break;
 		}
 
