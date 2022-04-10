@@ -263,7 +263,9 @@ trait Fields {
     "266"=> "url",
     "267"=> "video_is_public",
     "268"=> "locale",
-    "269"=> "accept"
+    "269"=> "accept",
+    
+    "272"=> "vipcode"
 
   );
 
