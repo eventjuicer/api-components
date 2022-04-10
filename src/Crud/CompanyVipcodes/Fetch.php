@@ -29,7 +29,16 @@ class Fetch extends Crud  {
 
     public function getTargetCount(){
         //handle companydata tweak....
-        return (int)  $this->limits->vip($this->repo);
+
+        if($this->getUser()){
+            return (int)  $this->limits->vip($this->repo);
+        }else{
+            //public endpoint
+
+            return 0;
+        }
+
+       
     }
 
 
