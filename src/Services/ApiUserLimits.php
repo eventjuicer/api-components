@@ -1,55 +1,58 @@
 <?php
 namespace Eventjuicer\Services;
 
-use Eventjuicer\Services\PartnerPerformance;
-use Eventjuicer\Services\ApiUser;
-use Eventjuicer\Repositories\CompanyRepository;
 use Bosnadev\Repositories\Eloquent\Repository;
+use Eventjuicer\Services\PartnerPerformance;
+use Eventjuicer\Repositories\CompanyRepository;
 use Eventjuicer\Repositories\Criteria\BelongsToCompany;
 use Eventjuicer\Repositories\Criteria\BelongsToEvent;
+use Eventjuicer\Services\Company\GetActiveEventId;
+use Eventjuicer\Services\Company\GetCompanyDataValue;
 
 class ApiUserLimits {
 
-	protected $user, $performance, $companies;
+	protected $company, $performance, $companies;
 
 	protected $stats = null;
 
-	function __construct(
-		ApiUser $user, 
-		PartnerPerformance $performance, 
-		CompanyRepository $companies
-	)
-	{
+	function __construct(PartnerPerformance $performance, CompanyRepository $companies){
 
-		$this->user 		= $user;
 		$this->performance 	= $performance;
 		$this->companies 	= $companies;
 
+		$user = app("request")->user();
 
-		if($this->user->company()->group_id == 1) {
+		if($user && $user->company){
+			
+			$this->company = $user->company;
 
-			$this->performance->setView(63645499);
+			if($this->company->group_id == 1) {
 
-		} else {
+				$this->performance->setView(63645499);
+	
+			} else {
+	
+				//BERLIN
+				$this->performance->setView(112949308);
+			}
 
-			//BERLIN
-			$this->performance->setView(112949308);
+			
 		}
-
+		
 	}
 
-
-	public function stats()
-	{
+	public function stats(){
 
 		if(!is_null($this->stats))
 		{
 			return $this->stats;
 		}
 
-		return $this->stats = $this->companies->updateStatsIfNeeded($this->user->company()->id, function()
+		return $this->stats = $this->companies->updateStatsIfNeeded($this->company->id, function()
 		{
-			return $this->performance->getExhibitorRankingPosition($this->user->activeEventId() ); 
+			return $this->performance->getExhibitorRankingPosition(
+				(string) new GetActiveEventId($this->company)
+			 ); 
 		});
 	}
 
@@ -64,13 +67,18 @@ class ApiUserLimits {
 	}
 
 
-	public function __call($name, $params)
-	{	
+	public function __call($name, $params){	
 
-		$this->stats();
+		if(!$this->company){
+			return 0;
+		}
 
-		$i_tweak = intval( $this->user->setting("invitations_tweak") );
-		$v_tweak = intval( $this->user->setting("vip_tweak") );
+		$this->stats(); //refresh stats if old...
+
+		$cd = new GetCompanyDataValue($this->company);
+
+		$i_tweak = intval(  $cd->get("invitations_tweak")  );
+		$v_tweak = intval(  $cd->get("vip_tweak") );
 
 		$name = str_singular($name);
 
@@ -82,11 +90,11 @@ class ApiUserLimits {
 		if(isset($params[0]) && $params[0] instanceof Repository)
 		{
 			$params[0]->pushCriteria(
-				new BelongsToCompany($this->user->company()->id)
+				new BelongsToCompany( (int) $this->company->id )
 			);
 
 			$params[0]->pushCriteria(
-				new BelongsToEvent($this->user->activeEventId() )
+				new BelongsToEvent( (string) new GetActiveEventId($this->company)  )
 			);
 
 			$used = $params[0]->all()->count();
@@ -95,9 +103,10 @@ class ApiUserLimits {
 
 		switch($name){
 
+
 			case "meetup":
 
-				if($this->user->company()->organizer_id > 1){
+				if($this->company->organizer_id > 1){
 					$base = 30 + $i_tweak;
 				}else{
 					$base = 10 + $i_tweak;
@@ -131,6 +140,19 @@ class ApiUserLimits {
 				}
 
 			break;
+
+
+
+			case "scan":
+
+				$base = 10 + $v_tweak;
+				
+				if($this->points() > 19){
+					$earned = 100000;
+				}
+				
+			break;
+
 
 		}
 
