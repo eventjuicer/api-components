@@ -3,11 +3,13 @@
 namespace Eventjuicer\Resources\Restricted;
 
 use Illuminate\Http\Resources\Json\Resource;
+use Eventjuicer\Services\Vipcodes\ShouldBeExpired;
 
 class CompanyVipCodesResource extends Resource {
 
     public function toArray($request) {       
 
+      $sbe = new ShouldBeExpired($this->resource);
 
       $data = [];
 
@@ -26,8 +28,10 @@ class CompanyVipCodesResource extends Resource {
       $data["created_at"] = (string) $this->created_at;
       $data["updated_at"] = (string) $this->updated_at;
       
-      $data["blocked_till"] = $data["email"] ? (string) $this->updated_at->addDay() : "";
+      $data["blocked_till"] = $data["email"] ?  (string) $sbe->blockedTill() : "";
       
+      $data["should_be_expired"] = $sbe->check();
+
       return $data;
 
     }
