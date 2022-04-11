@@ -13,11 +13,11 @@ class ShouldBeExpired {
         $this->vipcode = $vipcode;
     }
 
-    function check(){
+    public function check(){
         return $this->vipcode->participant_id || $this->vipcode->email &&  Carbon::now()->gt( $this->blockedTill() );
     }
 
-    function blockedTill(){
+    public function blockedTill(){
         return $this->vipcode->updated_at->addDay();
     }
 }

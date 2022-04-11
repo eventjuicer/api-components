@@ -28,12 +28,17 @@ use Eventjuicer\Contracts\CountsSoldTickets;
 use Uuid;
 use Carbon\Carbon;
 
+/** VIPS */
+
+use Eventjuicer\Services\Vipcodes\VipFromVisitorRegistration;
+
 class SaveOrder {
 
 //	use ProvidesConvenienceMethods;
 
 	protected $request;
 	protected $ticketssold;
+	protected $vipcodeHandler;
 	protected $purchase;
 
 	protected $amount = 0;
@@ -58,9 +63,10 @@ class SaveOrder {
 
 	protected $errors = [];
 
-	function __construct(Request $request, CountsSoldTickets $ticketssold){
+	function __construct(Request $request, CountsSoldTickets $ticketssold, VipFromVisitorRegistration $vipcodeHandler){
 		$this->request = $request;
 		$this->ticketssold = $ticketssold;
+		$this->vipcodeHandler = $vipcodeHandler;
 	}
 
 	/* SETTERS */
@@ -244,6 +250,7 @@ class SaveOrder {
 		$participant->confirmed 	= 1;
 		$participant->lang 			= $this->locale;
 
+		/** legacy! */
 		if( isset($this->fields["important"]) ){
 			$participant->important = intval($this->fields["important"]);
 		}
@@ -251,6 +258,14 @@ class SaveOrder {
 		$participant->save();
 
 		$this->setParticipant($participant);
+
+		if(!empty($this->fields["code"])){
+			/** TODO: extract code from URL.... */
+			$this->vipcodeHandler->setCode($this->fields["code"]);
+			$this->vipcodeHandler->setParticipant($participant);
+			$company_id = $this->vipcodeHandler->assign();
+			$this->makeVip("C".$company_id);
+		}
 	}
 
 	public function makeVip(string $referral = ""){
@@ -267,7 +282,6 @@ class SaveOrder {
 			"referral" => $referral
 		));
 	}
-
 
 	protected function countTotalAmount(){
 

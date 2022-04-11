@@ -265,7 +265,7 @@ trait Fields {
     "268"=> "locale",
     "269"=> "accept",
     
-    "272"=> "vipcode"
+    "272"=> "code"
 
   );
 
