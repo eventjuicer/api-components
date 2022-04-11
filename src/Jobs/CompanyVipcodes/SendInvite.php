@@ -44,18 +44,15 @@ class SendInvite extends Job //implements ShouldQueue
         ];
 
         $mail->send([
-            "template_id" => "admin-report-message",
+            "template_id" => "pl-vips-invite",
             "recipient" => [
-                "name"  => "adam zygadlewicz",
-                "email" => "adam@zygadlewicz.com"
+                "name"  => $this->vipcode->email,
+                "email" => $this->vipcode->email
             ],
             "substitution_data" => $substitution_data,                
             "locale" => "en"
         ]);
 
-       
-
-        // event(new RestrictedImageUploaded( $cdn ));
       
     }
 }
