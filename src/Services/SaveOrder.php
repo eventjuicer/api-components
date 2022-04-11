@@ -202,6 +202,9 @@ class SaveOrder {
 
 	function make(){
 
+
+		$vipcode = !empty($this->fields["code"])? $this->fields["code"]: null;
+
 		if( !$this->event && !$this->participant ){
 			throw new \Exception("Either event or participant must be resolved!");
 		}
@@ -223,10 +226,9 @@ class SaveOrder {
 			
 		$this->saveFields();
 
-
-		if(!empty($this->fields["code"])){
+		if($vipcode){
 			/** TODO: extract code from URL.... */
-			$this->vipcodeHandler->setCode($this->fields["code"]);
+			$this->vipcodeHandler->setCode( $vipcode );
 			$this->vipcodeHandler->setParticipant($this->participant);
 			$company_id = $this->vipcodeHandler->assign();
 			if($company_id){
