@@ -223,6 +223,17 @@ class SaveOrder {
 			
 		$this->saveFields();
 
+
+		if(!empty($this->fields["code"])){
+			/** TODO: extract code from URL.... */
+			$this->vipcodeHandler->setCode($this->fields["code"]);
+			$this->vipcodeHandler->setParticipant($this->participant);
+			$company_id = $this->vipcodeHandler->assign();
+			if($company_id){
+				$this->makeVip("C".$company_id);
+			}
+		}
+
 	}
 
 	public function registerParticipant(){
@@ -259,13 +270,7 @@ class SaveOrder {
 
 		$this->setParticipant($participant);
 
-		if(!empty($this->fields["code"])){
-			/** TODO: extract code from URL.... */
-			$this->vipcodeHandler->setCode($this->fields["code"]);
-			$this->vipcodeHandler->setParticipant($participant);
-			$company_id = $this->vipcodeHandler->assign();
-			$this->makeVip("C".$company_id);
-		}
+		
 	}
 
 	public function makeVip(string $referral = ""){
