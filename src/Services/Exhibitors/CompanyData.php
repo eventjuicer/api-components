@@ -163,6 +163,10 @@ class CompanyData {
 		return collect([]);
 	}
 
+	public function howManyBooths(){
+		return $this->getPurchases()->where("role", "exhibitor")->count();
+	}
+
 	public function logotype(){
 
         $logotype = new CloudinaryImage($this->getLogotypeCdn());
