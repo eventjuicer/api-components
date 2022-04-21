@@ -18,8 +18,8 @@ class PdfTicket
 	protected $center 		= 210 / 2;
 	protected $middle 		= 297 / 2;
 
-	protected $first_row 	= 34;
-	protected $second_row 	= 50;
+	protected $first_row 	= 36;
+	protected $second_row 	= 53;
 	protected $third_row 	= 69;
 	protected $fourth_row 	= 82;
 
