@@ -22,7 +22,17 @@ class AdminParticipantResource extends Resource
             
             "email" => $this->email,
 
-            "profile" => $profile,
+            "profile" => [
+                "fname" => $profile["fname"] ?? "",
+                "lname" => $profile["lname"] ?? "",
+                "cname2" => $profile["cname2"] ?? "",
+                "position" => $profile["position"] ?? "",
+                "phone" => $profile["phone"] ?? "",
+                "url" => $profile["url"] ?? "",
+                "referral" => $profile["referral"] ?? "",
+                "booth" => $profile["booth"] ?? "",
+
+            ],
 
             "important" => $this->important || !empty($profile["important"]),
 
