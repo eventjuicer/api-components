@@ -3,7 +3,7 @@
 namespace Eventjuicer\Resources;
 
 use Illuminate\Http\Resources\Json\Resource;
- 
+use Eventjuicer\Services\Hashids;
 
 class AdminParticipantResource extends Resource
 {
@@ -37,6 +37,8 @@ class AdminParticipantResource extends Resource
             "important" => $this->important || !empty($profile["important"]),
 
             "going" => $this->ticketdownload ? $this->ticketdownload->going: null,
+
+            "code" => (new Hashids)->encode($this->id),
 
             "ticket_ids" => $this->ticketpivot->filter(function($item){
                 return $item->sold;
