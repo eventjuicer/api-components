@@ -36,7 +36,7 @@ class GetByTicketId   {
         $this->repo->pushCriteria(new FlagEquals("sold", 1));
     }
 
-    $this->paginator = $this->repo->paginate($this->perPage, ["*"], $this->page);
+    $this->paginator = $this->repo->paginate($this->perPage);
     $this->repo->with($this->with);
     $res = $this->repo->all();
     return $res->pluck("participant");
