@@ -20,6 +20,8 @@ class AdminParticipantResource extends Resource
 
 
             "id" => $this->id,
+
+            "token" => $this->token,
             
             "email" => $this->email,
 
