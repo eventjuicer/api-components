@@ -13,6 +13,7 @@ class AdminParticipantResource extends Resource
     public function toArray($request){
 
         $profile = $this->profile();
+        $url = new Url($profile["url"] ?? "");
 
         return [
 
@@ -34,7 +35,8 @@ class AdminParticipantResource extends Resource
 
             ],
 
-            "utms" =>  (new Url($profile["url"] ?? ""))->utms(),
+            "utms" =>   $url->utms(),
+            "path" =>  $url->path(),
 
             "important" => $this->important || !empty($profile["important"]),
 

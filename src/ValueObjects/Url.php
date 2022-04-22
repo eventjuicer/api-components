@@ -10,7 +10,8 @@ class Url {
 	protected $size = 0;
 	protected $headers;
 	protected $parsed;
-	protected $query;
+	protected $path = "";
+	protected $query = [];
 
 	function __construct($url = "")
 	{
@@ -29,15 +30,24 @@ class Url {
 
 	protected function parse(){
 
+		if(empty($this->url)){
+			return;
+		}
+
 		$this->parsed = parse_url($this->url);	
 
 		$query = [];
 
 		if($this->parsed && !empty($this->parsed["query"]) ){
-			parse_str($this->parsed["query"], $query);
+			parse_str($this->parsed["query"], $query);	
+			$this->query = $query;
+		}
+	
+		if($this->parsed && !empty($this->parsed["path"]) ){
+			$this->path = $this->parsed["path"];
 		}
 
-		$this->query = $query;
+		
 
 	}
 
@@ -48,7 +58,11 @@ class Url {
 		}, ARRAY_FILTER_USE_KEY);
 	}
 
+	public function path(){
+		return $this->path;
+	}
 
+	
 	function __set($what, $value)
 	{
 
