@@ -10,7 +10,7 @@ class WhereIdLike extends Criteria {
     protected $ids;
     protected $sep;
 
-    function __construct(string $ids, $sep = "|")
+    function __construct($ids, $sep = "|")
     {
         $this->ids   = $ids;
         $this->sep   = $sep;
@@ -24,9 +24,24 @@ class WhereIdLike extends Criteria {
     public function apply($model, Repository $repository)
     {
 
-        if(!empty($this->ids) && (is_numeric($this->ids) || strpos($this->ids, $this->sep)!==false)){
+        if(!empty($this->ids)){
 
-            $model = $model->whereIn("id", explode($this->sep, $this->ids) );
+            if(is_array($this->ids)){
+                $model = $model->whereIn("id", $this->ids);
+                return $model;
+            }
+
+            if(is_string($this->ids) && strpos($this->ids, $this->sep)!==false ){
+                $model = $model->whereIn("id", explode($this->sep, $this->ids) );
+                return $model;
+            }
+            
+            if(is_numeric($this->ids)){
+                $model = $model->whereIn("id", [$this->ids] );
+                return $model;
+            }
+
+            
         }
         
         return $model;
