@@ -9,20 +9,43 @@ class Url {
 	protected $mimeSubType;
 	protected $size = 0;
 	protected $headers;
-
+	protected $parsed;
+	protected $query;
 
 	function __construct($url = "")
 	{
 
 		$url = trim($url);
 
-		if(strpos($url, "//")===0)
-		{
-			$url = "http:" . $url;
+		if(strpos($url, "//")===0){
+			$url = "https:" . $url;
 		}
 
 		$this->url = $url;
 
+		$this->parse();
+
+	}
+
+	protected function parse(){
+
+		$this->parsed = parse_url($this->url);	
+
+		$query = [];
+
+		if($this->parsed && !empty($this->parsed["query"]) ){
+			parse_str($this->parsed["query"], $query);
+		}
+
+		$this->query = $query;
+
+	}
+
+	public function utms(){
+
+		return array_filter($this->query, function($k){
+			return strpos($k, "utm_")!==false;
+		}, ARRAY_FILTER_USE_KEY);
 	}
 
 

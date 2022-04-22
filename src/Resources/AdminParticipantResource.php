@@ -4,15 +4,15 @@ namespace Eventjuicer\Resources;
 
 use Illuminate\Http\Resources\Json\Resource;
 use Eventjuicer\Services\Hashids;
+use Eventjuicer\ValueObjects\Url;
+
 
 class AdminParticipantResource extends Resource
 {
 
-    public function toArray($request)
-    {
+    public function toArray($request){
 
         $profile = $this->profile();
-
 
         return [
 
@@ -33,6 +33,8 @@ class AdminParticipantResource extends Resource
                 "booth" => $profile["booth"] ?? "",
 
             ],
+
+            "utms" =>  (new Url($profile["url"] ?? ""))->utms(),
 
             "important" => $this->important || !empty($profile["important"]),
 
