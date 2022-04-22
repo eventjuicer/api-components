@@ -21,6 +21,8 @@ class AdminParticipantResource extends Resource
 
             "id" => $this->id,
 
+            "company_id" => $this->company_id,
+
             "token" => $this->token,
             
             "email" => $this->email,
@@ -28,6 +30,7 @@ class AdminParticipantResource extends Resource
             "profile" => $profile,
 
             "utms" =>   $url->utms(),
+            
             "path" =>  $url->path(),
 
             "important" => $this->important || !empty($profile["important"]),
