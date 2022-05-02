@@ -30,9 +30,9 @@ class PersonPdfLabel {
 		$this->path = app()->basePath( $this->directory . "ticket_".$profile->code.".pdf");
     
 		$data = [
-			"first"     => mb_strtoupper($profile->fname), 
-            "second"    => mb_strtoupper($profile->lname), 
-            "third"     => mb_strtoupper($profile->cname2),
+			"first"     => mb_strtoupper($profile->cname2), 
+            "second"    => mb_strtoupper($profile->fname), 
+            "third"     => mb_strtoupper($profile->lname),
             "code"      => "https://expojuicer.com/p/" . $profile->code,
             "ribbon"	=> $profile->isVip() ? "VIP" : null
 		];
