@@ -22,6 +22,16 @@ class Fetch extends Crud  {
         $res = $this->repo->all();
         return $res;
     }
+
+    public function countVisitorsByEventId($event_id){
+
+        $this->repo->pushCriteria(new BelongsToEvent(  $event_id ));
+        $this->repo->pushCriteria(new WhereHas("purchases.tickets", function($q){
+            $q->where("role", "visitor");
+        }));
+        $res = $this->repo->all(["id"]);
+       return $res->count();
+    }
  
     public function getVisitorsByEmail($email = ""){
 
