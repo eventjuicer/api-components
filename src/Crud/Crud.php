@@ -51,9 +51,9 @@ abstract class Crud {
         }
     }
 
-    public function getTransformed(){
+    public function getTransformed(...$params){
         
-        $res = $this->get();
+        $res = call_user_func_array(array($this, "get"), $params);
 
         $res = $this->filter($res);
 
@@ -130,6 +130,7 @@ abstract class Crud {
                  });
 
                 if(method_exists($instance, "getAgg")){
+
                     $this->aggregates = array_merge(
                         $this->aggregates,
                         $instance->getAgg()
