@@ -4,7 +4,7 @@ namespace Eventjuicer\Crud\Traits;
 
 trait Aggregate {
 
-    protected $aggregates;
+    protected $aggregates = [];
 
     protected function initializeAgg($key){
         if(!isset($this->aggregates[$key])){
@@ -17,7 +17,7 @@ trait Aggregate {
        $this->aggregates[$key]++;
     }
 
-    protected function decrement($agg){
+    protected function decrement($key){
         $this->initializeAgg($key);
         $this->aggregates[$key]--;
     }
