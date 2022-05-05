@@ -209,7 +209,7 @@ class SaveOrder {
 			throw new \Exception("Either event or participant must be resolved!");
 		}
 
-		$this->validateTickets();
+		// $this->validateTickets();
 
 		if(!empty($this->errors)){
 			throw new \Exception(implode(",", $this->errors));
