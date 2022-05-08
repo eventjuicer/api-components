@@ -63,6 +63,8 @@ class SaveOrder {
 
 	protected $errors = [];
 
+	protected $validateTickets = true;
+
 	function __construct(Request $request, CountsSoldTickets $ticketssold, VipFromVisitorRegistration $vipcodeHandler){
 		$this->request = $request;
 		$this->ticketssold = $ticketssold;
@@ -93,6 +95,10 @@ class SaveOrder {
 	// 		$this->tickets[$ticket_id] = $data;
 	// 	}
 	// }
+
+	public function setValidateTickets(bool $setting){
+		$this->validateTickets = $setting;
+	}
 
 	public function setParticipantId(int $participant_id){
 
@@ -209,8 +215,10 @@ class SaveOrder {
 			throw new \Exception("Either event or participant must be resolved!");
 		}
 
-		// $this->validateTickets();
-
+		if($this->validateTickets){
+			$this->handleTicketValidation();
+		}
+	
 		if(!empty($this->errors)){
 			throw new \Exception(implode(",", $this->errors));
 		}
@@ -448,7 +456,7 @@ class SaveOrder {
 	}
 
 	
-	protected function validateTickets(){
+	protected function handleTicketValidation(){
 
 		if(empty($this->tickets)){
 			$this->errors[] = "api.errors.cart_empty";
