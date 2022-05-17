@@ -22,13 +22,14 @@ class SendSlackNotificationListener {
             return;
         }
 
-        if($participant->organizer_id > 1){
-            return;
-        }
+        // if($participant->organizer_id > 1){
+        //     return;
+        // }
 
         dispatch( new SendSlackNotificationJob( 
 
-            $participant->email . " " . strval($roles)
+            $participant->email . " " . strval($roles),
+            $participant->organizer_id
 
         ) );
     }
