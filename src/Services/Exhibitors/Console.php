@@ -50,7 +50,7 @@ class Console {
 
 	}
 
-	public function getApi($resource = ""){
+	public function getApi($resource = "", string $host){
 
         $arrContextOptions=array(
             "ssl"=>array(
@@ -61,7 +61,7 @@ class Console {
 
         //TODO - map group_id to host!
 
-    	$json = json_decode(file_get_contents("https://api.eventjuicer.com/v1/public/hosts/targiehandlu.pl/".trim($resource, " /"), false, stream_context_create($arrContextOptions)), true);
+    	$json = json_decode(file_get_contents("https://api.eventjuicer.com/v1/public/hosts/".$host."/".trim($resource, " /"), false, stream_context_create($arrContextOptions)), true);
 
     	if(empty($json) || empty($json["data"])) {
         	return ["data" => []];
