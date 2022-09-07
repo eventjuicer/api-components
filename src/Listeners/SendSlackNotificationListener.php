@@ -22,6 +22,14 @@ class SendSlackNotificationListener {
             return;
         }
 
+        if( $roles->hasRole("contestant*") ){
+            return;
+        }
+
+        if( $roles->hasRole("representative") ){
+            return;
+        }
+
         // if($participant->organizer_id > 1){
         //     return;
         // }

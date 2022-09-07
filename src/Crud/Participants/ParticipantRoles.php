@@ -29,6 +29,17 @@ class ParticipantRoles {
     }
 
     function hasRole(string $role){
+
+        if(strpos($role, "*")!==false){
+            $role = str_replace("*", "", $role);
+            foreach($this->roles as $_role){
+                if(strpos($_role, $role)!==false){
+                    return true;
+                }
+            }
+            return false; 
+        }
+
         return in_array($role, $this->roles);
     }
 
