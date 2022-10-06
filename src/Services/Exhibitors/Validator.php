@@ -18,7 +18,7 @@ class Validator {
 
         "facebook"              => 0,
         "twitter"               => 0,
-        "linkedin"              => 0,
+        "linkedin"              => 1,
         "xing"                  => 0,
 
         "logotype"              => 1,
