@@ -5,6 +5,7 @@ namespace Eventjuicer\Crud\CompanyVipcodes;
 use Eventjuicer\Crud\Crud;
 use Eventjuicer\Repositories\CompanyVipcodeRepository;
 use Eventjuicer\Repositories\Criteria\BelongsToCompany;
+use Eventjuicer\Repositories\Criteria\BelongsToEvent;
 use Eventjuicer\Repositories\Criteria\SortBy;
 use Eventjuicer\Repositories\Criteria\FlagEquals;
 use Eventjuicer\Services\ApiUserLimits;
@@ -66,9 +67,15 @@ class Fetch extends Crud  {
 
     public function _get($company_id=0){
 
+        $event_id = $this->activeEventId();
+
         $this->repo->pushCriteria(new BelongsToCompany(  $company_id ));
+        $this->repo->pushCriteria(new BelongsToEvent(  $event_id ));
+
         $this->repo->pushCriteria(new FlagEquals("expired", 0));
         $this->repo->pushCriteria( new SortBy("participant_id", "ASC"));
+        
+
         $this->repo->with(["participant.fields"]);
         return $this->repo->all();
 
