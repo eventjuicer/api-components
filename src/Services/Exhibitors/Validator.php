@@ -9,8 +9,8 @@ class Validator {
 
 	protected $names = [
         "name"                  => 1,
-        "about"                 => 1, 
-        "products"              => 1,
+        "about"                 => 0, 
+        "products"              => 0,
         // "expo"                  => 0, 
         "keywords"              => 1,
         "website"               => 1,
@@ -18,7 +18,7 @@ class Validator {
 
         "facebook"              => 0,
         "twitter"               => 0,
-        "linkedin"              => 1,
+        "linkedin"              => 0,
         "xing"                  => 0,
 
         "logotype"              => 1,
