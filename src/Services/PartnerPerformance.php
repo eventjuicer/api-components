@@ -36,7 +36,7 @@ class PartnerPerformance {
 	
 	protected $startDate;
 	protected $endDate;
-	protected $prefix = "yy14dcs4_"; //"th3rCMiM_";
+	protected $prefix = "xx14ycs4_"; //"th3rCMiM_";
 	protected $eventName = "promoninja";
 
 	function __construct(
@@ -262,8 +262,8 @@ class PartnerPerformance {
 
         	//ebe5
         	$dt = Period::create(
-        		Carbon::createFromDate(2022, 03, 20), 
-        		Carbon::create(2022, 05, 04, 23, 59, 59)
+        		Carbon::createFromDate(2022, 10, 6), 
+        		Carbon::create(2023, 02, 22, 23, 59, 59)
         	);
 
 
