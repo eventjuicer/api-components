@@ -24,8 +24,8 @@ class AdminCompanyResource extends Resource {
         })->all();
 
         //it should be taken from settings....
-        $profile["og_template"] = $this->group_id > 1 ? 'ebe5_2__template' : 'template_teh21_exhibitor';
-        $lang = !empty($profile["lang"]) ? $profile["lang"] : $this->group_id > 1 ? "en" : "pl";
+        $profile["og_template"] = $this->group_id > 1 ? 'ebe5_2__template' : 'template_teh22_exhibitor';
+        $lang = !empty($profile["lang"]) ? $profile["lang"] : ($this->group_id > 1 ? "en" : "pl");
 
 
         if(!empty($profile["logotype_cdn"])){
