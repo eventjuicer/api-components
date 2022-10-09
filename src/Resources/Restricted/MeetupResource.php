@@ -34,6 +34,7 @@ class MeetupResource extends Resource
         $data["created_at"] = (string) $this->created_at;
         $data["updated_at"] = (string) $this->updated_at;
 
+        $data["direction"] = (string) $this->direction;
 
         $data["participant"] = new VisitorResource($this->participant);
 
