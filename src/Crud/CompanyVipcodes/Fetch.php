@@ -6,7 +6,7 @@ use Eventjuicer\Crud\Crud;
 use Eventjuicer\Repositories\CompanyVipcodeRepository;
 use Eventjuicer\Repositories\Criteria\BelongsToCompany;
 use Eventjuicer\Repositories\Criteria\BelongsToEvent;
-use Eventjuicer\Repositories\Criteria\SortBy;
+use Eventjuicer\Repositories\Criteria\SortByDesc;
 use Eventjuicer\Repositories\Criteria\FlagEquals;
 use Eventjuicer\Services\ApiUserLimits;
 
@@ -48,6 +48,12 @@ class Fetch extends Crud  {
 
         $company_id = (int) $this->getParam("x-company_id", $company_id);
 
+        /**
+         * mark expired as expired
+         */
+
+        $this->expireExpired( $company_id );
+
         $res = $this->_get($company_id);
 
         $missing =  $this->getTargetCount();
@@ -65,6 +71,18 @@ class Fetch extends Crud  {
     }
 
 
+    protected function expireExpired($company_id=0){
+
+        foreach($this->_get($company_id) as $item){
+            if($item->email && !$item->participant && $item->created_at->addDays(1)->isPast() ){
+                $item->expired =  1;
+                $item->save();
+            }
+        } 
+    
+    }
+
+
     public function _get($company_id=0){
 
         $event_id = $this->activeEventId();
@@ -73,7 +91,7 @@ class Fetch extends Crud  {
         $this->repo->pushCriteria(new BelongsToEvent(  $event_id ));
 
         $this->repo->pushCriteria(new FlagEquals("expired", 0));
-        $this->repo->pushCriteria( new SortBy("participant_id", "ASC"));
+        $this->repo->pushCriteria( new SortByDesc("created_at"));
         
 
         $this->repo->with(["participant.fields"]);
