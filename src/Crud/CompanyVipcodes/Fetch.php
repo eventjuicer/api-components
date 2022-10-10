@@ -73,12 +73,12 @@ class Fetch extends Crud  {
 
     protected function expireExpired($company_id=0){
 
-        foreach($this->_get($company_id) as $item){
-            if($item->email && !$item->participant && $item->created_at->addDays(1)->isPast() ){
-                $item->expired =  1;
-                $item->save();
-            }
-        } 
+        // foreach($this->_get($company_id) as $item){
+        //     if($item->email && !$item->participant && $item->created_at->addDays(1)->isPast() ){
+        //         $item->expired =  1;
+        //         $item->save();
+        //     }
+        // } 
     
     }
 
