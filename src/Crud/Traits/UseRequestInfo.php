@@ -75,7 +75,7 @@ trait UseRequestInfo {
         if(!empty($this->data) && empty($data)){
             return;
         }
-
+        
         if(!app()->runningInConsole()){
             $this->data = array_merge($this->data, app("request")->all() );
             $this->payload();
@@ -85,6 +85,10 @@ trait UseRequestInfo {
             $this->data = array_merge($this->data, $data);
         }
        
+    }
+
+    public function setParam($key, $value){
+        $this->data[$key] = $value;
     }
 
     public function getParam($key, $replacement=null){
