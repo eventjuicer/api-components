@@ -35,14 +35,15 @@ class Fetch extends Crud  {
  
     public function getVisitorsByEmail($email = ""){
 
-        $event_id = $this->getContextFromHost()->getEventId();
+        $email = strtolower( trim($email) );
+        $event_id = $this->getParam("event_id");
 
         if(!$event_id || !$email){
-            return collect([]);
+            throw new \Exception("email or event_id missing...");
         }
 
         $this->repo->pushCriteria(new BelongsToEvent(  $event_id ));
-        $this->repo->pushCriteria(new ColumnMatches("email", strtolower( trim($email)) ));
+        $this->repo->pushCriteria(new ColumnMatches("email", $email));
         $this->repo->pushCriteria(new WhereHas("purchases.tickets", function($q){
             $q->where("role", "visitor");
         }));
