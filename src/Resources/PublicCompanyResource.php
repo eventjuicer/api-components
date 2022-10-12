@@ -107,6 +107,10 @@ class PublicCompanyResource extends Resource
         $data = [
 
             "id" => $this->id,        
+
+            "organizer_id" => $this->organizer_id,        
+
+            "group_id" => $this->group_id,        
             
             "slug" => $this->slug,
 
