@@ -24,6 +24,9 @@ use Eventjuicer\Models\Input;
 use Eventjuicer\Models\Ticket;
 use Illuminate\Database\Eloquent\Model;
 use Eventjuicer\Contracts\CountsSoldTickets;
+use Eventjuicer\Crud\CompanyMeetups\CreateByParticipant as CreateMeetupWithCompany;
+
+
 
 use Uuid;
 use Carbon\Carbon;
@@ -39,6 +42,7 @@ class SaveOrder {
 	protected $request;
 	protected $ticketssold;
 	protected $vipcodeHandler;
+	protected $meetupHandler;
 	protected $purchase;
 
 	protected $amount = 0;
@@ -65,10 +69,16 @@ class SaveOrder {
 
 	protected $validateTickets = true;
 
-	function __construct(Request $request, CountsSoldTickets $ticketssold, VipFromVisitorRegistration $vipcodeHandler){
+	function __construct(
+		Request $request, 
+		CountsSoldTickets $ticketssold, 
+		VipFromVisitorRegistration $vipcodeHandler, 
+		CreateMeetupWithCompany $meetupHandler
+	){
 		$this->request = $request;
 		$this->ticketssold = $ticketssold;
 		$this->vipcodeHandler = $vipcodeHandler;
+		$this->meetupHandler = $meetupHandler;
 	}
 
 	/* SETTERS */
@@ -210,6 +220,9 @@ class SaveOrder {
 
 
 		$vipcode = !empty($this->fields["code"])? $this->fields["code"]: null;
+		$meetup = !empty($this->fields["company_id"])? $this->fields["company_id"]: null;
+
+
 
 		if( !$this->event && !$this->participant ){
 			throw new \Exception("Either event or participant must be resolved!");
@@ -242,6 +255,12 @@ class SaveOrder {
 			if($company_id){
 				$this->makeVip("C".$company_id);
 			}
+		}
+
+		if($meetup){
+			$this->meetupHandler->setData();
+			$this->meetupHandler->setParam("company_id", $meetup);
+			$this->meetupHandler->create( $this->getParticipant() );
 		}
 
 	}
