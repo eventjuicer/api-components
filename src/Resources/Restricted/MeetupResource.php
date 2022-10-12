@@ -19,6 +19,8 @@ class MeetupResource extends Resource
     public function toArray($request)
     {
 
+        
+
         $data = [];
 
         $data["id"] = $this->id;
@@ -36,7 +38,13 @@ class MeetupResource extends Resource
 
         $data["direction"] = (string) $this->direction;
 
-        $data["participant"] = new VisitorResource($this->participant);
+        if($this->direction == "P2C"){
+            $data["participant"] = new FullVisitorResource($this->participant);
+        }else{
+            $data["participant"] = new VisitorResource($this->participant);
+        }
+
+        
 
         $data["admin"] = new ApiUserResource($this->admin, true);
 
