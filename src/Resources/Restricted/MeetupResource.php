@@ -38,13 +38,12 @@ class MeetupResource extends Resource
 
         $data["direction"] = (string) $this->direction;
 
-        if($this->direction == "P2C"){
+        if($this->agreed){
             $data["participant"] = new FullVisitorResource($this->participant);
         }else{
             $data["participant"] = new VisitorResource($this->participant);
         }
 
-        
 
         $data["admin"] = new ApiUserResource($this->admin, true);
 

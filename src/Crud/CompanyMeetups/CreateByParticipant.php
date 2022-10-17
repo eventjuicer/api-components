@@ -2,21 +2,12 @@
 
 namespace Eventjuicer\Crud\CompanyMeetups;
 
-use Illuminate\Validation\Rule;
 use Eventjuicer\Crud\Crud;
-use Eventjuicer\Models\Meetup;
 use Eventjuicer\Models\Participant;
 use Eventjuicer\Repositories\MeetupRepository;
 
-use Eventjuicer\Repositories\Criteria\BelongsToCompany;
-use Eventjuicer\Repositories\Criteria\FlagEquals;
-use Eventjuicer\Repositories\Criteria\SortBy;
-use Eventjuicer\Crud\Traits\UseRouteInfo;
-
-
 
 class CreateByParticipant extends Crud  {
-
 
     protected $repo;
     
@@ -61,40 +52,6 @@ class CreateByParticipant extends Crud  {
         return $this->find( $this->repo->getId() );
     }
 
-
-    public function update($id){
-
-        if(!$this->validates()){
-            return null;
-        }
-
-        $this->repo->update($this->getData(), $id);
-        return $this->find($id);
-    }
-
-    public function delete($id){
-
-        $this->repo->update(["disabled"=>1], $id);
-        return $this->find($id);
-    }
-
-
-    protected function getData(){
-        
-        $fname = $this->getParam("fname", "");
-        $lname = $this->getParam("lname", "");
-        $email = $this->getParam("email", "");
-        $role = $this->getParam("role", "");
-        $phone = (int) $this->getParam("phone", 0);
-
-        return compact(
-            "fname",
-            "lname",
-            "email",
-            "phone",
-            "role"
-        );
-    }
 
 
 
