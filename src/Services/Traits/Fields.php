@@ -264,8 +264,10 @@ trait Fields {
     "267"=> "video_is_public",
     "268"=> "locale",
     "269"=> "accept",
-    
-    "272"=> "code"
+    "270"=> "custom_jury_omnichannel",
+    "271"=> "custom_jury_ar_vr_3d",
+    "272"=> "code",
+    "273"=> "limited"
 
   );
 

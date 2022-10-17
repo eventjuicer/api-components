@@ -43,7 +43,8 @@ class PresenterResource extends Resource{
         "video",
         "profile_twitter",
         "profile_linkedin",
-        "profile_facebook"
+        "profile_facebook",
+        "limited"
     ); 
 
     static public function showVotes($bool){
