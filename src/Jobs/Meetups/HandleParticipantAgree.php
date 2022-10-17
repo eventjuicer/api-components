@@ -37,9 +37,10 @@ class HandleParticipantAgree extends Job //implements ShouldQueue
         $order->makeVip( "C" . $this->meetup->company_id );
 
         $personalizer = new Personalizer( $this->meetup->participant );
-        $profile = $personalizer->getProfile(true);
+        $substitution_data = $personalizer->getProfile(true);
 
         $companydata = $cd->toArray($this->meetup->company->data);
+        $substitution_data["name"] = $companydata["name"];
 
         $mail->send([
             "template_id" => "pl-p2c-meetup-confirmed",
@@ -49,9 +50,7 @@ class HandleParticipantAgree extends Job //implements ShouldQueue
                 "name"  => $personalizer->translate("[[fname]] [[lname]]"),
                 "email" => $personalizer->email
             ],
-            "substitution_data" => array_merge(
-                $profile,  ["company" => $companydata]
-            ),             
+            "substitution_data" => $substitution_data,             
             "locale" => "pl"//$locale
         ]);
 
