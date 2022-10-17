@@ -39,7 +39,7 @@ class HandleParticipantAgree extends Job //implements ShouldQueue
         $personalizer = new Personalizer( $this->meetup->participant );
         $profile = $personalizer->getProfile(true);
 
-        $companydata = $cd->toArray($this->meetup->data);
+        $companydata = $cd->toArray($this->meetup->company->data);
 
         $mail->send([
             "template_id" => "pl-p2c-meetup-confirmed",
