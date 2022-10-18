@@ -34,6 +34,17 @@ class Fetch extends Crud  {
         return $this->repo->all();
     }
 
+    public function getAgreedByDirection($direction="P2C"){
+
+        $event_id =   (int) $this->getParam("event_id");
+
+        $this->repo->pushCriteria(new FlagEquals("direction", $direction));
+        $this->repo->pushCriteria(new BelongsToEvent(  $event_id ));
+
+        return $this->repo->all();
+
+    }
+
     public function get($company_id=0){
 
 
