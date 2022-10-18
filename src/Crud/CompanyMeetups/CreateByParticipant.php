@@ -25,20 +25,21 @@ class CreateByParticipant extends Crud  {
 
     }
 
-    public function create(Participant $participant){
+    public function create(Participant $participant, $direction = "P2C"){
 
         if(!$this->validates()){
             return null;
         }
 
-       $data = array();
+        $data = array();
 
-        $data["direction"] = "P2C";
+        $data["direction"] = $direction;
         $data["organizer_id"] = $participant->organizer_id;
         $data["group_id"] = $participant->group_id;
         $data["event_id"] = $participant->event_id;
-        $data["company_id"] =  (int) $this->getParam("company_id");;
+        $data["company_id"] =  (int) $this->getParam("company_id");
         $data["participant_id"] = $participant->id;
+        $data["rel_participant_id"] =  (int) $this->getParam("rel_participant_id", 0);
         $data["user_id"] = 0; 
         $data["creative_id"] = 0;
         $data["agreed"] = 0;
