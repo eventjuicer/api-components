@@ -31,6 +31,12 @@ class CreateByParticipant extends Crud  {
             return null;
         }
 
+        $rel_participant_id = (int) $this->getParam("rel_participant_id", 0);
+
+        if($direction == "LTD" && !$rel_participant_id){
+            return null;
+        }
+
         $data = array();
 
         $data["direction"] = $direction;
@@ -39,7 +45,7 @@ class CreateByParticipant extends Crud  {
         $data["event_id"] = $participant->event_id;
         $data["company_id"] =  (int) $this->getParam("company_id");
         $data["participant_id"] = $participant->id;
-        $data["rel_participant_id"] =  (int) $this->getParam("rel_participant_id", 0);
+        $data["rel_participant_id"] =  $rel_participant_id;
         $data["user_id"] = 0; 
         $data["creative_id"] = 0;
         $data["agreed"] = 0;
