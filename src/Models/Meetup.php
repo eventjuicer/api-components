@@ -42,6 +42,10 @@ class Meetup extends Model
         return $this->belongsTo(Participant::class);
     }
 
+    public function presenter()
+    {   
+        return $this->belongsTo(Participant::class, "rel_participant_id");
+    }
 
     public function admin()
     {

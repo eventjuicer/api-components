@@ -9,12 +9,11 @@ use Eventjuicer\Services\SparkPost;
 use Eventjuicer\Services\Personalizer;
 use Eventjuicer\Crud\CompanyData\Fetch as CompanyData;
 
-class HandleParticipantAgree extends Job //implements ShouldQueue
+class HandleLTDConfirm extends Job //implements ShouldQueue
 {
     //use Dispatchable;
 
     /**
-     * Create a new job instance.
      *
      * @return void
      */
@@ -32,23 +31,29 @@ class HandleParticipantAgree extends Job //implements ShouldQueue
      */
     public function handle(SaveOrder $order, SparkPost $mail, CompanyData $cd){
 
-
         $order->setParticipant( $this->meetup->participant );
         $order->makeVip( "C" . $this->meetup->company_id );
 
-        $personalizer = new Personalizer( $this->meetup->participant );
-        $substitution_data = $personalizer->getProfile(true);
-
+        $presenter = new Personalizer( $this->meetup->presenter );
+        $participant = new Personalizer( $this->meetup->participant );
         $companydata = $cd->toArray($this->meetup->company->data);
-        $substitution_data["name"] = $companydata["name"];
+
+        $substitution_data = [];
+        $substitution_data["cname2"] = $companydata["name"];
+        $substitution_data["fname"] = $participant->fname;
+        $substitution_data["presenter"] = $presenter->presenter;
+        $substitution_data["presentation_title"] = $presenter->presentation_title;
+        $substitution_data["presentation_venue"] = $presenter->presentation_venue;
+        $substitution_data["presentation_time"] = $presenter->presentation_time;
+
 
         $mail->send([
-            "template_id" => "pl-p2c-meetup-confirmed",
+            "template_id" => "pl-ltd-meetup-confirmed",
             // "cc" => !empty($data["cc"]) ? $data["cc"] : false,
             // "bcc" => !empty($data["bcc"]) ? $data["bcc"] : false,
             "recipient" => [
-                "name"  => $personalizer->translate("[[fname]] [[lname]]"),
-                "email" => $personalizer->email
+                "name"  => $participant->translate("[[fname]] [[lname]]"),
+                "email" => $participant->email
             ],
             "substitution_data" => $substitution_data,             
             "locale" => "pl"//$locale
