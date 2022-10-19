@@ -19,6 +19,20 @@ class Fetch extends Crud  {
         $this->repo = $repo;
     }
 
+    public function getAgreedByRelParticipantId($direction = "LTD"){
+
+        $rel_participant_id = (int) $this->getParam("rel_participant_id", 0);
+
+        if(!$rel_participant_id){
+            throw new \Exception("rel_participant_id missing!");
+        }
+
+        $this->repo->pushCriteria(new FlagEquals(  "rel_participant_id", $rel_participant_id ));
+        $this->repo->pushCriteria(new FlagEquals(  "agreed", 1));
+        $this->repo->pushCriteria(new FlagEquals(  "direction", $direction));
+
+        return $this->repo->all();
+    }
 
     public function getByParticipants( Collection $participants, $direction="P2C"){
 
