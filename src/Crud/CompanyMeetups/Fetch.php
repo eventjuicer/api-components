@@ -20,15 +20,22 @@ class Fetch extends Crud  {
     }
 
 
-    public function getByParticipants( Collection $participants ){
+    public function getByParticipants( Collection $participants, $direction="P2C"){
 
         $participant_ids = $participants->pluck("id")->all();
+        
         $company_id = (int) $this->getParam("company_id");
         $event_id =   (int) $this->getParam("event_id");
+        $rel_participant_id = (int) $this->getParam("rel_participant_id", 0);
 
-        $this->repo->pushCriteria(new BelongsToCompany(  $company_id ));
-        $this->repo->pushCriteria(new FlagEquals(  "direction", "P2C" ));
-        $this->repo->pushCriteria(new BelongsToEvent(  $event_id ));
+        if($rel_participant_id){
+            $this->repo->pushCriteria(new FlagEquals(  "rel_participant_id", $rel_participant_id ));
+        }else{
+            $this->repo->pushCriteria(new BelongsToCompany(  $company_id ));
+            $this->repo->pushCriteria(new BelongsToEvent( $event_id ));
+        }
+
+        $this->repo->pushCriteria(new FlagEquals( "direction", $direction ));
         $this->repo->pushCriteria(new WhereIn("participant_id",  $participant_ids ));
 
         return $this->repo->all();
