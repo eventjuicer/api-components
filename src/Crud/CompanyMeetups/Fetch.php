@@ -34,7 +34,7 @@ class Fetch extends Crud  {
         return $this->repo->all();
     }
 
-    public function getAgreedByDirection($direction="P2C"){
+    public function getMeetupsByDirection($direction="P2C"){
 
         $event_id =   (int) $this->getParam("event_id");
 
