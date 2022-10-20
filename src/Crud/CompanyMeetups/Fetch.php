@@ -9,6 +9,8 @@ use Eventjuicer\Repositories\Criteria\BelongsToEvent;
 use Eventjuicer\Repositories\Criteria\WhereIn;
 use Eventjuicer\Repositories\Criteria\FlagEquals;
 use Eventjuicer\Repositories\Criteria\OrderByCreatedAt;
+use Eventjuicer\Repositories\Criteria\ColumnIsNull;
+
 use Illuminate\Support\Collection;
 
 class Fetch extends Crud  {
@@ -39,14 +41,12 @@ class Fetch extends Crud  {
         $participant_ids = $participants->pluck("id")->all();
         
         $company_id = (int) $this->getParam("company_id");
-        $event_id =   (int) $this->getParam("event_id");
         $rel_participant_id = (int) $this->getParam("rel_participant_id", 0);
 
         if($rel_participant_id){
             $this->repo->pushCriteria(new FlagEquals(  "rel_participant_id", $rel_participant_id ));
         }else{
             $this->repo->pushCriteria(new BelongsToCompany(  $company_id ));
-            $this->repo->pushCriteria(new BelongsToEvent( $event_id ));
         }
 
         $this->repo->pushCriteria(new FlagEquals( "direction", $direction ));
@@ -55,6 +55,40 @@ class Fetch extends Crud  {
         return $this->repo->all();
     }
 
+    /**
+     * do not allow mass applications!
+     */
+
+    public function getAllForParticipantsInPipeline( Collection $participants){
+
+        $participant_ids = $participants->pluck("id")->all();
+    
+        $this->repo->pushCriteria(new FlagEquals( "direction", "LTD" ));
+        $this->repo->pushCriteria(new WhereIn("participant_id",  $participant_ids ));
+        $this->repo->pushCriteria(new ColumnIsNull("responded_at"));
+    
+        return $this->repo->all();
+    }
+
+    /**
+     * do not allow 2 workshops!
+     */
+
+    public function getAllAgreedForParticipants( Collection $participants){
+
+        $participant_ids = $participants->pluck("id")->all();
+    
+        $this->repo->pushCriteria(new FlagEquals( "direction", "LTD" ));
+        $this->repo->pushCriteria(new WhereIn("participant_id",  $participant_ids ));
+        $this->repo->pushCriteria(new FlagEquals( "agreed", 1 ));
+    
+        return $this->repo->all();
+    }
+
+
+    /**
+     * used by /workshopers
+     */
     public function getMeetupsByDirection($direction="P2C"){
 
         $event_id =   (int) $this->getParam("event_id");

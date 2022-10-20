@@ -39,6 +39,7 @@ class HandleLTDReject extends Job //implements ShouldQueue
         $substitution_data["cname2"] = $companydata["name"];
         $substitution_data["fname"] = $participant->fname;
         $substitution_data["presenter"] = $presenter->presenter;
+        $substitution_data["position"] = $presenter->position;
         $substitution_data["presentation_title"] = $presenter->presentation_title;
         $substitution_data["presentation_venue"] = $presenter->presentation_venue;
         $substitution_data["presentation_time"] = $presenter->presentation_time;
