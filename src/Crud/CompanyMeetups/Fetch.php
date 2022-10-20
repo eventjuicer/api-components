@@ -23,6 +23,8 @@ class Fetch extends Crud  {
 
     public function getAgreedByRelParticipantId($direction = "LTD"){
 
+        $this->repo->makeModel();
+        
         $rel_participant_id = (int) $this->getParam("rel_participant_id", 0);
 
         if(!$rel_participant_id){
@@ -37,6 +39,8 @@ class Fetch extends Crud  {
     }
 
     public function getByParticipants( Collection $participants, $direction="P2C"){
+
+        $this->repo->makeModel();
 
         $participant_ids = $participants->pluck("id")->all();
         
@@ -61,6 +65,8 @@ class Fetch extends Crud  {
 
     public function getAllForParticipantsInPipeline( Collection $participants){
 
+        $this->repo->makeModel();
+
         $participant_ids = $participants->pluck("id")->all();
     
         $this->repo->pushCriteria(new FlagEquals( "direction", "LTD" ));
@@ -75,6 +81,8 @@ class Fetch extends Crud  {
      */
 
     public function getAllAgreedForParticipants( Collection $participants){
+
+        $this->repo->makeModel();
 
         $participant_ids = $participants->pluck("id")->all();
     
@@ -91,6 +99,8 @@ class Fetch extends Crud  {
      */
     public function getMeetupsByDirection($direction="P2C"){
 
+        $this->repo->makeModel();
+
         $event_id =   (int) $this->getParam("event_id");
 
         $this->repo->pushCriteria(new FlagEquals("direction", $direction));
@@ -102,6 +112,7 @@ class Fetch extends Crud  {
 
     public function get($company_id=0){
 
+        $this->repo->makeModel();
 
         $company_id = (int) $this->getParam("x-company_id", $company_id);
         $event_id = $this->activeEventId();
