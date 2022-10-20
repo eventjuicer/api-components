@@ -49,7 +49,7 @@ class HandleLTDConfirm extends Job //implements ShouldQueue
 
         $mail->send([
             "template_id" => "pl-ltd-meetup-confirmed",
-            // "cc" => !empty($data["cc"]) ? $data["cc"] : false,
+            "cc" => "workshops@targiehandlu.pl",
             // "bcc" => !empty($data["bcc"]) ? $data["bcc"] : false,
             "recipient" => [
                 "name"  => $participant->translate("[[fname]] [[lname]]"),
