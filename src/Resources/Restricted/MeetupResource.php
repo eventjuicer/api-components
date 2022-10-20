@@ -38,7 +38,7 @@ class MeetupResource extends Resource
 
         $data["direction"] = (string) $this->direction;
 
-        if($this->agreed || $this->direction == "LTD" ){
+        if($this->agreed){
             $data["participant"] = new FullVisitorResource($this->participant);
         }else{
             $data["participant"] = new VisitorResource($this->participant);
