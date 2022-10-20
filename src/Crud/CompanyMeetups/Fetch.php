@@ -10,7 +10,6 @@ use Eventjuicer\Repositories\Criteria\WhereIn;
 use Eventjuicer\Repositories\Criteria\FlagEquals;
 use Eventjuicer\Repositories\Criteria\OrderByCreatedAt;
 use Eventjuicer\Repositories\Criteria\ColumnIsNull;
-
 use Illuminate\Support\Collection;
 
 class Fetch extends Crud  {
@@ -21,9 +20,13 @@ class Fetch extends Crud  {
         $this->repo = $repo;
     }
 
+    function makeMeetupRepository(){
+        return app(MeetupRepository::class);
+    }
+
     public function getAgreedByRelParticipantId($direction = "LTD"){
 
-        $this->repo->makeModel();
+        $repo = $this->makeMeetupRepository();
         
         $rel_participant_id = (int) $this->getParam("rel_participant_id", 0);
 
@@ -31,16 +34,16 @@ class Fetch extends Crud  {
             throw new \Exception("rel_participant_id missing!");
         }
 
-        $this->repo->pushCriteria(new FlagEquals(  "rel_participant_id", $rel_participant_id ));
-        $this->repo->pushCriteria(new FlagEquals(  "agreed", 1));
-        $this->repo->pushCriteria(new FlagEquals(  "direction", $direction));
+        $repo->pushCriteria(new FlagEquals(  "rel_participant_id", $rel_participant_id ));
+        $repo->pushCriteria(new FlagEquals(  "agreed", 1));
+        $repo->pushCriteria(new FlagEquals(  "direction", $direction));
 
-        return $this->repo->all();
+        return $repo->all();
     }
 
     public function getByParticipants( Collection $participants, $direction="P2C"){
 
-        $this->repo->makeModel();
+        $repo = $this->makeMeetupRepository();
 
         $participant_ids = $participants->pluck("id")->all();
         
@@ -48,15 +51,15 @@ class Fetch extends Crud  {
         $rel_participant_id = (int) $this->getParam("rel_participant_id", 0);
 
         if($rel_participant_id){
-            $this->repo->pushCriteria(new FlagEquals(  "rel_participant_id", $rel_participant_id ));
+            $repo->pushCriteria(new FlagEquals(  "rel_participant_id", $rel_participant_id ));
         }else{
-            $this->repo->pushCriteria(new BelongsToCompany(  $company_id ));
+            $repo->pushCriteria(new BelongsToCompany(  $company_id ));
         }
 
-        $this->repo->pushCriteria(new FlagEquals( "direction", $direction ));
-        $this->repo->pushCriteria(new WhereIn("participant_id",  $participant_ids ));
+        $repo->pushCriteria(new FlagEquals( "direction", $direction ));
+        $repo->pushCriteria(new WhereIn("participant_id",  $participant_ids ));
 
-        return $this->repo->all();
+        return $repo->all();
     }
 
     /**
@@ -65,15 +68,15 @@ class Fetch extends Crud  {
 
     public function getAllForParticipantsInPipeline( Collection $participants){
 
-        $this->repo->makeModel();
+        $repo = $this->makeMeetupRepository();
 
         $participant_ids = $participants->pluck("id")->all();
     
-        $this->repo->pushCriteria(new FlagEquals( "direction", "LTD" ));
-        $this->repo->pushCriteria(new WhereIn("participant_id",  $participant_ids ));
-        $this->repo->pushCriteria(new ColumnIsNull("responded_at"));
+        $repo->pushCriteria(new FlagEquals( "direction", "LTD" ));
+        $repo->pushCriteria(new WhereIn("participant_id",  $participant_ids ));
+        $repo->pushCriteria(new ColumnIsNull("responded_at"));
     
-        return $this->repo->all();
+        return $repo->all();
     }
 
     /**
@@ -82,15 +85,15 @@ class Fetch extends Crud  {
 
     public function getAllAgreedForParticipants( Collection $participants){
 
-        $this->repo->makeModel();
+        $repo = $this->makeMeetupRepository();
 
         $participant_ids = $participants->pluck("id")->all();
     
-        $this->repo->pushCriteria(new FlagEquals( "direction", "LTD" ));
-        $this->repo->pushCriteria(new WhereIn("participant_id",  $participant_ids ));
-        $this->repo->pushCriteria(new FlagEquals( "agreed", 1 ));
+        $repo->pushCriteria(new FlagEquals( "direction", "LTD" ));
+        $repo->pushCriteria(new WhereIn("participant_id",  $participant_ids ));
+        $repo->pushCriteria(new FlagEquals( "agreed", 1 ));
     
-        return $this->repo->all();
+        return $repo->all();
     }
 
 
@@ -99,32 +102,32 @@ class Fetch extends Crud  {
      */
     public function getMeetupsByDirection($direction="P2C"){
 
-        $this->repo->makeModel();
+        $repo = $this->makeMeetupRepository();
 
         $event_id =   (int) $this->getParam("event_id");
 
-        $this->repo->pushCriteria(new FlagEquals("direction", $direction));
-        $this->repo->pushCriteria(new BelongsToEvent(  $event_id ));
+        $repo->pushCriteria(new FlagEquals("direction", $direction));
+        $repo->pushCriteria(new BelongsToEvent(  $event_id ));
 
-        return $this->repo->all();
+        return $repo->all();
 
     }
 
     public function get($company_id=0){
 
-        $this->repo->makeModel();
+        $repo = $this->makeMeetupRepository();
 
         $company_id = (int) $this->getParam("x-company_id", $company_id);
         $event_id = $this->activeEventId();
 
-        $this->repo->pushCriteria(new BelongsToCompany(  $company_id ));
-        $this->repo->pushCriteria(new BelongsToEvent(  $event_id ));
+        $repo->pushCriteria(new BelongsToCompany(  $company_id ));
+        $repo->pushCriteria(new BelongsToEvent(  $event_id ));
 
-        $this->repo->pushCriteria(new OrderByCreatedAt("DESC"));
+        $repo->pushCriteria(new OrderByCreatedAt("DESC"));
 
         // $this->repo->with(["company"]);
 
-        return $this->repo->all();
+        return $repo->all();
 
 
     }
