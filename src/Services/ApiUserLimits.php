@@ -6,6 +6,7 @@ use Eventjuicer\Services\PartnerPerformance;
 use Eventjuicer\Repositories\CompanyRepository;
 use Eventjuicer\Repositories\Criteria\BelongsToCompany;
 use Eventjuicer\Repositories\Criteria\BelongsToEvent;
+use Eventjuicer\Repositories\Criteria\FlagEquals;
 use Eventjuicer\Services\Company\GetActiveEventId;
 use Eventjuicer\Services\Company\GetCompanyDataValue;
 
@@ -96,6 +97,14 @@ class ApiUserLimits {
 			$params[0]->pushCriteria(
 				new BelongsToEvent( (string) new GetActiveEventId($this->company)  )
 			);
+
+			if($name === "meetup"){
+				$params[0]->pushCriteria(
+					new FlagEquals("direction", "C2P")
+				);
+	
+			}
+
 
 			$used = $params[0]->all()->count();
 
