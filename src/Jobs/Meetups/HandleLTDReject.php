@@ -6,7 +6,8 @@ use Eventjuicer\Jobs\Job;
 use Eventjuicer\Models\Meetup;
 use Eventjuicer\Services\SparkPost;
 use Eventjuicer\Services\Personalizer;
-use Eventjuicer\Crud\CompanyData\Fetch as CompanyData;
+use Eventjuicer\Services\CompanyData;
+
 
 class HandleLTDReject extends Job //implements ShouldQueue
 {
@@ -33,7 +34,7 @@ class HandleLTDReject extends Job //implements ShouldQueue
 
         $presenter = new Personalizer( $this->meetup->presenter );
         $participant = new Personalizer( $this->meetup->participant );
-        $companydata = $cd->toArray($this->meetup->company->data);
+        $companydata = $cd->toArray($this->meetup->company);
 
         $substitution_data = [];
         $substitution_data["cname2"] = $companydata["name"];
