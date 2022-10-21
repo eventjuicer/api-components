@@ -114,7 +114,7 @@ class Fetch extends Crud  {
     }
 
 
-
+    /** RESTRICTED  */
 
     public function getAgreedByDirection($direction = "LTD"){
 
@@ -137,7 +137,24 @@ class Fetch extends Crud  {
     }
 
 
+    /** CONSOLE  */
 
+    public function getAllForEventByDirection($direction = "LTD"){
+
+        $repo = $this->makeMeetupRepository();
+
+        $event_id = (int) $this->getParam("event_id");
+
+        if(! (int) $event_id){
+            throw new \Exception("getAllAgreedByDirection / bad params");
+        }
+
+        $repo->pushCriteria(new BelongsToEvent(  $event_id ));
+        $repo->pushCriteria(new FlagEquals( "direction", $direction ));
+
+        return $repo->all();
+
+    }
 
 
 
