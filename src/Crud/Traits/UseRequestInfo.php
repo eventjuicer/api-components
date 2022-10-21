@@ -34,11 +34,11 @@ trait UseRequestInfo {
     }
 
     final public function getCompany(){
-        return $this->getUser()->company;
+        return app("request")->user()? app("request")->user()->company : null;
     }
 
     final public function getCompanyId(){
-        $company = $this->getUser()->company;
+        $company = $this->getCompany();
         return $company? $company->id : 0;
     }
 
