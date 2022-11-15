@@ -39,6 +39,9 @@ class PartnerPerformance {
 	protected $prefix = "xx14ycs4_"; //"th3rCMiM_";
 	protected $eventName = "promoninja";
 
+
+	static protected $prizesCache = [];
+
 	function __construct(
 			EloquentTicketRepository $repo, 
 			ParticipantRepository $participants,
@@ -56,7 +59,15 @@ class PartnerPerformance {
 	}
 
 	public function getPrizes($groupId = 0){
-		return PromoPrize::where("group_id", $groupId)->where("disabled", 0)->get();
+
+
+		if(!isset(static::$prizesCache[$groupId])){
+			static::$prizesCache[$groupId] = PromoPrize::where("group_id", $groupId)->where("disabled", 0)->get();
+		}
+
+		return static::$prizesCache[$groupId] ;
+
+		// return PromoPrize::where("group_id", $groupId)->where("disabled", 0)->get();
 	}
 
 
@@ -262,8 +273,8 @@ class PartnerPerformance {
 
         	//ebe5
         	$dt = Period::create(
-        		Carbon::createFromDate(2022, 10, 6), 
-        		Carbon::create(2023, 02, 22, 23, 59, 59)
+        		Carbon::createFromDate(2022, 9, 1), 
+        		Carbon::create(2022, 10, 26, 23, 59, 59)
         	);
 
 
