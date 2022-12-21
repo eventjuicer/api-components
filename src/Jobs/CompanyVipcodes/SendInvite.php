@@ -38,13 +38,28 @@ class SendInvite extends Job //implements ShouldQueue
         $data = $cd->toArray(
             $cd->get($this->vipcode->company_id, "")
         );
+
+        $template = "pl-vips-invite";
+
         $substitution_data = [
             "name" => $data["name"],
             "url" =>  "https://targiehandlu.pl/exhibitors/".$company->slug."?vipcode=".$code
         ];
 
+        if($organizer_id > 1){
+            
+            $template = "ebe-vips-invite";
+
+            $substitution_data = [
+                "name" => $data["name"],
+                "url" =>  "https://ecommerceberlin.com/exhibitors/".$company->slug."?vipcode=".$code
+            ];
+
+        }
+
+
         $mail->send([
-            "template_id" => "pl-vips-invite",
+            "template_id" => $template,
             "recipient" => [
                 "name"  => $this->vipcode->email,
                 "email" => $this->vipcode->email
