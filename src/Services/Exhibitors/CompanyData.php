@@ -31,7 +31,7 @@ class CompanyData {
 	protected $defaultLang = "en";
 	protected $messagebag;
 	
-	protected $prefix = "yy14dcs4_"; 
+	protected $prefix = "exh"; 
     protected $campaign = "promoninja";
 
 	function __construct(Model $model){
@@ -60,7 +60,7 @@ class CompanyData {
 	public function trackingLink($medium = "banner", $ad = "")
 	{
 
-		return sprintf("?meet&utm_source=".$this->prefix."%d&utm_medium=%s&utm_campaign=".$this->campaign."&utm_content=%s", $this->getCompany()->id, $medium, $ad);
+		return sprintf("?meet&utm_source=".$this->prefix."&utm_medium=%s&utm_campaign=".$this->campaign."&utm_content=%s", $medium, $ad);
 	}
 
 	public function trackedProfileUrl($medium = "banner", $ad = ""){
