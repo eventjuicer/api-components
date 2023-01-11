@@ -43,7 +43,7 @@ class HandleP2CAgree extends Job //implements ShouldQueue
         $substitution_data["name"] = $companydata["name"];
 
         $mail->send([
-            "template_id" => "pl-p2c-meetup-confirmed",
+            "template_id" => $this->meetup->organizer_id>1 ? "en-p2c-meetup-confirmed": "pl-p2c-meetup-confirmed",
             // "cc" => !empty($data["cc"]) ? $data["cc"] : false,
             // "bcc" => !empty($data["bcc"]) ? $data["bcc"] : false,
             "recipient" => [
