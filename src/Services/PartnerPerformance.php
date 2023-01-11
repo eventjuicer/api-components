@@ -273,8 +273,8 @@ class PartnerPerformance {
 
         	//ebe5
         	$dt = Period::create(
-        		Carbon::createFromDate(2022, 9, 1), 
-        		Carbon::create(2022, 10, 26, 23, 59, 59)
+        		Carbon::createFromDate(2023, 1, 11), 
+        		Carbon::create(2023, 2, 20, 23, 59, 59)
         	);
 
 
