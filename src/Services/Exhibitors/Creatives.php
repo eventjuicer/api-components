@@ -93,32 +93,36 @@ class Creatives {
                 "name" => "logotype",
                 "lang" => "en",
                 "act_as" => "link",
-                "link" => $this->companydata->trackingLink("link", "logotype,en"),
-                "link_full" => $this->companydata->trackedProfileUrl("link", "logotype,en"),
+                "link" => $this->companydata->trackingLink("link", "logotype"),
+                "link_full" => $this->companydata->trackedProfileUrl("link", "logotype"),
                 "shareable" => true,
                 "services" => ["linkedin", "twitter", "facebook"],
                 "requires" => ["logotype"],
                 "enabled" => $hasBasicLogo && !$hasCustomImage,
                 "template" => $logotype_cdn_en,
-                "sharers" => $this->sharer( $this->companydata->trackedProfileUrl("link", "logotype,en") )
+                "sharers" => $this->sharer( $this->companydata->trackedProfileUrl("link", "logotype") )
             
             ],
 
-            [
-                "id" => 51,
-                "name" => "logotype",
-                "lang" => "de",
-                "act_as" => "link",
-                "link" =>  $this->companydata->trackingLink("link", "logotype,de"),
-                "link_full" => $this->companydata->trackedProfileUrl("link", "logotype,de"),
-                "shareable" => true,
-                "services" => ["facebook"],
-                "requires" => ["logotype"],
-                "enabled" => $hasBasicLogo && !$hasCustomImage,
-                "template" => $logotype_cdn_de,
-                "sharers" => $this->sharer( $this->companydata->trackedProfileUrl("link", "logotype,de") )
+      
+
             
-            ],
+
+            // [
+            //     "id" => 51,
+            //     "name" => "logotype",
+            //     "lang" => "de",
+            //     "act_as" => "link",
+            //     "link" =>  $this->companydata->trackingLink("link", "logotype,de"),
+            //     "link_full" => $this->companydata->trackedProfileUrl("link", "logotype,de"),
+            //     "shareable" => true,
+            //     "services" => ["facebook"],
+            //     "requires" => ["logotype"],
+            //     "enabled" => $hasBasicLogo && !$hasCustomImage,
+            //     "template" => $logotype_cdn_de,
+            //     "sharers" => $this->sharer( $this->companydata->trackedProfileUrl("link", "logotype,de") )
+            
+            // ],
 
 
             [
@@ -126,8 +130,8 @@ class Creatives {
                 "name" => "opengraph_image",
                 "lang" => "undefined",
                 "act_as" => "link",
-                "link" =>  $this->companydata->trackingLink("link", "opengraph_image"),
-                "link_full" => $this->companydata->trackedProfileUrl("link", "opengraph_image"),
+                "link" =>  $this->companydata->trackingLink("link", "custom"),
+                "link_full" => $this->companydata->trackedProfileUrl("link", "custom"),
                 "shareable" => true,
                 "services" => ["facebook"],
                 "requires" => ["opengraph_image"],
