@@ -31,7 +31,7 @@ class VipFromVisitorRegistration {
     public function assign(){
 
         if(!$this->vipcode){
-            throw new \Exception("No vipcode found!");
+            return null;
         }
 
         $expired = (new ShouldBeExpired($this->vipcode))->check();

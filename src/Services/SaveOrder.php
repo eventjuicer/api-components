@@ -220,8 +220,7 @@ class SaveOrder {
 
 
 		$vipcode = !empty($this->fields["code"])? $this->fields["code"]: null;
-		$meetup = !empty($this->fields["company_id"])? $this->fields["company_id"]: null;
-
+		$company_id = !empty($this->fields["company_id"])? $this->fields["company_id"]: 0;
 
 
 		if( !$this->event && !$this->participant ){
@@ -247,21 +246,26 @@ class SaveOrder {
 			
 		$this->saveFields();
 
+		if($company_id && !$vipcode){
+			$this->meetupHandler->setData();
+			$this->meetupHandler->setParam("company_id", $company_id );
+			$this->meetupHandler->create( $this->getParticipant() );
+		}
+
 		if($vipcode){
 			/** TODO: extract code from URL.... */
 			$this->vipcodeHandler->setCode( $vipcode );
 			$this->vipcodeHandler->setParticipant($this->participant);
-			$company_id = $this->vipcodeHandler->assign();
-			if($company_id){
-				$this->makeVip("C".$company_id);
+			$company_id_from_code = $this->vipcodeHandler->assign();
+
+			if($company_id_from_code){
+				$this->makeVip("C".$company_id_from_code);
+			}else{
+				$this->makeVip($vipcode);
 			}
 		}
 
-		if($meetup){
-			$this->meetupHandler->setData();
-			$this->meetupHandler->setParam("company_id", $meetup);
-			$this->meetupHandler->create( $this->getParticipant() );
-		}
+		
 
 	}
 
