@@ -19,8 +19,8 @@ class Fetch extends Crud  {
 
     protected $repo;
     protected $create;
-    protected $howmany = 10;
-    protected $limtis;
+    protected $howmany = 5;
+    protected $limits;
 
     function __construct(CompanyVipcodeRepository $repo, Create $create, ApiUserLimits $limits){
         $this->repo = $repo;
