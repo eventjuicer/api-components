@@ -76,7 +76,7 @@ class Console {
 
 		if($this->getGroupId()>1){
 			//expojuicer
-			return json_decode(file_get_contents("https://localise.biz/api/export/all.json?format=multi&key=odUK6fy66gMjMpjQ7_IauP-JpjRpi3Nt"), true);
+			return json_decode(file_get_contents("https://localise.biz/api/export/all.json?format=multi&key=Hv2J57NdQBgu3UYbz7DuXmAlU2KZzGYz"), true);
 		}else{
 			return json_decode(file_get_contents("https://localise.biz/api/export/all.json?format=multi&key=LKwL-Ej08phbpT-bbw8_Furw0eUQqeAs"), true);
 		}
