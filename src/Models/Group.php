@@ -55,6 +55,9 @@ class Group extends Model
         return $this->hasMany(Topic::class, "group_id");
     }
 
+    public function host(){
+        return $this->hasOne(Host::class);
+    }
 
 
 
