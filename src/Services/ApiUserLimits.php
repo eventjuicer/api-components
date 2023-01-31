@@ -128,7 +128,7 @@ class ApiUserLimits {
 				$earned = $earned + intval($this->points() / 50) * 50;
 		
 				if($base + $earned > 200){
-					return max(200, $i_tweak);
+					$earned = 190;
 				}
 
 			break;
@@ -145,7 +145,7 @@ class ApiUserLimits {
 				$earned = $earned + intval($this->points() / 50) * 5;
 		
 				if($base + $earned > 20){
-					return max(20, $v_tweak);
+					$earned = 15;
 				}
 
 			break;
