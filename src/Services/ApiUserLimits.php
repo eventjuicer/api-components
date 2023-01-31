@@ -136,16 +136,16 @@ class ApiUserLimits {
 
 			case "vip":
 
-				$base = 10;
+				$base = 5;
 				
-				if($this->points() > 19){
+				if($this->points() > 50){
 					$earned = 5;
 				}
 				
 				$earned = $earned + intval($this->points() / 50) * 5;
 		
-				if($base + $earned > 25){
-					return 25 + $v_tweak;
+				if($base + $earned > 20){
+					return 20 + $v_tweak;
 				}
 
 			break;
