@@ -46,7 +46,7 @@ class HandleLTDReject extends Job //implements ShouldQueue
         $substitution_data["presentation_time"] = $presenter->presentation_time;
 
         $mail->send([
-            "template_id" => "pl-ltd-meetup-rejected",
+            "template_id" => $this->meetup->organizer_id>1 ? "ebe-ltd-rejected": "pl-ltd-meetup-rejected",
             // "cc" => !empty($data["cc"]) ? $data["cc"] : false,
             // "bcc" => !empty($data["bcc"]) ? $data["bcc"] : false,
             "recipient" => [
