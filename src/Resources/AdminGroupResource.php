@@ -32,8 +32,8 @@ class AdminGroupResource extends Resource
             "is_portal" => $this->is_portal,
             "active_event_id" => $this->active_event_id,
             "active_event" => new AdminEventResource($this->activeEvent->first()),
-            "events" => AdminEventResource::collection( $this->whenLoaded("latestEvents"))
-               
+            "events" => AdminEventResource::collection( $this->whenLoaded("latestEvents")),
+            "host" => $this->host? $this->host->host: ""
         ];
     }
 }
