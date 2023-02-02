@@ -25,6 +25,7 @@ use Eventjuicer\Models\Ticket;
 use Illuminate\Database\Eloquent\Model;
 use Eventjuicer\Contracts\CountsSoldTickets;
 use Eventjuicer\Crud\CompanyMeetups\CreateByParticipant as CreateMeetupWithCompany;
+use Eventjuicer\Services\Vipcodes\VipFromVisitorRegistration;
 
 
 
@@ -33,7 +34,6 @@ use Carbon\Carbon;
 
 /** VIPS */
 
-use Eventjuicer\Services\Vipcodes\VipFromVisitorRegistration;
 
 class SaveOrder {
 
@@ -221,6 +221,7 @@ class SaveOrder {
 
 		$vipcode = !empty($this->fields["code"])? $this->fields["code"]: null;
 		$company_id = !empty($this->fields["company_id"])? $this->fields["company_id"]: 0;
+		$rel_participant_id = !empty($this->fields["rel_participant_id"])? $this->fields["rel_participant_id"]: 0;
 
 
 		if( !$this->event && !$this->participant ){
@@ -248,8 +249,11 @@ class SaveOrder {
 
 		if($company_id && !$vipcode){
 			$this->meetupHandler->setData();
+			/*
 			$this->meetupHandler->setParam("company_id", $company_id );
-			$this->meetupHandler->create( $this->getParticipant() );
+			**/
+			$this->meetupHandler->create( $this->getParticipant(),  $rel_participant_id ? "LTD": "P2C");
+			//LTD
 		}
 
 		if($vipcode){
