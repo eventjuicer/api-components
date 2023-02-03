@@ -248,10 +248,7 @@ class SaveOrder {
 		$this->saveFields();
 
 		if($company_id && !$vipcode){
-			$this->meetupHandler->setData();
-			$this->meetupHandler->setParam("company_id", $company_id );
-			$this->meetupHandler->setParam("rel_participant_id", $rel_participant_id );
-
+			$this->meetupHandler->setData($this->fields);
 			$this->meetupHandler->create( $this->getParticipant(),  $rel_participant_id ? "LTD": "P2C");
 			//LTD
 		}
