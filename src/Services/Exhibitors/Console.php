@@ -7,11 +7,13 @@ use Eventjuicer\Services\Exhibitors\CompanyData;
 use Eventjuicer\Services\Revivers\ParticipantSendable;
 use Illuminate\Support\MessageBag;
 use Eventjuicer\Services\PartnerPerformance;
+use Validator;
 
 class Console {
 
 	protected $eventId = 0;
 	protected $groupId = 0;
+	protected $organizerId = 0;
 	protected $repo;
 	protected $dataset = [];
 	protected $sendable;
@@ -20,6 +22,7 @@ class Console {
 	protected $performance;
 	protected $additionalRels = ["fields", "company.data", "company.participants"];
 	protected $additionalRepRels = ["fields", "company.data"];
+	protected $errors = [];
 
 	function __construct(
 		GetByRole $repo, 
@@ -41,15 +44,71 @@ class Console {
 
 	public function setParams(array $params = []){
 		$this->params = $params;
-
-		return $this->validateParams();
-		//validate!
 	}
+
+	public function getParam(string $key){
+
+		if(!isset($this->params[$key])){
+			throw new \Exception("No $key param.");
+		}
+
+		return $this->params[$key];
+	}
+
+	public function isValid(array $rules = []){
+        $validator = Validator::make($this->params, $rules);
+		if($validator->passes()){
+			return true;
+		}
+		throw new \Exception($validator->errors());
+    }
+
+
 
 	public function validateParams(){
 
+
+		// if(empty($viewlang)) {
+        //     $this->messagebag->add("lang", "--lang= must be set!");
+        // }
+
+
+        // if(empty($domain)) {
+        //     $errors[] = "--domain= must be set!";
+        // }
+
+        // if(empty($subject)) {
+        //     $errors[] = "--subject= must be set!";
+        // }
+    
+        
+        // if(empty($email)) {
+        //     $errors[] = "--email= must be set!";
+        // }
+
+        // if(empty($defaultlang)) {
+        //     $errors[] = "--defaultlang= must be set!";
+        // }
+
+        // $email = $email . "-" . $viewlang;
+
+        // if(! view()->exists("emails.company." . $email)) {
+        //     $errors[] = "--email= error. View cannot be found!";
+        // }
+
+
+
+		// if(isset($this->params["email"])){
+		// 	dd("email");
+		// }
+
+		// if(isset($this->params["domain"])){
+		// 	dd("email");
+		// }
+
 	}
 
+	
 	public function getApi($resource = "", string $host){
 
         $arrContextOptions=array(
@@ -92,7 +151,7 @@ class Console {
 
         $this->eventId = $previous ? $route->previousEvent() : $route->getEventId();
         $this->groupId = $route->getGroupId();
-
+		$this->organizerId = $route->getOrganizerId();
 	}
 
 	public function setEventId($eventId){
@@ -115,6 +174,11 @@ class Console {
 	public function getGroupId(){
 
 		return $this->groupId;
+	}
+
+	public function getOrganizerId(){
+
+		return $this->organizerId;
 	}
 
 	public function getSendable($uniqueCompanies=true){

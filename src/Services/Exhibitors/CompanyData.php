@@ -69,6 +69,10 @@ class CompanyData {
 	
 	}
 
+	public function accountUrlPromotePublic(){
+		return "https://account.".$this->getHostFromGroupId()."/#/promote?company_id=" . $this->getCompany()->id;
+	}
+
 	//moved from ApiUser
 	// public function companyPublicProfile(string $baseHost){
 
