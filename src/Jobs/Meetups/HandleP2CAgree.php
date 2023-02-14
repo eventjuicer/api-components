@@ -33,8 +33,8 @@ class HandleP2CAgree extends Job //implements ShouldQueue
     public function handle(SaveOrder $order, SparkPost $mail, CompanyData $cd){
 
 
-        $order->setParticipant( $this->meetup->participant );
-        $order->makeVip( "C" . $this->meetup->company_id );
+        // $order->setParticipant( $this->meetup->participant );
+        // $order->makeVip( "C" . $this->meetup->company_id );
 
         $participant = new Personalizer( $this->meetup->participant );
         $substitution_data = $participant->getProfile(true);
