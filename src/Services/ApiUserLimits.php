@@ -102,8 +102,13 @@ class ApiUserLimits {
 				$params[0]->pushCriteria(
 					new FlagEquals("direction", "C2P")
 				);
-	
 			}
+
+			// if($name === "vip"){
+			// 	$params[0]->pushCriteria(
+			// 		new FlagEquals("direction", "C2P")
+			// 	);
+			// }
 
 
 			$used = $params[0]->all()->count();
@@ -136,7 +141,7 @@ class ApiUserLimits {
 
 			case "vip":
 
-				$base = 5 + $v_tweak;
+				$base = 10 + $v_tweak;
 				
 				if($this->points() > 19){
 					$earned = 2;
