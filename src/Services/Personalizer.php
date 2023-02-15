@@ -106,7 +106,15 @@ class Personalizer implements Arrayable {
 
 	public function isVip(){
 
-		return ( $this->important > 0 || strlen($this->referral) > 1 );
+		if($this->model && $this->model->important){
+			return true;
+		}
+
+		if(!empty($this->profile) && is_array($this->profile) && !empty($this->profile["important"]) ){
+			return true;
+		}
+
+		return false;
 
 	}
 
