@@ -42,7 +42,7 @@ class AdminParticipantExportResource extends Resource{
 
             "is_vip" => (int) $this->important,
 
-            "profile" => $this->filterFields($this->fieldpivot, $this->showable),
+            // "profile" => $this->filterFields($this->fieldpivot, $this->showable),
 
             // "ticket_ids" => $this->ticketpivot->filter(function($item){
             //     return $item->sold;
