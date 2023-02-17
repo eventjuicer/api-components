@@ -4,9 +4,26 @@ namespace Eventjuicer\Resources;
 
 use Illuminate\Http\Resources\Json\Resource;
 use Eventjuicer\Services\Hashids;
+use Eventjuicer\Services\Traits\Fields;
 
-class AdminParticipantExportResource extends Resource
-{
+
+class AdminParticipantExportResource extends Resource{
+
+    use Fields;
+
+
+    protected $showable = array(
+        
+        "fname",
+        "lname",
+        "cname2",
+        "position",
+        "phone",
+
+        "referral",
+        "url"
+    ); 
+
 
     public function toArray($request)
     {
@@ -19,16 +36,13 @@ class AdminParticipantExportResource extends Resource
             
             "email" => $this->email,
 
-            "going" => !is_null($this->ticketdownload) ? (int) $this->ticketdownload->going: "N/A",
+            "is_going" => !is_null($this->ticketdownload) ? (int) $this->ticketdownload->going: "N/A",
 
             "code" => (new Hashids)->encode($this->id),
 
-            "important" => (int) $this->important,
+            "is_vip" => (int) $this->important,
 
-            "profile" => $this->fields->mapWithKeys(function($_item){
-                
-                return [$_item->name => $_item->pivot->field_value];
-            }),
+            "profile" => $this->filterFields($this->fieldpivot, $this->showable),
 
             // "ticket_ids" => $this->ticketpivot->filter(function($item){
             //     return $item->sold;
