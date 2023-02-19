@@ -36,7 +36,7 @@ class AdminParticipantExportResource extends Resource{
             
             "email" => $this->email,
 
-            "is_going" => !is_null($this->ticketdownload) ? (int) $this->ticketdownload->going: "N/A",
+            "is_going" => !is_null($this->ticketdownload) && is_numeric($this->ticketdownload->going) ? (int) $this->ticketdownload->going: "N/A",
 
             "code" => (new Hashids)->encode($this->id),
 
