@@ -21,7 +21,7 @@ class PublicVisitor extends Resource
             $data["fname"] = (string) $profile->fname;
             $data["lname"] = $this->stringToSecret($profile->lname);
             $data["cname2"] = (string) $profile->cname2;
-            $data["phone"] = str_pad ( substr( (string) $profile->phone, 0, 3) , 9, "*", STR_PAD_RIGHT);
+            $data["phone"] = str_pad ( substr( (string) $profile->phone, -3) , 9, "*", STR_PAD_LEFT);
             $data["vip"] = (string) $profile->isVip();
             $data["ns"] = "participant";
             $data["email"] = (new EmailAddress($this->email))->obfuscated();
