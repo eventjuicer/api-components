@@ -16,10 +16,9 @@ protected $result;
 
 function __construct(Repository $repo, int $event_id, string $q, $addFields = []){
 
-        if(!$q || strlen($q) < 3){
+        if(!$q || strlen($q) < 4){
             return;
         }
-
 
         if(strpos($q, "@")!==false){
 
