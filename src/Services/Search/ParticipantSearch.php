@@ -30,7 +30,7 @@ function __construct(Repository $repo, int $event_id, string $q, $addFields = []
         
         }else{
 
-            if(is_numeric($q) && strlen($q) > 2){
+            if(is_numeric($q)){
 
                 $rows = ParticipantFields::with("participant", "participant.fields")->where("event_id", $event_id)->where("field_id", 8)->where("field_value", "LIKE", $q."%")->get()->pluck("participant");  
 
@@ -39,12 +39,17 @@ function __construct(Repository $repo, int $event_id, string $q, $addFields = []
            }else{
 
                 $rows1 = ParticipantFields::with("participant", "participant.fields")->where("event_id", $event_id)->whereIn("field_id", array_merge([3,11], (array) $addFields))->where("field_value", "LIKE", $q."%")->get()->pluck("participant");
+                $rows2 = collect([]);
 
-                $repo->with(["fields"]);
-                $repo->pushCriteria(new BelongsToEvent($event_id));
-                $repo->pushCriteria(new ColumnMatches("email", "%" . $q . "%"));    
-                $rows = $rows1->merge( $repo->all() );
+                if(strlen($q)>4){
+                    $repo->with(["fields"]);
+                    $repo->pushCriteria(new BelongsToEvent($event_id));
+                    $repo->pushCriteria(new ColumnMatches("email", "%" . $q . "%"));    
+                    $rows2 = $repo->all();
+                }
 
+                $rows = $rows1->merge( $rows2  );
+            
                 $this->result = $rows->unique("id")->values();
 
             }
