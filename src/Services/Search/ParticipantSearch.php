@@ -19,7 +19,7 @@ function __construct(Repository $repo, int $event_id, string $q, $addFields = []
 
         $q = trim($q);
 
-        if(!$q || strlen($q) < 4){
+        if(!$q || mb_strlen($q) < 4){
             return;
         }
 
@@ -35,11 +35,14 @@ function __construct(Repository $repo, int $event_id, string $q, $addFields = []
 
         else if( is_numeric($q) ){
 
+            /***
+             * PHONE?
+             */
             $rows = ParticipantFields::with("participant", "participant.fields")->where("event_id", $event_id)->where("field_id", 8)->where("field_value", "LIKE", $q."%")->get()->pluck("participant");  
 
             $this->result = $rows;   
 
-        }else if( is_numeric(ltrim($q, "cC")) &&  ltrim($q, "cC") > 152090 ){
+        }else if( is_numeric(ltrim($q, "cC")) &&  ltrim($q, "cC") > 152089 ){
 
             $lookup = Participant::find( ltrim($q, "cC") );
 
