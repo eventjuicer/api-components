@@ -8,6 +8,7 @@ use Eventjuicer\Repositories\Criteria\BelongsToEvent;
 use Eventjuicer\Repositories\Criteria\ColumnMatches;
 use Eventjuicer\Models\ParticipantFields;
 use Eventjuicer\Models\Participant;
+use Eventjuicer\Services\Hashids;
 
 class ParticipantSearch {
 
@@ -42,9 +43,9 @@ function __construct(Repository $repo, int $event_id, string $q, $addFields = []
 
             $this->result = $rows;   
 
-        }else if( is_numeric(ltrim($q, "cC")) &&  ltrim($q, "cC") > 152089 ){
+        }else if( strpos($q, "#") === 0 ){
 
-            $lookup = Participant::find( ltrim($q, "cC") );
+            $lookup = Participant::find( (new Hashids())->decode( substr($q, 1) )  );
 
             $this->result =  $lookup && $lookup->event_id==$event_id ? collect([ $lookup ]): collect([]);
         }
