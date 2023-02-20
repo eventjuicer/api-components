@@ -43,7 +43,7 @@ function __construct(Repository $repo, int $event_id, string $q, $addFields = []
 
             $this->result = $rows;   
 
-        }else if( strpos($q, "#") === 0 ){
+        }else if( strpos($q, "!") === 0 ){
 
             $lookup = Participant::find( (new Hashids())->decode( substr($q, 1) )  );
 
