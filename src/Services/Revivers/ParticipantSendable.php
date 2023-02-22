@@ -9,9 +9,11 @@ use Illuminate\Support\Collection;
 
 use Eventjuicer\Repositories\ParticipantDeliveryRepository;
 use Eventjuicer\Repositories\ParticipantMuteRepository;
+use Eventjuicer\Repositories\TicketDownloadRepository;
 
 use Eventjuicer\Repositories\Criteria\BelongsToEvent;
 use Eventjuicer\Repositories\Criteria\ColumnGreaterThan;
+use Eventjuicer\Repositories\Criteria\FlagEquals;
 
 use Eventjuicer\ValueObjects\EmailAddress;
 use Closure;
@@ -21,6 +23,9 @@ class ParticipantSendable {
 
 	protected $deliveries;
 	protected $mutes;
+	protected $ticketdownloads;
+
+	protected $eventId;
 
 	protected $checkUniqueness = true;
 	protected $checkDeliveries = true;
@@ -35,15 +40,25 @@ class ParticipantSendable {
 	protected $actions = [];
 	protected $file = "";
 
-	function __construct(ParticipantDeliveryRepository $deliveries, ParticipantMuteRepository $mutes)
-	{
-		$this->deliveries 	= $deliveries;
-		$this->mutes 		= $mutes;
-		
+	function __construct(
+		ParticipantDeliveryRepository $deliveries, 
+		ParticipantMuteRepository $mutes,
+		TicketDownloadRepository $ticketdownloads
+	){
+		$this->deliveries 		= $deliveries;
+		$this->mutes 			= $mutes;
+		$this->ticketdownloads 	= $ticketdownloads;
+
 		$this->resolver = function($item){return $item->email; };
 
 		$this->setMuteTime();
 
+	}
+
+	public function setEventId( $event_id ){
+		if(is_numeric($event_id) && $event_id > 0){
+			$this->eventId = $event_id;
+		}
 	}
 
 	public function excludeFromFile(string $file){
@@ -81,6 +96,13 @@ class ParticipantSendable {
 		return $mutes ? count($mutes) : 0;
 	}
 
+	public function howManyNotGoing(){
+
+		$notgoing =  $this->getNotGoing();
+
+		return $notgoing ? count($notgoing) : 0;
+	}
+
 	public function validateEmails(bool $val)
 	{
 		$this->validateEmails = $val;
@@ -93,11 +115,13 @@ class ParticipantSendable {
 	
 	public function filter(Collection $dataset, $eventId = 0, array $excludes = [])
 	{
+		$this->setEventId($eventId);
 
-		$deliveries = $this->getDeliveries($eventId);
-		$mutes 		= $this->getMutes($eventId);
+		$notgoing = $this->getNotGoing();
+		$deliveries = $this->getDeliveries();
+		$mutes 		= $this->getMutes();
 
-		$filtered = $dataset->filter(function($item) use ($deliveries, $mutes, $excludes) 
+		$filtered = $dataset->filter(function($item) use ($notgoing, $deliveries, $mutes, $excludes) 
 		{ 
 
 			$email = $this->resolver->__invoke($item) ;
@@ -105,6 +129,11 @@ class ParticipantSendable {
 			//normalize
 
 			$email = trim( strtolower($email) );
+
+			if( in_array($item->id, $notgoing) ){
+				return false;
+			} 
+
 
 			if($this->validateEmails && ! (new EmailAddress($email))->isValid() ) {
 				return false;
@@ -146,14 +175,27 @@ class ParticipantSendable {
 
 	}
 
-	
+	protected function getNotGoing(){
+
+		if(!$this->eventId){
+			throw new \Exception("No event id set");
+		}
+
+		$this->ticketdownloads->pushCriteria( new BelongsToEvent( $this->eventId ) );
+
+		$this->ticketdownloads->pushCriteria( new FlagEquals("going", 0) );
+
+		return $this->ticketdownloads->all()->pluck("participant_id")->all();	
+
+	}
 
 
-	protected function getDeliveries($eventId = 0)
+	protected function getDeliveries()
 	{
-		if($eventId)
+
+		if($this->eventId)
 		{
-			$this->deliveries->pushCriteria( new BelongsToEvent($eventId) );
+			$this->deliveries->pushCriteria( new BelongsToEvent($this->eventId) );
 		}
 		
         $this->deliveries->pushCriteria( new ColumnGreaterThan("created_at", $this->then) );
@@ -163,7 +205,7 @@ class ParticipantSendable {
 
 	protected function getMutes($eventId = 0)
 	{
-		if($eventId)
+		if($this->eventId)
 		{
 	//		temporary skip all mutes!!!
 	//		$this->mutes->pushCriteria( new BelongsToEvent($eventId) );
