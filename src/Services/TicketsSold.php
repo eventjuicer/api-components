@@ -146,7 +146,7 @@ class TicketsSold implements CountsSoldTickets {
 		$ticket->in_dates 	= intval( !$datePassed && !$dateInFuture );
 		$ticket->remaining 	= max(0, $ticket->limit - $ticket->agg["sold"]);
 
-		if( $ticket->ticket_group_id > 0) {
+		if( $ticket->ticket_group_id > 0 && isset($this->keyedGroups[$ticket->ticket_group_id]) ) {
 			$group = $this->keyedGroups[$ticket->ticket_group_id];
 			$remainingInGroup = max(0, $group->limit - $group->agg["sold"]);
 			if($remainingInGroup < $ticket->remaining){
