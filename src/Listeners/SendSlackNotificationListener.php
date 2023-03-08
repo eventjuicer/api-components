@@ -22,6 +22,19 @@ class SendSlackNotificationListener {
             return;
         }
 
+        if( $roles->hasRole("presenter") ){
+            return;
+        }
+
+        if( $roles->hasRole("juror") ){
+            return;
+        }
+
+
+        if( $roles->hasRole("party") ){
+            return;
+        }
+
         if( $roles->hasRole("contestant*") ){
             return;
         }
