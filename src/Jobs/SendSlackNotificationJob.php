@@ -6,13 +6,8 @@ use GuzzleHttp\Client as Guzzle;
 use Exception;
 
 
-/**
 
-https://fp20.slack.com/apps/A0F7XDUAZ-incoming-webhooks?tab=more_info
-
-**/
-
-class SendSlackNotificationJob extends Job implements ShouldQueue {
+class SendSlackNotificationJob extends Job  {
 
     protected $message;
     protected $organizer_id;
@@ -24,8 +19,6 @@ class SendSlackNotificationJob extends Job implements ShouldQueue {
 
     public function handle(){
 
-        try{
-        
         $url = env("SLACK_HOOK_ORG_" . $this->organizer_id);
 
         $response = (new Guzzle())->request("POST", $url, [
@@ -36,9 +29,6 @@ class SendSlackNotificationJob extends Job implements ShouldQueue {
 
         $json = json_decode( (string) $response->getBody(), true ); 
 
-        }catch(Exception $e) {
-
-        }
-
+      
     }
 }
