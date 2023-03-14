@@ -7,7 +7,7 @@ use Exception;
 
 
 
-class SendSlackNotificationJob extends Job implements ShouldQueue {
+class SendSlackNotificationJob extends Job {
 
     protected $message;
     protected $organizer_id;
@@ -19,10 +19,12 @@ class SendSlackNotificationJob extends Job implements ShouldQueue {
 
     public function handle(){
 
-        $url = env("SLACK_HOOK_ORG_" . $this->organizer_id);
+        $env_name = "SLACK_HOOK_ORG_" . $this->organizer_id;
+
+        $url = env( $env_name );
 
         if(empty($url)){
-            throw new Exception("env $url missing");
+            throw new Exception("env $env_name missing");
         }
 
         $response = (new Guzzle(["verify"=>false]))->request("POST", $url, [
