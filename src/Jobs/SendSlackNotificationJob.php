@@ -5,12 +5,10 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use GuzzleHttp\Client as Guzzle;
 use Exception;
 
+class SendSlackNotificationJob extends Job implements ShouldQueue {
 
-
-class SendSlackNotificationJob extends Job {
-
-    protected $message;
-    protected $organizer_id;
+    public $message;
+    public $organizer_id;
 
     public function __construct($message = "", $organizer_id=0){
         $this->message = $message;
