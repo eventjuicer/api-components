@@ -7,7 +7,7 @@ use Exception;
 
 
 
-class SendSlackNotificationJob extends Job  {
+class SendSlackNotificationJob extends Job implements ShouldQueue {
 
     protected $message;
     protected $organizer_id;
@@ -22,7 +22,7 @@ class SendSlackNotificationJob extends Job  {
         $url = env("SLACK_HOOK_ORG_" . $this->organizer_id);
 
         if(empty($url)){
-            throw new \Exception("SLACK_HOOK_ORG_ missing");
+            throw new Exception("SLACK_HOOK_ORG_ missing");
         }
 
         $response = (new Guzzle(["verify"=>false]))->request("POST", $url, [
