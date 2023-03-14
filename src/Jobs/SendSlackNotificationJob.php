@@ -4,8 +4,9 @@ namespace Eventjuicer\Jobs;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use GuzzleHttp\Client as Guzzle;
 use Exception;
+use Log;
 
-class SendSlackNotificationJob extends Job {
+class SendSlackNotificationJob extends Job implements ShouldQueue {
 
     public $message;
     public $organizer_id;
@@ -31,8 +32,18 @@ class SendSlackNotificationJob extends Job {
             ]
         ]);
 
-        $json = json_decode( (string) $response->getBody(), true ); 
+
+        if(env("APP_DEBUG")){
+
+            $json = json_decode( (string) $response->getBody(), true ); 
+
+            Log::debug("SendSlackNotificationJob",  $json  );
+        }
+      
 
       
     }
+
+
+    
 }
