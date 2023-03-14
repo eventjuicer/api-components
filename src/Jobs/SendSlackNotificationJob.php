@@ -25,7 +25,7 @@ class SendSlackNotificationJob extends Job  {
             throw new \Exception("SLACK_HOOK_ORG_ missing");
         }
 
-        $response = (new Guzzle())->request("POST", $url, [
+        $response = (new Guzzle(["verify"=>false]))->request("POST", $url, [
             "json" => [
                 "text"=> $this->message,
             ]
