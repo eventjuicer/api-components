@@ -26,10 +26,11 @@ class SendSlackNotificationJob extends Job implements ShouldQueue {
 
         try{
         
-        $response = (new Guzzle())->request("POST", env("SLACK_HOOK"), [
+        $url = env("SLACK_HOOK_ORG_" . $this->organizer_id);
+
+        $response = (new Guzzle())->request("POST", $url, [
             "json" => [
                 "text"=> $this->message,
-                "channel"=> env("SLACK_CHANNEL_ORG" . $this->organizer_id)
             ]
         ]);
 
