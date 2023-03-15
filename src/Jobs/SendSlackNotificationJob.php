@@ -3,6 +3,8 @@
 namespace Eventjuicer\Jobs;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use GuzzleHttp\Client as Guzzle;
+use GuzzleHttp\Exception\ClientException; 
+
 use Exception;
 use Log;
 
@@ -26,24 +28,27 @@ class SendSlackNotificationJob extends Job implements ShouldQueue {
             throw new Exception("env $env_name missing");
         }
 
-        $response = (new Guzzle(["verify"=>false]))->request("POST", $url, [
-            "json" => [
-                "text"=> $this->message,
-            ]
-        ]);
-
-
-        if(env("APP_DEBUG")){
-
-            $json = json_decode( (string) $response->getBody(), true ); 
-
-            Log::debug("SendSlackNotificationJob",  $json  );
+        try {
+            $response = (new Guzzle(["verify"=>false]))->request("POST", $url, [
+                "json" => [
+                    "text"=> $this->message,
+                ]
+            ]);
         }
-      
+        catch (ClientException $e) {
+     
+            // $json = json_decode( (string) $response->getBody(), true ); 
 
-      
+            Log::error("SendSlackNotificationJob",  [
+                "env_name" => $env_name,
+                "response" => $e->getResponse(),
+                "response2"=> $response->getBody()->getContents()
+            ] );
+            
+
+        }
+
     }
 
-
-    
+   
 }
