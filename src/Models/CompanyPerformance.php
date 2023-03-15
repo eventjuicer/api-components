@@ -15,6 +15,9 @@ class CompanyPerformance extends Model {
         'prizes' => 'array',
     ];
 
+    protected $fillable = ["event_id", "company_id"];
+
+
     public function event()
     {   
         return $this->belongsTo(Event::class);
