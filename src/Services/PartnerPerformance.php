@@ -269,13 +269,19 @@ class PartnerPerformance {
 		$query = function() use ($search, $period)
         {
 
+			/**
+			 * 
+			 * https://github.com/eventjuicer/api-components/commits/master/src/Services/PartnerPerformance.php
+			 */
+
+
         	//$dt = Period::days($period);
 
 			//teh22
-        	$dt = Period::create(
-        		Carbon::createFromDate(2022, 9, 1), 
-        		Carbon::create(2022, 10, 26, 23, 59, 59)
-        	);
+        	// $dt = Period::create(
+        	// 	Carbon::createFromDate(2022, 9, 1), 
+        	// 	Carbon::create(2022, 10, 26, 23, 59, 59)
+        	// );
 
 			//ebe7
         	// $dt = Period::create(
@@ -284,10 +290,10 @@ class PartnerPerformance {
         	// );
 
         	//teh23
-        	// $dt = Period::create(
-        	// 	Carbon::createFromDate(2023, 1, 11), 
-        	// 	Carbon::create(2023, 2, 20, 23, 59, 59)
-        	// );
+        	$dt = Period::create(
+        		Carbon::createFromDate(2023, 3, 16), 
+        		Carbon::create(2023, 4, 4, 12, 00, 00)
+        	);
 
 
 			//2nd param - metrics...
