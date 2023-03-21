@@ -41,11 +41,12 @@ class FetchCompanyPerson extends Crud {
 
         //remap for Mailable
 
-        return $res->map(function($item){
+        $res->transform(function($item){
             $item->name = $item->fname . " " . $item->lname;
             return $item;
         });
 
+        return $res;
     }
 
     public function getForParticipantFiltered($participant, $roles): Collection{
@@ -54,9 +55,11 @@ class FetchCompanyPerson extends Crud {
 
         //filter for Mailable
 
-        return $coll->filter(function($item){
+        $coll = $coll->filter(function($item){
             return (new EmailAddress($item->email))->isValid();
         });
+
+        return $coll;
     }
 
     private function handleRolesInput($roles): Collection {
