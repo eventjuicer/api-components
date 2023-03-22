@@ -31,8 +31,8 @@ class HandleLTDConfirm extends Job //implements ShouldQueue
      */
     public function handle(SaveOrder $order, SparkPost $mail, CompanyData $cd){
 
-        // $order->setParticipant( $this->meetup->participant );
-        // $order->makeVip( "C" . $this->meetup->company_id );
+        $order->setParticipant( $this->meetup->participant );
+        $order->makeVip( "C" . $this->meetup->company_id );
 
         $presenter = new Personalizer( $this->meetup->presenter );
         $participant = new Personalizer( $this->meetup->participant );
