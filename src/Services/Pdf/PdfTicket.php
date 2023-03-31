@@ -183,10 +183,9 @@ array(5) {
 				"top" => $this->fourth_row))
 
 		->addText([
-			"left" 		=> $this->center - 60, 
+			"left" 		=> $this->center - 55, 
 			"top" 		=> $this->fourth_row + 45,
-			"fontSize" 	=> 15,
-			"bold"		=> true,
+			"fontSize" 	=> 20,
 			"text" 		=> $regdesk,
 		])
 
@@ -212,10 +211,9 @@ array(5) {
 		)
 				
 		->addText([
-			"left" 		=> $this->center + 40, 
+			"left" 		=> $this->center + 45, 
 			"top" 		=> $this->fourth_row + 45,
-			"fontSize" 	=> 15,
-			"bold"		=> true,
+			"fontSize" 	=> 20,
 			"text" 		=> $regdesk,
 		]);
 	
