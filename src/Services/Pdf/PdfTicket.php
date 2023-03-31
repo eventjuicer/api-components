@@ -91,7 +91,7 @@ class PdfTicket
 	}
 
 
-	protected function addText($data = [], $width=100)
+	protected function addText($data = [], $width=50)
 	{
 		extract($data);
 
@@ -184,7 +184,7 @@ array(5) {
 
 		->addText([
 			"left" 		=> $this->center - 60, 
-			"top" 		=>$this->fourth_row + 60,
+			"top" 		=> $this->fourth_row + 50,
 			"fontSize" 	=> 20,
 			"bold"		=> true,
 			"text" 		=> $regdesk,
@@ -213,7 +213,7 @@ array(5) {
 				
 		->addText([
 			"left" 		=> $this->center + 40, 
-			"top" 		=> $this->fourth_row + 60,
+			"top" 		=> $this->fourth_row + 50,
 			"fontSize" 	=> 20,
 			"bold"		=> true,
 			"text" 		=> $regdesk,
