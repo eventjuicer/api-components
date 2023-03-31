@@ -91,13 +91,13 @@ class PdfTicket
 	}
 
 
-	protected function addText($data = [], $width=50)
+	protected function addText($data = [], $width=45)
 	{
 		extract($data);
 
 		$this->pdf->setXY($this->from_left + $left, $this->from_top + $top, true);	
 		$this->pdf->SetFont('freesansb', '', $fontSize);	
-		$this->pdf->Cell($width, 0, $text, 0, 1, "L", false, "", $bold ? 2 : 1); //OR 1
+		$this->pdf->Cell($width, 0, $text, 0, 1, "L", false, "", 1); //OR 1
 
 		return $this;
 	}
