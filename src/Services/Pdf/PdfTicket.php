@@ -170,14 +170,6 @@ array(5) {
 			"text" 		=> $third,
 		])
 
-		->addTextBox([
-			"left" 		=> 0, 
-			"top" 		=> $this->third_row,
-			"fontSize" 	=> 30,
-			"bold"		=> false,
-			"text" 		=> $third,
-		])
-
 		->addBarcode($code, array(
 				"left" => $this->center - 60, 
 				"top" => $this->fourth_row))
@@ -189,6 +181,14 @@ array(5) {
 			"text" 		=> $regdesk,
 		])
 
+		->addTextBox([
+			"left" 		=> $this->center, 
+			"top" 		=> $this->first_row,
+			"fontSize" 	=> 40,
+			"bold"		=> true,
+			"text" 		=> $first,
+		])
+		
 		->addTextBox([
 			"left" 		=> $this->center, 
 			"top" 		=> $this->second_row,
