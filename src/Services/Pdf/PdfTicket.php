@@ -91,6 +91,18 @@ class PdfTicket
 	}
 
 
+	protected function addText($data = [], $width=100)
+	{
+		extract($data);
+
+		$this->pdf->setXY($this->from_left + $left, $this->from_top + $top, true);	
+		$this->pdf->SetFont('freesansb', '', $fontSize);	
+		$this->pdf->Cell($width, 0, $text, 0, 1, "L", false, "", $bold ? 2 : 1); //OR 1
+
+		return $this;
+	}
+
+
 	public function addPage($template = "")
 	{
 
@@ -170,7 +182,7 @@ array(5) {
 				"left" => $this->center - 60, 
 				"top" => $this->fourth_row))
 
-		->addTextBox([
+		->addText([
 			"left" 		=> $this->center - 60, 
 			"top" 		=>$this->fourth_row + 60,
 			"fontSize" 	=> 20,
@@ -199,7 +211,7 @@ array(5) {
 				"top" => $this->fourth_row)
 		)
 				
-		->addTextBox([
+		->addText([
 			"left" 		=> $this->center + 40, 
 			"top" 		=> $this->fourth_row + 60,
 			"fontSize" 	=> 20,
