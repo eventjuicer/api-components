@@ -185,6 +185,22 @@ class Participant extends Model
         return $this->hasMany(Scan::class, "owner_id")->orderby("id", "DESC");
     }
 
+    public function meetups(){
+        return $this->hasMany(Meetup::class, "participant_id");    
+    }
+    
+    public function workshops(){
+        return $this->hasMany(Meetup::class, "participant_id")->where("direction","like", "LTD");   
+    }
+
+    public function p2c_meetups_agreed(){
+        return $this->hasMany(Meetup::class, "participant_id")->where("direction","like", "P2C")->where("agreed", 1);     
+    }
+
+    public function p2c_meetups_not_agreed(){
+        return $this->hasMany(Meetup::class, "participant_id")->where("direction","like", "P2C")->where("agreed", 0)->whereNotNull("respondet_at");        
+    }
+
     public function scannedParticipants()
     {
         
