@@ -6,20 +6,22 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
-use Eventjuicer\Resources\PublicPreBookingResource;
-use Illuminate\Database\Eloquent\Model;
+use Eventjuicer\Models\Participant as Model;
 
 class NewItemPurchased extends Event implements ShouldBroadcast{
 
     use SerializesModels;
 
-    public $data;
+    public $data, $config;
 
-    public function __construct(Model $participant){
-        $this->data = $participant;
+    public function __construct(Model $data, array $config=[]){
+        $this->data = $data;
+        $this->config = $config;
     }
 
-    public function handle(){}
+    public function handle(){
+        
+    }
     
     public function broadcastOn(){
         

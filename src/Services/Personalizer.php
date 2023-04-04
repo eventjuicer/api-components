@@ -5,8 +5,9 @@ namespace Eventjuicer\Services;
 
 use Eventjuicer\ValueObjects\EmailAddress;
 use Illuminate\Database\Eloquent\Model;
-use Eventjuicer\Services\Hashids;
 use Illuminate\Contracts\Support\Arrayable;
+use Eventjuicer\Services\GenerateParticipantHash;
+
 
 class Personalizer implements Arrayable {
 
@@ -119,7 +120,7 @@ class Personalizer implements Arrayable {
 	}
 
 	public function getCode(){
-		return (new Hashids())->encode($this->model->id); 
+		return (string) (new GenerateParticipantHash($this->model));
 	}
 
 	public function __get($attr) {
@@ -199,7 +200,7 @@ class Personalizer implements Arrayable {
 
 				if( $key === "code" || $key === "hash" ) {
 
-					$output = (new Hashids())->encode($this->model->id);
+					$output = $this->getCode();
 				}
 
 
