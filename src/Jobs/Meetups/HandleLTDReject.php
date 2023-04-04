@@ -45,17 +45,17 @@ class HandleLTDReject extends Job //implements ShouldQueue
         $substitution_data["presentation_venue"] = $presenter->presentation_venue;
         $substitution_data["presentation_time"] = $presenter->presentation_time;
 
-        $mail->send([
-            "template_id" => $this->meetup->organizer_id>1 ? "ebe-ltd-rejected": "pl-ltd-meetup-rejected",
-            // "cc" => !empty($data["cc"]) ? $data["cc"] : false,
-            // "bcc" => !empty($data["bcc"]) ? $data["bcc"] : false,
-            "recipient" => [
-                "name"  => $participant->translate("[[fname]] [[lname]]"),
-                "email" => $participant->email
-            ],
-            "substitution_data" => $substitution_data,             
-            "locale" => "pl"//$locale
-        ]);
+        // $mail->send([
+        //     "template_id" => $this->meetup->organizer_id>1 ? "ebe-ltd-rejected": "pl-ltd-meetup-rejected",
+        //     // "cc" => !empty($data["cc"]) ? $data["cc"] : false,
+        //     // "bcc" => !empty($data["bcc"]) ? $data["bcc"] : false,
+        //     "recipient" => [
+        //         "name"  => $participant->translate("[[fname]] [[lname]]"),
+        //         "email" => $participant->email
+        //     ],
+        //     "substitution_data" => $substitution_data,             
+        //     "locale" => "pl"//$locale
+        // ]);
 
 
 
