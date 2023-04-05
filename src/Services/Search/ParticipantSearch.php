@@ -47,6 +47,8 @@ function __construct(Repository $repo, int $event_id, string $q, $addFields = []
 
             $lookup = Participant::find( (new Hashids())->decode( substr($q, 1) )  );
 
+            var_dump($lookup);
+
             $this->result =  $lookup && $lookup->event_id==$event_id ? collect([ $lookup ]): collect([]);
         }
         else{
