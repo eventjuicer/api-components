@@ -45,11 +45,15 @@ function __construct(Repository $repo, int $event_id, string $q, $addFields = []
 
         }else if( strpos($q, "!") === 0 ){
 
-            $lookup = Participant::find( (new Hashids())->decode( substr($q, 1) )  );
+            $decoded_id = (new Hashids())->decode( substr($q, 1) );
 
-            var_dump($lookup);
+            if(is_numeric($decoded_id)){
+                $lookup = Participant::find( $decoded_id );
+                $this->result = collect([ $lookup ]);
 
-            $this->result =  $lookup && $lookup->event_id==$event_id ? collect([ $lookup ]): collect([]);
+            }else{
+                $this->result = collect([]);
+            }
         }
         else{
   
