@@ -268,8 +268,8 @@ trait Fields {
     "271"=> "custom_jury_ar_vr_3d",
     "272"=> "code",
     "273"=> "limited",
-    "274"=> "company_role",
-    "275"=> "participation_type"
+    "274"=> "company_role", //old 86
+    "275"=> "participation_type" //old 246
 
   );
 
