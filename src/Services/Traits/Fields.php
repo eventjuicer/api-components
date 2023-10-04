@@ -269,7 +269,7 @@ trait Fields {
     "272"=> "code",
     "273"=> "limited",
     "274"=> "company_role", //old 86
-    "275"=> "participation_type" //old 246
+    "275"=> "participant_type" //old 246
 
   );
 
