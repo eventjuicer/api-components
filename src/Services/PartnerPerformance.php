@@ -290,10 +290,16 @@ class PartnerPerformance {
         	// );
 
         	//teh23
-        	$dt = Period::create(
-        		Carbon::createFromDate(2023, 3, 16), 
-        		Carbon::create(2023, 4, 4, 12, 00, 00)
-        	);
+        	// $dt = Period::create(
+        	// 	Carbon::createFromDate(2023, 3, 16), 
+        	// 	Carbon::create(2023, 4, 4, 12, 00, 00)
+        	// );
+
+			//teh24
+			$dt = Period::create(
+				Carbon::createFromDate(2023, 10, 9), 
+				Carbon::create(2023, 10, 25, 12, 00, 00)
+			);
 
 
 			//2nd param - metrics...
