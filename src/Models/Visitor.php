@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Visitor extends Model
 {
 
-    // protected $fillable = [];
+    protected $guarded = ["id"];
 
     protected $table = "eventjuicer_visitors";
     
