@@ -97,7 +97,7 @@ class PublicCompanyResource extends Resource
         $og_image = (new CloudinaryImage($profile["opengraph_image_cdn"]))->thumb(1200, 630);
 
         //it should be taken from settings....
-        $profile["og_template"] = $this->group_id > 1 ? 'ebe7_template' : 'template_teh23_exhibitor';
+        $profile["og_template"] = $this->group_id > 1 ? 'ebe7_template' : 'template_teh24_exhibitor';
         $profile["thumbnail"] = $logotype_thumbnail ?? $profile["logotype"];
 
         $lang = !empty($profile["lang"]) && strlen($profile["lang"])>1 ? $profile["lang"] : $defaultLang;
