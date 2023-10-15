@@ -17,6 +17,8 @@ use Eventjuicer\Crud\Visitors\GetVisitorsForPeriod;
 
 use Illuminate\Contracts\Cache\Repository as Cache;
 use Eventjuicer\Models\Event;
+use Eventjuicer\Models\Company;
+
 use Eventjuicer\Models\PromoPrize;
 
 
@@ -27,15 +29,9 @@ class PartnerPerformanceLocal {
 
 	protected $repo, $participants, $companies, $role, $cache, $gaView, $analytics;
 	
-	protected $statsDefault = ["sessions" => 0, "conversions" => 0, "position" => 0];
-
-	
+	protected $statsDefault = ["sessions" => 0, "conversions" => 0, "position" => 0];	
 	protected $startDate;
 	protected $endDate;
-	protected $prefix = "xx14ycs4_"; //"th3rCMiM_";
-	protected $eventName = "promoninja";
-
-
 	static protected $prizesCache = [];
 
 	function __construct(
@@ -66,19 +62,6 @@ class PartnerPerformanceLocal {
 		// return PromoPrize::where("group_id", $groupId)->where("disabled", 0)->get();
 	}
 
-
-	public function setView($viewId = "")
-	{
-		$config = config('analytics');
-
-        $client = AnalyticsClientFactory::createForConfig($config);
-
-        $this->gaView = $viewId;
-       	
-       	$this->analytics = new Analytics($client, $this->gaView);
-
-	}
-
 	public function setStartDate(DateTime $startDate){
 		$this->startDate = $startDate;
 	}
@@ -87,83 +70,35 @@ class PartnerPerformanceLocal {
 		$this->endDate = $endDate;
 	}
 
-	public function setPrefix(string $prefix){
-		$this->prefix = $prefix;
-	}
-
-	public function getPrefix(){
-		return $this->prefix;
-	}
-
 	public function getDefaultStats(){
 		return $this->statsDefault;
 	}
 
-	
-
-   	public function mergeExhibitorsBySlug(Collection $participants, Collection $analytics) {
-
-		$analytics = $analytics->keyBy("slug");
-
-		$participants->map(function($row) use ($analytics){
-
-			if($row->company_id && $row->company){
-
-				$cd_lookup = $row->company->data->where("name", "ranking_tweak");
-
-				$tweak_value = $cd_lookup->count() ? intval( $cd_lookup->first()->value ) : 0;
-	
-				$stats = $analytics->get( $row->company->slug, $this->getDefaultStats() );
-
-				$tweakedSessions = $stats["sessions"] + $tweak_value;
-
-				$stats["sessions"] = $tweakedSessions > 0 ? $tweakedSessions : 0;
-
-				$row->company->stats = $stats;
-			
-			}
-
-			return $row;
-			
-		});
-
-		return $participants;
-
-   	}
-
 
    	public function getExhibitorRankingPosition($active_event_id){
 
-		$ga = $this->getAnalyticsForSource($this->getPrefix(), 90);
+		$exhibitors = $this->getParticipantsWithRole(
+            "exhibitor", 
+            $active_event_id, 
+            ['company.data']
+        );
 
-		$participants = $this->role->get($active_event_id, "exhibitor", ["company.data"]);
+		$merged = $this->mergeExhibitorWithCompany(
+			$exhibitors, 
+			$this->getLocalRanking($active_event_id)
+		);
 
-		//filter...we only need exhbitors with company assigned!
-
-		$participants = $participants->filter(function($item){
-			return $item->company != null;
-		});
-
-		//filter...we must only have unique companies....
-
-		$participants = $participants->unique("company_id");
-
-		//enrich with GA data....
-		$mapped = $this->mergeExhibitorsBySlug($participants, $ga);
-
-		$sorted = $mapped->sortByDesc("company.stats.sessions")->values();
-
+		$sorted = $merged->sortByDesc("company.stats.sessions")->values();
 
 		$position = 1;
 
-		return $sorted->map(function($exh) use (&$position) {
-
+		return $sorted->map(function($exhibitor) use (&$position) {
 			
-			$stats = isset($exh->company->stats) ? $exh->company->stats: $this->getDefaultStats();
+			$stats = $exhibitor->company->stats;
+
 			$stats["position"] = $stats["sessions"] > 0 ? $position : 0;
 			
-
-			$prizes = $this->getPrizes($exh->group_id); 
+			$prizes = $this->getPrizes($exhibitor->group_id); 
 
 			//check what prizes ...
 
@@ -181,87 +116,93 @@ class PartnerPerformanceLocal {
 
 			})->map(function($item){ return $item["name"]; })->values();
 
-			$exh->company->stats = $stats;
+			$exhibitor->company->stats = $stats;
 			
 			//update position!
 			$position++;
 
-			return $exh;
+			return $exhibitor;
 
 		});
 
 	}
 
-    /**
-     * 
-     * USED by /restricted/ranking ....
-     * 
-     */
-
-   	public function getStatsForCompanies($eventId, $start = null, $end = null)
+   	public function getStatsForCompanies($eventId)
 	{	
 
-		$data = $this->getParticipantsWithRole(
+		$companies = $this->getParticipantsWithRole(
             "exhibitor", 
             $eventId, 
             ['company.data']
         );
-		
-        $companies = $data->pluck("company")->unique();
 
-		//in case some company was not assigned!!!
-		$companies = $companies->filter(function($value, $key){
-			return $value != null;
-		});
+		$companies = $companies->pluck("company");
 
-        $rankingRepo = app(GetVisitorsForPeriod::class);
-        $rankingRepo->setEventId($eventId);
-        $rankingRepo->setStartDate($start);
-        $rankingRepo->setEndDate($end);
+		$ranking = $this->getLocalRanking($eventId);
 
-        $ranking = $rankingRepo->get();
-
-		return $this->mergeByCompanyId($companies, $ranking);
+		return $this->mergeRankingWithCompany($companies, $ranking);
 
 	}
 
 
-    private function mergeByCompanyId(Collection $companies, Collection $ranking){
+	private function getLocalRanking($eventId){
+		
+		$rankingRepo = app(GetVisitorsForPeriod::class);
+        $rankingRepo->setEventId($eventId);
+        $rankingRepo->setStartDate($this->startDate);
+        $rankingRepo->setEndDate($this->endDate);
+
+        return $rankingRepo->get();
+	}
+
+    private function mergeRankingWithCompany(Collection $companies, Collection $ranking){
 
 		$_ranking = $ranking->keyBy("company_id");
-
-		$companies->map(function($row) use ($_ranking){
-
-			$cd_lookup = $row->data->where("name", "ranking_tweak");
-
-			$tweak_value = $cd_lookup->count() ? intval( $cd_lookup->first()->value ) : 0;
-
-			if(!is_null($row)){
-
-				$stats = $_ranking->get($row->id, $this->getDefaultStats() );
-
-				$tweakedSessions = $stats["sessions"] + $tweak_value;
-
-				$stats["sessions"] = $tweakedSessions? $tweakedSessions : 0;
-
-				$row->stats = $stats;
+		$companies->map(function($company) use ($_ranking){
+			if(!is_null($company)){
+				$company->stats = $this->enhanceStats($company, $_ranking);
 			}
-
-
+			return $company;
 		});
-
 		return $companies;
-
    	}
+
+
+	public function mergeExhibitorWithCompany(Collection $exhibitors, Collection $ranking) {
+
+		$_ranking = $ranking->keyBy("company_id");
+		$exhibitors->map(function($exh) use ($_ranking){
+			if($exh->company_id && $exh->company){
+				$exh->company->stats = $this->enhanceStats($exh->company, $_ranking);
+			}
+			return $exh;
+		});
+		return $exhibitors;
+   	}
+
+	private function enhanceStats(Company $company, Collection $ranking){
+
+		$cd_lookup = $company->data->where("name", "ranking_tweak");
+		$tweak_value = $cd_lookup->count() ? intval( $cd_lookup->first()->value ) : 0;
+		$stats = $ranking->get( $company->id, $this->getDefaultStats() );
+		$tweakedSessions = $stats["sessions"] + $tweak_value;
+		$stats["sessions"] = $tweakedSessions > 0 ? $tweakedSessions : 0;
+		return $stats;
+	}
 
 
 	private function getParticipantsWithRole($role, int $eventId, array $withRels = []) : Collection
 	{
 
-
 		$query = function() use ($role, $eventId, $withRels)
 		{
-			return $this->role->get($eventId, $role, $withRels);
+			$data = $this->role->get($eventId, $role, $withRels);
+			$exh = $data->filter(function($item){
+				return $item->company != null;
+			});
+			//filter...we must only have unique companies....
+			$exh = $exh->unique("company_id");
+			return $exh;
 		};
 
 		return env("USE_CACHE", true) ? $this->cache->remember("all_" . $role . "_" . $eventId, 10, $query) : $query();
