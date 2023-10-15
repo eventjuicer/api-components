@@ -6,7 +6,7 @@ use Eventjuicer\Services\GetByRole;
 use Eventjuicer\Services\Exhibitors\CompanyData;
 use Eventjuicer\Services\Revivers\ParticipantSendable;
 use Illuminate\Support\MessageBag;
-use Eventjuicer\Services\PartnerPerformance;
+use Eventjuicer\Services\PartnerPerformanceLocal;
 use Validator;
 
 class Console {
@@ -28,7 +28,7 @@ class Console {
 		GetByRole $repo, 
 		ParticipantSendable $sendable,
 		MessageBag $messagebag,
-		PartnerPerformance $performance
+		PartnerPerformanceLocal $performance
 	){
 
 		$this->repo = $repo;
