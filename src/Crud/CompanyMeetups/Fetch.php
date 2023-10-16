@@ -75,7 +75,7 @@ class Fetch extends Crud  {
 
         $openOrAcceptedHrs = $openOrAccepted->pluck("presenter.fields")->collapse()->where("name", "presentation_time")->pluck("pivot.field_value")->all();
 
-        return in_array($openOrAcceptedHrs, $presentationTime);
+        return in_array($presentationTime, $openOrAcceptedHrs);
 
     }
 
