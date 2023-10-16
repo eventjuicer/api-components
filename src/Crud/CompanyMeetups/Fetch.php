@@ -3,6 +3,7 @@
 namespace Eventjuicer\Crud\CompanyMeetups;
 
 use Eventjuicer\Crud\Crud;
+use Eventjuicer\Models\Participant;
 use Eventjuicer\Repositories\MeetupRepository;
 use Eventjuicer\Repositories\Criteria\BelongsToCompany;
 use Eventjuicer\Repositories\Criteria\BelongsToEvent;
@@ -62,8 +63,22 @@ class Fetch extends Crud  {
         return $repo->all();
     }
 
+    public function checkTimeConflict(Collection $participants){
 
-    
+        $rel_participant_id = (int) $this->getParam("rel_participant_id", 0);
+
+        $presentationTimes = Participant::find($rel_participant_id)->fields->where("name","presentation_time")->first();
+
+        $presentationTime = $presentationTimes? $presentationTimes->pivot->field_value: "";
+
+        $openOrAccepted = $this->getAllForParticipantsInPipelineOrAccepted($participants);
+
+        $openOrAcceptedHrs = $openOrAccepted->pluck("presenter.fields")->collapse()->where("name", "presentation_time")->pluck("pivot.field_value")->all();
+
+        return in_array($openOrAcceptedHrs, $presentationTime);
+
+    }
+
     /**
      * GET ALL OPEN OR ACCEPTED....
      */
@@ -86,11 +101,6 @@ class Fetch extends Crud  {
 
         return $filtered;
     }
-
-
-
-
-
 
 
     /**
