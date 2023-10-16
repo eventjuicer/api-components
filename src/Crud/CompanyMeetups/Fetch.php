@@ -62,6 +62,37 @@ class Fetch extends Crud  {
         return $repo->all();
     }
 
+
+    
+    /**
+     * GET ALL OPEN OR ACCEPTED....
+     */
+
+     public function getAllForParticipantsInPipelineOrAccepted( Collection $participants){
+
+        $repo = $this->makeMeetupRepository();
+
+        $participant_ids = $participants->pluck("id")->all();
+    
+        $repo->pushCriteria(new FlagEquals( "direction", "LTD" ));
+        $repo->pushCriteria(new WhereIn("participant_id",  $participant_ids ));
+        $repo->with(["presenter.fields"]);
+    
+        $all = $repo->all();
+
+        $filtered = $all->filter(function($meetup){
+            return !$meetup->responded_at || $meetup->agreed;
+        });
+
+        return $filtered;
+    }
+
+
+
+
+
+
+
     /**
      * do not allow mass applications!
      */
