@@ -159,7 +159,7 @@ class PartnerPerformanceLocal {
 
 		$companies->map(function($company) use ($ranking){
 			if(!is_null($company)){
-				$company = $this->enhanceStats($company, $ranking);
+				$company->stats = $this->enhanceStats($company, $ranking);
 			}
 			return $company;
 		});
@@ -172,7 +172,7 @@ class PartnerPerformanceLocal {
 	
 		$exhibitors->map(function($exh) use ($ranking){
 			if($exh->company_id && $exh->company){
-				$exh->company = $this->enhanceStats($exh->company, $ranking);
+				$exh->company->stats = $this->enhanceStats($exh->company, $ranking);
 			}
 			return $exh;
 		});
@@ -186,12 +186,13 @@ class PartnerPerformanceLocal {
 		/**
 		 * we must cast to array
 		 */
-		$stats = array_get($ranking, $company->id, $this->getDefaultStats() );
+
+
+		$stats = isset($ranking[$company->id])? $ranking[$company->id]: $this->getDefaultStats();
 
 		$tweakedSessions = $stats["sessions"] + $tweak_value;
 		$stats["sessions"] = $tweakedSessions > 0 ? $tweakedSessions : 0;
-		$company->stats = $stats;
-		return $company;
+		return $stats;
 	}
 
 
