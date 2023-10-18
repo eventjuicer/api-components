@@ -29,13 +29,14 @@ class CompanyRepository extends Repository
 
     	if(!$company) 
     	{
-    		throw new \Exception("Company missing...");
+    		throw new \Exception("Company $id missing...");
     	}
 
     	if(! is_null($company->stats_updated_at) && Carbon::now()->diffInMinutes( $company->stats_updated_at ) < 15){
     		
 			//FRESH -> get from database!
-			// return $company->only( ["position", "points"] );
+			dd("from db");
+			return $company->only( ["position", "points"] )->all();
     	}
 
 		/**
@@ -49,6 +50,10 @@ class CompanyRepository extends Repository
 
 		$exhibitor = $exhibitorsWithStats->where("company_id", $id)->first();
 
+
+Log::error("updateStatsIfNeeded", ["stats" => $exhibitor]);
+
+
 		if(!$exhibitor){
 			 return [];
 		}
@@ -58,11 +63,17 @@ class CompanyRepository extends Repository
 
 		Log::error("updateStatsIfNeeded", ["stats" => $exhibitor->company->stats]);
 
-		$this->update([
-			"stats_updated_at" => Carbon::now(),
-			"points" => $points,
-			"position" => $position
-		], $id);
+
+		if($points>0){
+
+			$this->update([
+				"stats_updated_at" => Carbon::now(),
+				"points" => $points,
+				"position" => $position
+			], $id);
+		}
+
+		
 
 		return compact("points", "position");   
 
