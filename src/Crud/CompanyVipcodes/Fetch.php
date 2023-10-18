@@ -28,6 +28,10 @@ class Fetch extends Crud  {
         $this->limits = $limits;
     }
 
+    function makeRepository(){
+        return app(CompanyVipcodeRepository::class);
+    }
+
     public function getTargetCount(){
         //handle companydata tweak....
 
@@ -56,7 +60,7 @@ class Fetch extends Crud  {
 
         $res = $this->_get($company_id);
 
-        $missing =  $this->getTargetCount();
+        $missing =  $this->getTargetCount(); //10
 
         if($missing > 0){
 
@@ -90,29 +94,35 @@ class Fetch extends Crud  {
 
         $event_id = $this->activeEventId();
 
-        $this->repo->pushCriteria(new BelongsToCompany(  $company_id ));
-        $this->repo->pushCriteria(new BelongsToEvent(  $event_id ));
+        $repo = $this->makeRepository();
 
-        $this->repo->pushCriteria(new FlagEquals("expired", 0));
-        $this->repo->pushCriteria( new SortByDesc("created_at"));
-        
+        $repo->pushCriteria(new BelongsToCompany(  $company_id ));
+        $repo->pushCriteria(new BelongsToEvent(  $event_id ));
 
-        $this->repo->with(["participant.fields"]);
-        return $this->repo->all();
+        $repo->pushCriteria(new FlagEquals("expired", 0));
+        $repo->pushCriteria( new SortByDesc("created_at"));
+
+        $repo->with(["participant.fields"]);
+        return $repo->all();
 
     }
 
     public function getByCode($code){
-        $this->repo->pushCriteria(new FlagEquals("code", (string) $code));
-        return $this->repo->all()->first();
+
+        $repo = $this->makeRepository();
+
+        $repo->pushCriteria(new FlagEquals("code", (string) $code));
+        return $repo->all()->first();
 
     }
 
 
     public function show($id){
 
-        $this->repo->with(["company"]);
-        return $this->repo->find($id);
+        $repo = $this->makeRepository();
+
+        $repo->with(["company"]);
+        return $repo->find($id);
 
     }
 
