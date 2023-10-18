@@ -10,7 +10,8 @@ use Eventjuicer\Repositories\Criteria\ColumnGreaterThan;
 use Eventjuicer\Repositories\Criteria\FlagEquals;
 use Eventjuicer\Services\Company\GetActiveEventId;
 use Eventjuicer\Services\Company\GetCompanyDataValue;
-use Log;
+use Eventjuicer\Services\Company\UpdateCompanyStats;
+
 
 class ApiUserLimits {
 
@@ -42,32 +43,19 @@ class ApiUserLimits {
 		}
 
 
-		$ranking = $this->performance->getExhibitorRankingPosition(
-			(string) new GetActiveEventId($this->company)
-		);
+		$updater = new UpdateCompanyStats($this->company);
+	
+		if(!$updater->statsAreFresh()){
+			$ranking = $this->performance->getExhibitorRankingPosition(
+				(string) new GetActiveEventId($this->company)
+			);
 
-		$exh = $ranking->where("company_id", $this->company->id)->first();
-
-		if($exh && $exh->company){
-			$this->stats = $exh->company->stats;
-		}else{
-			throw new \Exception("not an exh");
+			$updater->updateWithRanking($ranking);
 		}
 
-		Log::info("apiuserlimit", [
-			"cid"=> $exh->company->id, 
-			"evemt" => (string) new GetActiveEventId($this->company),
-			"sta" => $exh->company->stats
-		]);
+		$this->stats = $updater->getCachedStats();
 
 
-		// $this->stats = $this->companies->updateStatsIfNeeded($this->company->id, function()
-		// {
-
-		// 	return 1; 
-		// });
-
-	
 
 	}
 

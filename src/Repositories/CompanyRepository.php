@@ -19,45 +19,7 @@ class CompanyRepository extends Repository
     }
 
 
-    public function updateStatsIfNeeded($id, Closure $source)
-    {
-
-    	$company = $this->find($id);
-
-    	if(!$company) 
-    	{
-    		return [];
-    	}
-
-    	if(! is_null($company->stats_updated_at) && Carbon::now()->diffInMinutes( $company->stats_updated_at ) < 15){
-    		
-			//FRESH -> get from database!
-			return $company->only( ["position", "points"] );
-    	}
-
-    	$exhibitorsWithStats = $source();
-
-		/** Collection of participants */
-
-		$exhibitor = $exhibitorsWithStats->where("company_id", $id)->first();
-
-		if(!$exhibitor){
-			return $company;
-		}
-
-		$points =  array_get($exhibitor->company->stats, "sessions", 0);
-		$position = array_get($exhibitor->company->stats, "position", 0);
-
-		$this->update([
-			"stats_updated_at" => Carbon::now(),
-			"points" => $points,
-			"position" => $position
-		], $id);
-
-		return $this->find($id);   
-
-    }
-
+  
 
 
 }
