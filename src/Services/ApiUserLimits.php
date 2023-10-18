@@ -2,10 +2,11 @@
 namespace Eventjuicer\Services;
 
 use Bosnadev\Repositories\Eloquent\Repository;
-use Eventjuicer\Services\PartnerPerformance;
+use Eventjuicer\Services\PartnerPerformanceLocal;
 use Eventjuicer\Repositories\CompanyRepository;
 use Eventjuicer\Repositories\Criteria\BelongsToCompany;
 use Eventjuicer\Repositories\Criteria\BelongsToEvent;
+use Eventjuicer\Repositories\Criteria\ColumnGreaterThan;
 use Eventjuicer\Repositories\Criteria\FlagEquals;
 use Eventjuicer\Services\Company\GetActiveEventId;
 use Eventjuicer\Services\Company\GetCompanyDataValue;
@@ -16,7 +17,7 @@ class ApiUserLimits {
 
 	protected $stats = null;
 
-	function __construct(PartnerPerformance $performance, CompanyRepository $companies){
+	function __construct(PartnerPerformanceLocal $performance, CompanyRepository $companies){
 
 		$this->performance 	= $performance;
 		$this->companies 	= $companies;
@@ -26,17 +27,6 @@ class ApiUserLimits {
 		if($user && $user->company){
 			
 			$this->company = $user->company;
-
-			if($this->company->group_id == 1) {
-
-				$this->performance->setView(63645499);
-	
-			} else {
-	
-				//BERLIN
-				$this->performance->setView(112949308);
-			}
-
 			
 		}
 		
@@ -44,17 +34,33 @@ class ApiUserLimits {
 
 	public function stats(){
 
+
 		if(!is_null($this->stats))
 		{
 			return $this->stats;
 		}
 
-		return $this->stats = $this->companies->updateStatsIfNeeded($this->company->id, function()
-		{
-			return $this->performance->getExhibitorRankingPosition(
-				(string) new GetActiveEventId($this->company)
-			 ); 
-		});
+
+		$ranking = $this->performance->getExhibitorRankingPosition(
+			(string) new GetActiveEventId($this->company)
+		);
+
+		$exh = $ranking->where("company_id", $this->company->id)->first();
+
+		if($exh && $exh->company){
+			$this->stats = $exh->company->stats;
+		}
+
+
+
+		// $this->stats = $this->companies->updateStatsIfNeeded($this->company->id, function()
+		// {
+
+		// 	return 1; 
+		// });
+
+	
+
 	}
 
 	public function points()
@@ -104,11 +110,11 @@ class ApiUserLimits {
 				);
 			}
 
-			// if($name === "vip"){
-			// 	$params[0]->pushCriteria(
-			// 		new FlagEquals("direction", "C2P")
-			// 	);
-			// }
+			if($name === "vip"){
+				$params[0]->pushCriteria(
+					new ColumnGreaterThan("participant_id", 0)
+				);
+			}
 
 
 			$used = $params[0]->all()->count();
