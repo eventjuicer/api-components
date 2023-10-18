@@ -26,7 +26,7 @@ class CompanyRepository extends Repository
 
     	if(!$company) 
     	{
-    		return [];
+    		throw new \Exception("Company missing...");
     	}
 
     	if(! is_null($company->stats_updated_at) && Carbon::now()->diffInMinutes( $company->stats_updated_at ) < 15){
@@ -42,8 +42,9 @@ class CompanyRepository extends Repository
 		$exhibitor = $exhibitorsWithStats->where("company_id", $id)->first();
 
 		if(!$exhibitor){
-			return $company;
+			throw new \Exception("Company $id missing...");
 		}
+
 
 		$points =  array_get($exhibitor->company->stats, "sessions", 0);
 		$position = array_get($exhibitor->company->stats, "position", 0);
