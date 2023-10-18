@@ -54,6 +54,11 @@ class ApiUserLimits {
 			throw new \Exception("not an exh");
 		}
 
+		Log::info("apiuserlimit", [
+			"cid"=> $exh->company->id, 
+			"evemt" => (string) new GetActiveEventId($this->company),
+			"sta" => $exh->company->stats
+		]);
 
 
 		// $this->stats = $this->companies->updateStatsIfNeeded($this->company->id, function()
