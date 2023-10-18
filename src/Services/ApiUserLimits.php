@@ -47,7 +47,6 @@ class ApiUserLimits {
 
 		$exh = $ranking->where("company_id", $this->company->id)->first();
 
-
 		if($exh && $exh->company){
 			$this->stats = $exh->company->stats;
 		}else{
@@ -97,32 +96,37 @@ class ApiUserLimits {
 		$used = 0;
 		$remaining = 0;
 
-		if(isset($params[0]) && $params[0] instanceof Repository)
+
+		if($params[0] instanceof Repository)
 		{
-			$params[0]->pushCriteria(
-				new BelongsToCompany( (int) $this->company->id )
-			);
-
-			$params[0]->pushCriteria(
-				new BelongsToEvent( (string) new GetActiveEventId($this->company)  )
-			);
-
-			if($name === "meetup"){
-				$params[0]->pushCriteria(
-					new FlagEquals("direction", "C2P")
-				);
-			}
-
-			if($name === "vip"){
-				$params[0]->pushCriteria(
-					new ColumnGreaterThan("participant_id", 0)
-				);
-			}
-
-
-			$used = $params[0]->all()->count();
-
+			$repo = $params[0];
+		}else{
+			$repo = app($params[0]);
 		}
+
+
+		$repo->pushCriteria(
+			new BelongsToCompany( (int) $this->company->id )
+		);
+
+		$repo->pushCriteria(
+			new BelongsToEvent( (string) new GetActiveEventId($this->company)  )
+		);
+
+		if($name === "meetup"){
+			$repo->pushCriteria(
+				new FlagEquals("direction", "C2P")
+			);
+		}
+
+		if($name === "vip"){
+			// $repo->pushCriteria(
+			// 	new FlagEquals("expired", 1)
+			// );
+		}
+
+
+		$used = $repo->all()->count();
 
 		switch($name){
 

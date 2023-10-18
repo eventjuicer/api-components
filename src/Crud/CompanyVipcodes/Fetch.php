@@ -22,8 +22,7 @@ class Fetch extends Crud  {
     protected $howmany = 5;
     protected $limits;
 
-    function __construct(CompanyVipcodeRepository $repo, Create $create, ApiUserLimits $limits){
-        $this->repo = $repo;
+    function __construct(Create $create, ApiUserLimits $limits){
         $this->create = $create;
         $this->limits = $limits;
     }
@@ -36,7 +35,8 @@ class Fetch extends Crud  {
         //handle companydata tweak....
 
         if($this->getUser()){
-            return (int)  $this->limits->vip($this->repo);
+             return (int)  $this->limits->vip(CompanyVipcodeRepository::class);
+
         }else{
             //public endpoint
 
