@@ -151,16 +151,17 @@ class PartnerPerformanceLocal {
         $rankingRepo->setEventId($eventId);
         $rankingRepo->setStartDate($this->startDate);
         $rankingRepo->setEndDate($this->endDate);
+		$data = $rankingRepo->get();
+		$arr = $data->keyBy("company_id")->toArray();
 
-        return $rankingRepo->get();
+        return $arr;
 	}
 
-    private function mergeRankingWithCompany(Collection $companies, Collection $ranking){
+    private function mergeRankingWithCompany(Collection $companies, array $ranking){
 
-		$_ranking = $ranking->keyBy("company_id");
-		$companies->map(function($company) use ($_ranking){
+		$companies->map(function($company) use ($ranking){
 			if(!is_null($company)){
-				$company->stats = $this->enhanceStats($company, $_ranking);
+				$company = $this->enhanceStats($company, $ranking);
 			}
 			return $company;
 		});
@@ -168,26 +169,31 @@ class PartnerPerformanceLocal {
    	}
 
 
-	public function mergeExhibitorWithCompany(Collection $exhibitors, Collection $ranking) {
+	public function mergeExhibitorWithCompany(Collection $exhibitors, array $ranking) {
 
-		$_ranking = $ranking->keyBy("company_id");
-		$exhibitors->map(function($exh) use ($_ranking){
+	
+		$exhibitors->map(function($exh) use ($ranking){
 			if($exh->company_id && $exh->company){
-				$exh->company->stats = $this->enhanceStats($exh->company, $_ranking);
+				$exh->company = $this->enhanceStats($exh->company, $ranking);
 			}
 			return $exh;
 		});
 		return $exhibitors;
    	}
 
-	private function enhanceStats(Company $company, Collection $ranking){
+	private function enhanceStats(Company $company, array $ranking){
 
 		$cd_lookup = $company->data->where("name", "ranking_tweak");
 		$tweak_value = $cd_lookup->count() ? intval( $cd_lookup->first()->value ) : 0;
-		$stats = $ranking->get( $company->id, $this->getDefaultStats() );
+		/**
+		 * we must cast to array
+		 */
+		$stats = array_get($ranking, $company->id, $this->getDefaultStats() );
+
 		$tweakedSessions = $stats["sessions"] + $tweak_value;
 		$stats["sessions"] = $tweakedSessions > 0 ? $tweakedSessions : 0;
-		return $stats;
+		$company->stats = $stats;
+		return $company;
 	}
 
 
