@@ -7,6 +7,7 @@ use Eventjuicer\Repositories\Repository;
 
 use Carbon\Carbon;
 use Closure;
+use Log;
 
 class CompanyRepository extends Repository
 {
@@ -54,6 +55,8 @@ class CompanyRepository extends Repository
 
 		$points =  array_get($exhibitor->company->stats, "sessions", 0);
 		$position = array_get($exhibitor->company->stats, "position", 0);
+
+		Log::error("updateStatsIfNeeded", ["stats" => $exhibitor->company->stats]);
 
 		$this->update([
 			"stats_updated_at" => Carbon::now(),
