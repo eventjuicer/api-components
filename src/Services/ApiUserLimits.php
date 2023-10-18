@@ -10,6 +10,7 @@ use Eventjuicer\Repositories\Criteria\ColumnGreaterThan;
 use Eventjuicer\Repositories\Criteria\FlagEquals;
 use Eventjuicer\Services\Company\GetActiveEventId;
 use Eventjuicer\Services\Company\GetCompanyDataValue;
+use Log;
 
 class ApiUserLimits {
 
