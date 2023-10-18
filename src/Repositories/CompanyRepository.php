@@ -44,15 +44,11 @@ class CompanyRepository extends Repository
 		 * Collection of Participants
 		 */
 
-    	$exhibitorsWithStats = $source();
+    	$exhibitorsWithStats = $source($id);
 
 		/** Collection of participants */
 
 		$exhibitor = $exhibitorsWithStats->where("company_id", $id)->first();
-
-
-	Log::error("xxx", ["id"=>$id, "exhibitor" => $exhibitor->company]);
-
 
 		if(!$exhibitor){
 			 return [];
@@ -60,8 +56,6 @@ class CompanyRepository extends Repository
 
 		$points =  array_get($exhibitor->company->stats, "sessions", 0);
 		$position = array_get($exhibitor->company->stats, "position", 0);
-
-		Log::error("yyy", ["stats" => $exhibitor->company->stats]);
 
 
 		if($points>0){
