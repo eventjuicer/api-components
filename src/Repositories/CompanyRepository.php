@@ -41,11 +41,12 @@ class CompanyRepository extends Repository
 
 		$exhibitor = $exhibitorsWithStats->where("company_id", $id)->first();
 
+
 		if(!$exhibitor){
-			throw new \Exception("Company $id missing...");
+			 return $company;
 		}
 
-		dd($exhibitor->company->stats);
+
 
 		$points =  array_get($exhibitor->company->stats, "sessions", 0);
 		$position = array_get($exhibitor->company->stats, "position", 0);
