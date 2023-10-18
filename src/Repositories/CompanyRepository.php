@@ -51,7 +51,7 @@ class CompanyRepository extends Repository
 		$exhibitor = $exhibitorsWithStats->where("company_id", $id)->first();
 
 
-Log::error("updateStatsIfNeeded", ["stats" => $exhibitor]);
+Log::error("xxx", ["exhibitor" => $exhibitor]);
 
 
 		if(!$exhibitor){
@@ -61,7 +61,7 @@ Log::error("updateStatsIfNeeded", ["stats" => $exhibitor]);
 		$points =  array_get($exhibitor->company->stats, "sessions", 0);
 		$position = array_get($exhibitor->company->stats, "position", 0);
 
-		Log::error("updateStatsIfNeeded", ["stats" => $exhibitor->company->stats]);
+		Log::error("yyy", ["stats" => $exhibitor->company->stats]);
 
 
 		if($points>0){

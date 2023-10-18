@@ -171,13 +171,13 @@ class PartnerPerformanceLocal {
 	public function mergeExhibitorsWithRanking(Collection $exhibitors, Collection $ranking) {
 
 	
-		$exhibitors->map(function($exh) use ($ranking){
+		return $exhibitors->map(function($exh) use ($ranking){
 			if($exh->company_id && $exh->company){
 				$exh->company->stats = $this->enhanceStats($exh->company, $ranking);
 			}
 			return $exh;
 		});
-		return $exhibitors;
+		//return $exhibitors;
    	}
 
 	private function enhanceStats(Company $company, Collection $ranking){
