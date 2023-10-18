@@ -32,7 +32,7 @@ class CompanyRepository extends Repository
     	if(! is_null($company->stats_updated_at) && Carbon::now()->diffInMinutes( $company->stats_updated_at ) < 15){
     		
 			//FRESH -> get from database!
-			return $company->only( ["position", "points"] );
+			// return $company->only( ["position", "points"] );
     	}
 
     	$exhibitorsWithStats = $source();
