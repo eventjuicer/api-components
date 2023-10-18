@@ -73,7 +73,7 @@ class ApiUserLimits {
 
 	public function points()
 	{
-		return array_get($this->stats(), "points", 0);
+		return array_get($this->stats(), "sessions", 0);
 	}
 
 	public function position()
