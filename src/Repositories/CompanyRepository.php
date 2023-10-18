@@ -19,6 +19,8 @@ class CompanyRepository extends Repository
     }
 
 
+	/** it should return Company  */
+	
     public function updateStatsIfNeeded($id, Closure $source)
     {
 
@@ -35,18 +37,20 @@ class CompanyRepository extends Repository
 			// return $company->only( ["position", "points"] );
     	}
 
+		/**
+		 * calling ->getExhibitorRankingPosition
+		 * Collection of Participants
+		 */
+
     	$exhibitorsWithStats = $source();
 
 		/** Collection of participants */
 
 		$exhibitor = $exhibitorsWithStats->where("company_id", $id)->first();
 
-
 		if(!$exhibitor){
-			 return $company;
+			 return [];
 		}
-
-
 
 		$points =  array_get($exhibitor->company->stats, "sessions", 0);
 		$position = array_get($exhibitor->company->stats, "position", 0);
@@ -57,7 +61,7 @@ class CompanyRepository extends Repository
 			"position" => $position
 		], $id);
 
-		return $this->find($id);   
+		return compact("points", "position");   
 
     }
 

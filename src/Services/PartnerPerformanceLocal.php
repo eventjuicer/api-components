@@ -83,7 +83,7 @@ class PartnerPerformanceLocal {
             ['company.data']
         );
 
-		$merged = $this->mergeExhibitorWithCompany(
+		$merged = $this->mergeExhibitorsWithRanking(
 			$exhibitors, 
 			$this->getLocalRanking($active_event_id)
 		);
@@ -138,9 +138,7 @@ class PartnerPerformanceLocal {
 
 		$companies = $companies->pluck("company");
 
-		$ranking = $this->getLocalRanking($eventId);
-
-		return $this->mergeRankingWithCompany($companies, $ranking);
+		return $this->mergeCompaniesWithRanking($companies, $this->getLocalRanking($eventId));
 
 	}
 
@@ -157,7 +155,7 @@ class PartnerPerformanceLocal {
         return $arr;
 	}
 
-    private function mergeRankingWithCompany(Collection $companies, array $ranking){
+    private function mergeCompaniesWithRanking(Collection $companies, array $ranking){
 
 		$companies->map(function($company) use ($ranking){
 			if(!is_null($company)){
@@ -169,7 +167,7 @@ class PartnerPerformanceLocal {
    	}
 
 
-	public function mergeExhibitorWithCompany(Collection $exhibitors, array $ranking) {
+	public function mergeExhibitorsWithRanking(Collection $exhibitors, array $ranking) {
 
 	
 		$exhibitors->map(function($exh) use ($ranking){
