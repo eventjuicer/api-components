@@ -47,8 +47,11 @@ class ApiUserLimits {
 
 		$exh = $ranking->where("company_id", $this->company->id)->first();
 
+
 		if($exh && $exh->company){
 			$this->stats = $exh->company->stats;
+		}else{
+			throw new \Exception("not an exh");
 		}
 
 

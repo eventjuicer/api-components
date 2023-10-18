@@ -84,7 +84,7 @@ class PartnerPerformanceLocal {
 		//filter...we only need exhbitors with company assigned!
 
 		$participants = $participants->filter(function($item){
-			return $item->company != null;
+			return $item->company;
 		});
 
 		//filter...we must only have unique companies....
@@ -100,11 +100,10 @@ class PartnerPerformanceLocal {
 
 		return $sorted->map(function($exh) use (&$position) {
 
-			
-			$stats = isset($exh->company->stats) ? $exh->company->stats: $this->getDefaultStats();
+			$stats = $exh->company->stats;
+
 			$stats["position"] = $stats["sessions"] > 0 ? $position : 0;
 			
-
 			$prizes = $this->getPrizes($exh->group_id); 
 
 			//check what prizes ...
@@ -149,8 +148,12 @@ class PartnerPerformanceLocal {
 
 				$tweak_value = $cd_lookup->count() ? intval( $cd_lookup->first()->value ) : 0;
 
+				if($analytics->has($row->company->id)){
+					$stats = $analytics->get($row->company->id)->toArray();
+				}else{
+					$stats = $this->getDefaultStats();
+				}
 
-				$stats = $analytics->get( $row->company->id, $this->getDefaultStats() );
 
 				$tweakedSessions = $stats["sessions"] + $tweak_value;
 
@@ -179,6 +182,7 @@ class PartnerPerformanceLocal {
 		$rankingRepo->setStartDate($this->startDate);
 		$rankingRepo->setEndDate($this->endDate);
 		$data = $rankingRepo->get();
+
 
 		return $data;
 
