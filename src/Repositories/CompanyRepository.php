@@ -25,6 +25,7 @@ class CompanyRepository extends Repository
     public function updateStatsIfNeeded($id, Closure $source)
     {
 
+
     	$company = $this->find($id);
 
     	if(!$company) 
@@ -35,8 +36,7 @@ class CompanyRepository extends Repository
     	if(! is_null($company->stats_updated_at) && Carbon::now()->diffInMinutes( $company->stats_updated_at ) < 15){
     		
 			//FRESH -> get from database!
-			dd("from db");
-			return $company->only( ["position", "points"] )->all();
+//			return $company->only( ["position", "points"] )->all();
     	}
 
 		/**
@@ -51,7 +51,7 @@ class CompanyRepository extends Repository
 		$exhibitor = $exhibitorsWithStats->where("company_id", $id)->first();
 
 
-Log::error("xxx", ["exhibitor" => $exhibitor]);
+	Log::error("xxx", ["id"=>$id, "exhibitor" => $exhibitor->company]);
 
 
 		if(!$exhibitor){
