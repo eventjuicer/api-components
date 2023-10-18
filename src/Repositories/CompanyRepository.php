@@ -45,6 +45,7 @@ class CompanyRepository extends Repository
 			throw new \Exception("Company $id missing...");
 		}
 
+		dd($exhibitor->company->stats);
 
 		$points =  array_get($exhibitor->company->stats, "sessions", 0);
 		$position = array_get($exhibitor->company->stats, "position", 0);
