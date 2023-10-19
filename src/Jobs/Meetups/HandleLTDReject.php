@@ -57,22 +57,7 @@ class HandleLTDReject extends Job //implements ShouldQueue
         //     "locale" => "pl"//$locale
         // ]);
 
-
-
-        // $substitution_data = [
-        //     "name" => $data["name"],
-        //     "url" =>  "https://targiehandlu.pl/exhibitors/".$company->slug."?vipcode=".$code
-        // ];
-
-        // $mail->send([
-        //     "template_id" => "pl-vips-invite",
-        //     "recipient" => [
-        //         "name"  => $this->vipcode->email,
-        //         "email" => $this->vipcode->email
-        //     ],
-        //     "substitution_data" => $substitution_data,                
-        //     "locale" => "en"
-        // ]);
+        
 
       
     }
