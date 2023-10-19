@@ -39,7 +39,10 @@ class CompanyData {
         "sales_manager"         => 0,
    
         //"marketing_person"      => 0,
-        "invitation_template"   => 0
+        "invitation_template"   => 0,
+
+        "ltd_reject_template" => "",
+        "ltd_accept_template" => ""
 
 
     ];

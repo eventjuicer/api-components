@@ -60,21 +60,7 @@ class HandleLTDConfirm extends Job //implements ShouldQueue
         ]);
 
 
-
-        // $substitution_data = [
-        //     "name" => $data["name"],
-        //     "url" =>  "https://targiehandlu.pl/exhibitors/".$company->slug."?vipcode=".$code
-        // ];
-
-        // $mail->send([
-        //     "template_id" => "pl-vips-invite",
-        //     "recipient" => [
-        //         "name"  => $this->vipcode->email,
-        //         "email" => $this->vipcode->email
-        //     ],
-        //     "substitution_data" => $substitution_data,                
-        //     "locale" => "en"
-        // ]);
+        dispatch(new HandleLTDAutoMassReject($this->meetup));
 
       
     }
