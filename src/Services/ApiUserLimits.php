@@ -114,9 +114,9 @@ class ApiUserLimits {
 		}
 
 		if($name === "vip"){
-			// $repo->pushCriteria(
-			// 	new FlagEquals("expired", 1)
-			// );
+			$repo->pushCriteria(
+				new ColumnGreaterThan("participant_id", 0)
+			);
 		}
 
 
