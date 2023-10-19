@@ -3,12 +3,12 @@
 namespace Eventjuicer\Jobs\Meetups;
 
 use Eventjuicer\Jobs\Job;
-use Eventjuicer\Models\Meetup;
+use Eventjuicer\Models\Participant;
 use Eventjuicer\Services\SparkPost;
 use Eventjuicer\Services\Personalizer;
 use Eventjuicer\Crud\CompanyMeetups\Fetch as CompanyMeetupsFetch;
 use Carbon\Carbon;
-
+use Log;
 
 class HandleLTDAutoMassReject extends Job //implements ShouldQueue
 {
@@ -19,10 +19,10 @@ class HandleLTDAutoMassReject extends Job //implements ShouldQueue
      * @return void
      */
 
-    public $meetup;
+    public $participant;
 
-    public function __construct(Meetup $meetup){
-        $this->meetup = $meetup;
+    public function __construct(Participant $participant){
+        $this->participant = $participant;
     }
 
     /**
@@ -32,17 +32,30 @@ class HandleLTDAutoMassReject extends Job //implements ShouldQueue
      */
     public function handle(CompanyMeetupsFetch $companymeetups, SparkPost $mail){
 
-        $participant = $this->meetup->participant;
 
         //check if user has at least 2 accepted
 
         $allAgreed = $companymeetups->getAllAgreedForParticipants(
-            collect([$participant])
+            collect([ $this->participant ])
         );
+
+       
+        Log::info("HandleLTDAutoMassReject", [
+            "allAgreed" => $allAgreed
+        ]);
 
         if($allAgreed->count() >= 2){
 
-            $getAllForParticipantsInPipeline = $companymeetups->getAllForParticipantsInPipeline(collect([$participant]));
+           
+            $getAllForParticipantsInPipeline = $companymeetups->getAllForParticipantsInPipeline(
+                collect([ $this->participant ])
+            );
+    
+
+                 
+            Log::info("HandleLTDAutoMassReject", [
+                "getAllForParticipantsInPipeline" => $getAllForParticipantsInPipeline
+            ]);
 
             foreach($getAllForParticipantsInPipeline as $toBeRejected){
 
@@ -58,13 +71,13 @@ class HandleLTDAutoMassReject extends Job //implements ShouldQueue
 
             }
 
-            $participant = new Personalizer( $participant);
+            $participant = new Personalizer( $this->participant);
             $substitution_data = [];
-            $substitution_data["fname"] = $participant->fname;
+            $substitution_data["fname"] = $this->participant->fname;
     
             
             $mail->send([
-                "template_id" => $this->meetup->organizer_id>1 ? "ebe-ltd-meetup-autorejected": "pl-ltd-meetup-autorejected",
+                "template_id" => $this->participant->organizer_id>1 ? "ebe-ltd-meetup-autorejected": "pl-ltd-meetup-autorejected",
                 // "cc" => "workshops@targiehandlu.pl",
                 // "bcc" => !empty($data["bcc"]) ? $data["bcc"] : false,
                 "recipient" => [
