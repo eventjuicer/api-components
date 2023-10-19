@@ -38,11 +38,10 @@ class HandleLTDAutoMassReject extends Job //implements ShouldQueue
         $allAgreed = $companymeetups->getAllAgreedForParticipants(
             collect([ $this->participant ])
         );
-
-       
-        Log::info("HandleLTDAutoMassReject", [
-            "allAgreed" => $allAgreed->count()
-        ]);
+   
+        // Log::info("HandleLTDAutoMassReject", [
+        //     "allAgreed" => $allAgreed->count()
+        // ]);
 
         if($allAgreed->count() >= 2){
 
@@ -50,12 +49,10 @@ class HandleLTDAutoMassReject extends Job //implements ShouldQueue
             $getAllForParticipantsInPipeline = $companymeetups->getAllForParticipantsInPipeline(
                 collect([ $this->participant ])
             );
-    
-
-                 
-            Log::info("HandleLTDAutoMassReject", [
-                "getAllForParticipantsInPipeline" => $getAllForParticipantsInPipeline->count()
-            ]);
+                  
+            // Log::info("HandleLTDAutoMassReject", [
+            //     "getAllForParticipantsInPipeline" => $getAllForParticipantsInPipeline->count()
+            // ]);
 
             foreach($getAllForParticipantsInPipeline as $toBeRejected){
 

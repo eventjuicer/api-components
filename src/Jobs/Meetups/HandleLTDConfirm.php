@@ -8,7 +8,7 @@ use Eventjuicer\Services\SaveOrder;
 use Eventjuicer\Services\SparkPost;
 use Eventjuicer\Services\Personalizer;
 use Eventjuicer\Crud\CompanyData\Fetch as CompanyData;
-use Eventjuicer\Jobs\Meetups\HandleLTDAutoMassReject;
+
 
 class HandleLTDConfirm extends Job //implements ShouldQueue
 {
@@ -60,7 +60,7 @@ class HandleLTDConfirm extends Job //implements ShouldQueue
             "locale" => "pl"//$locale
         ]);
 
-        dispatch(new HandleLTDAutoMassReject( $this->meetup->participant ));
+
 
 
       
