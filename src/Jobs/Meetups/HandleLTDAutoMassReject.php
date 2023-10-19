@@ -57,24 +57,27 @@ class HandleLTDAutoMassReject extends Job //implements ShouldQueue
                 $toBeRejected->save();
 
             }
+
+            $participant = new Personalizer( $participant);
+            $substitution_data = [];
+            $substitution_data["fname"] = $participant->fname;
+    
+            
+            $mail->send([
+                "template_id" => $this->meetup->organizer_id>1 ? "ebe-ltd-meetup-autorejected": "pl-ltd-meetup-autorejected",
+                // "cc" => "workshops@targiehandlu.pl",
+                // "bcc" => !empty($data["bcc"]) ? $data["bcc"] : false,
+                "recipient" => [
+                    "name"  => $participant->translate("[[fname]] [[lname]]"),
+                    "email" => $participant->email
+                ],
+                "substitution_data" => $substitution_data,             
+                "locale" => "pl"//$locale
+            ]);
+
+            
         }
 
-        $participant = new Personalizer( $participant);
-        $substitution_data = [];
-        $substitution_data["fname"] = $participant->fname;
-
-        
-        $mail->send([
-            "template_id" => $this->meetup->organizer_id>1 ? "ebe-ltd-meetup-autorejected": "pl-ltd-meetup-autorejected",
-            // "cc" => "workshops@targiehandlu.pl",
-            // "bcc" => !empty($data["bcc"]) ? $data["bcc"] : false,
-            "recipient" => [
-                "name"  => $participant->translate("[[fname]] [[lname]]"),
-                "email" => $participant->email
-            ],
-            "substitution_data" => $substitution_data,             
-            "locale" => "pl"//$locale
-        ]);
 
       
     }
