@@ -12,10 +12,16 @@ class GetCompanyDataValue {
         $this->companydata = $company->data;
     }
 
-    function get($name){
+    function get($name, $replacement = null){
 
         $query = $this->companydata->where("name", $name)->first();
 
-        return $query? $query->value : null;
+        return $query? $query->value : $replacement;
     }
+
+    function __get($name){
+       return $this->get($name); 
+    }
+
+    
 }
