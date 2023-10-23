@@ -6,6 +6,7 @@ use Eventjuicer\Crud\Crud;
 use Eventjuicer\Repositories\MeetupRepository;
 use Eventjuicer\Repositories\Criteria\BelongsToEvent;
 use Eventjuicer\Repositories\Criteria\ColumnMatches;
+use Eventjuicer\Repositories\Criteria\FlagEquals;
 use Eventjuicer\Repositories\Criteria\SortBy;
 use Eventjuicer\Repositories\Criteria\WhereHas;
 use Eventjuicer\Repositories\Criteria\WhereIn;
@@ -19,9 +20,17 @@ class FetchParticipantMeetups extends Crud  {
     }
 
     public function getForParticipantIds(array $ids){
-        $this->repo->pushCriteria(new WhereIn("participant_id", $ids ));
-        $res = $this->repo->all();
-        return $res;
+        $repo = app(MeetupRepository::class);
+        $repo->pushCriteria(new WhereIn("participant_id", $ids ));
+        $repo->pushCriteria(new FlagEquals("agreed", 1));
+        $repo->with([
+            "presenter.fieldpivot", 
+            "company.data",
+            "company.participants.ticketpivot" => function($q){
+                $q->where("event_id", $this->getParam("event_id"));
+            }
+        ]);
+        return $repo->all();;
     }
 
     // public function countVisitorsByEventId($event_id){
