@@ -7,7 +7,6 @@ use Illuminate\Http\Resources\Json\Resource;
 class PlannerCompanyResource extends Resource
 {
 
-    static $eventId;
 
     protected static $presenterFields = [
 
@@ -23,9 +22,7 @@ class PlannerCompanyResource extends Resource
         "logotype_cdn",
     ];
 
-    static function setEventId($eventId){
-        self::$eventId = $eventId;
-    }
+     
    
     public function toArray($request){   
 
