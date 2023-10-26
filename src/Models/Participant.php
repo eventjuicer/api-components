@@ -188,6 +188,10 @@ class Participant extends Model
     public function meetups(){
         return $this->hasMany(Meetup::class, "participant_id");    
     }
+
+    public function meetups_agreed(){
+        return $this->hasMany(Meetup::class, "participant_id")->where("agreed", 1);     
+    }
     
     public function workshops(){
         return $this->hasMany(Meetup::class, "participant_id")->where("direction","like", "LTD");   
