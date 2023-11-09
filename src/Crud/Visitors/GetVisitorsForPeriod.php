@@ -16,7 +16,7 @@ class GetVisitorsForPeriod extends Crud {
 
     protected $repository;
     protected $organizerId, $groupId, $eventId;
-    protected $startDate, $endDate = "2023-10-25 23:59:00";
+    protected $startDate, $endDate = "2023-10-26 23:59:00";
 
     function __construct(VisitorRepository $repository)
     {
@@ -31,14 +31,14 @@ class GetVisitorsForPeriod extends Crud {
 
         // if($this->startDate){
         //     $this->repository->pushCriteria(
-        //         new OlderThanDateTime("created_at", $this->startDate)
+        //         new YoungerThanDateTime("created_at", $this->startDate)
         //     );
         // }
-        // if($this->endDate){
+        if($this->endDate){
             $this->repository->pushCriteria(
-                new YoungerThanDateTime("created_at", $this->endDate)
+                new OlderThanDateTime("created_at", $this->endDate)
             );
-        // }
+        }
        
         // if($this->organizerId){
         //     $this->repository->pushCriteria(
