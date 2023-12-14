@@ -279,6 +279,14 @@ trait Fields {
         return array_get($this->fields, $keyId, null);
     }
 
+    public function getFieldId($keyName){
+        return array_get(
+            array_flip($this->fields), 
+            $keyName, 
+            null
+        );
+    }
+
     public function filterFields(Collection $profile, $showable = [], $conditions = []){
 
         $filtered = $profile->mapWithKeys(function($item)use($showable) {
