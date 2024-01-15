@@ -21,13 +21,13 @@ class VisitorResource extends Resource {
 
             $data = [];
 
-            $data["profile"]=  $this->fields->whereIn("name", $this->presenterFields)->mapWithKeys(function($item) {     
+            $data["profile" ]= $this->fields? $this->fields->whereIn("name", $this->presenterFields)->mapWithKeys(function($item) {     
 
                 $value = $item->pivot->field_value;
 
                 return [ $item->name => $value ] ;
 
-            })->all();
+            })->all(): [];
 
             $data["id"] = (int) $this->id;
             // $data["important"] = (int) $this->important;
