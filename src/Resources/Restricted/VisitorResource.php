@@ -6,7 +6,16 @@ use Eventjuicer\ValueObjects\EmailAddress;
 
 class VisitorResource extends Resource {
 
-    protected $presenterFields = ["fname", "lname", "cname2", "position", "nip", "important"];
+    protected $presenterFields = [
+        "fname", 
+        "lname", 
+        "cname2", 
+        "position", 
+        "nip", 
+        "important", 
+        "participant_type", 
+        "profile_linkedin"
+    ];
 
     public function toArray($request){
 
@@ -21,8 +30,8 @@ class VisitorResource extends Resource {
             })->all();
 
             $data["id"] = (int) $this->id;
-            $data["important"] = (int) $this->important;
-            $data["ns"] = "participant";
+            // $data["important"] = (int) $this->important;
+            // $data["ns"] = "participant";
             $data["domain"] = (new EmailAddress($this->email))->domain();
 
 
