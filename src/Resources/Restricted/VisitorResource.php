@@ -32,7 +32,7 @@ class VisitorResource extends Resource {
             $data["id"] = (int) $this->id;
             // $data["important"] = (int) $this->important;
             // $data["ns"] = "participant";
-            $data["domain"] = (new EmailAddress($this->email))->domain();
+            $data["domain"] = $this->email ? (new EmailAddress($this->email))->domain() : "";
 
 
            return $data;
