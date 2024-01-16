@@ -34,8 +34,9 @@ class GetParticipantsByFieldValue extends Crud  {
     
     public function get($value){
         if(strlen($value)){
+            $this->repo->with(["participant.fields"]);
             $this->repo->pushCriteria(new ColumnMatches("field_value",  $value));
-            return $this->repo->all();
+            return $this->repo->all()->pluck("participant");
         }
 
     }
