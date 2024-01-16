@@ -110,6 +110,10 @@ class SavePaidOrder implements SavesPaidOrder {
 
 	public function getLocksForUUID(){
 
+		if(!$this->uuid){
+			return collect([]);
+		}
+
 		return PreBooking::where("sessid", $this->uuid)->get();
 	}
 
