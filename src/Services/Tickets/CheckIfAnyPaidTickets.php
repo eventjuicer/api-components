@@ -4,7 +4,7 @@ namespace Eventjuicer\Services\Tickets;
 
 use Eventjuicer\Crud\Tickets\GetTicketsByIds;
 
-class CheckifAnyPaidTickets {
+class CheckIfAnyPaidTickets {
 
     private $tickets;
 
