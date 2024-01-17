@@ -18,7 +18,10 @@ class ParticipantTicketResource extends Resource
         if(is_array($data)){
             $data["participant_id"] = $this->participant_id;
             $data["ticket_id"] = $this->ticket_id;
-            $data["company"] = new PublicCompanyResource($this->participant->company);
+            // $data["company"] = new PublicCompanyResource($this->participant->company);
+            
+            $data["company"] = [];
+ 
             $data["purchase"] = new PurchaseResource($this->purchase);
         }
  		
