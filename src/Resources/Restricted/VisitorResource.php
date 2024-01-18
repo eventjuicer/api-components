@@ -15,7 +15,7 @@ class VisitorResource extends Resource {
         "important", 
         "participant_type", 
         "company_role",
-        "linkedin"
+        "profile_linkedin"
     ];
 
     public function toArray($request){
