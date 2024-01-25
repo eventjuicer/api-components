@@ -16,7 +16,8 @@ class GetVisitorsForPeriod extends Crud {
 
     protected $repository;
     protected $organizerId, $groupId, $eventId;
-    protected $startDate, $endDate = "2023-10-26 23:59:00";
+    protected $startDate;
+    protected $endDate = "2024-02-19 15:59:59";
 
     function __construct(VisitorRepository $repository)
     {
@@ -29,33 +30,33 @@ class GetVisitorsForPeriod extends Crud {
         //     throw new \Exception("No scope defined");
         // }
 
-        // if($this->startDate){
-        //     $this->repository->pushCriteria(
-        //         new YoungerThanDateTime("created_at", $this->startDate)
-        //     );
-        // }
+        if($this->startDate){
+            $this->repository->pushCriteria(
+                new YoungerThanDateTime("created_at", $this->startDate)
+            );
+        }
         if($this->endDate){
             $this->repository->pushCriteria(
                 new OlderThanDateTime("created_at", $this->endDate)
             );
         }
        
-        // if($this->organizerId){
-        //     $this->repository->pushCriteria(
-        //         new BelongsToOrganizer($this->organizerId)
-        //     );
-        // }
+        if($this->organizerId){
+            $this->repository->pushCriteria(
+                new BelongsToOrganizer($this->organizerId)
+            );
+        }
 
-        // if($this->groupId){
-        //     $this->repository->pushCriteria(
-        //         new BelongsToGroup($this->groupId)
-        //     );
-        // }
+        if($this->groupId){
+            $this->repository->pushCriteria(
+                new BelongsToGroup($this->groupId)
+            );
+        }
 
         if($this->eventId){
-            // $this->repository->pushCriteria(
-            //     new BelongsToEvent($this->eventId)
-            // );
+            $this->repository->pushCriteria(
+                new BelongsToEvent($this->eventId)
+            );
         }
 
         $this->repository->pushCriteria(
