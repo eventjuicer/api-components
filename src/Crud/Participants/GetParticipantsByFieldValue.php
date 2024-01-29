@@ -5,14 +5,11 @@ namespace Eventjuicer\Crud\Participants;
 use Eventjuicer\Crud\Crud;
 use Eventjuicer\Repositories\ParticipantFieldRepository;
 use Eventjuicer\Repositories\Criteria\BelongsToEvent;
-use Eventjuicer\Repositories\Criteria\ColumnMatches;
-use Eventjuicer\Repositories\Criteria\FlagEquals;
+use Eventjuicer\Repositories\Criteria\ProfileFieldMatches;
 use Eventjuicer\Repositories\Criteria\SortBy;
-use Eventjuicer\Services\Traits\Fields;
 
 class GetParticipantsByFieldValue extends Crud  {
 
-    use Fields;
 
     protected $repo;
 
@@ -27,18 +24,16 @@ class GetParticipantsByFieldValue extends Crud  {
         return $this;
     }
     
-    public function setName($field_name){
-        $this->repo->pushCriteria(new FlagEquals("field_id",  $this->getFieldId($field_name)));
+    public function setConditions(array $conditions){
+        $this->repo->pushCriteria(new ProfileFieldMatches($conditions));    
         return $this;
     }
     
-    public function get($value){
-        if(strlen($value)){
-            $this->repo->with(["participant.fields"]);
-            $this->repo->pushCriteria(new ColumnMatches("field_value",  $value));
-            return $this->repo->all()->pluck("participant");
-        }
+    public function get($with=["participant"]){
 
+        $this->repo->with($with);
+        return $this->repo->all()->pluck("participant");
+        
     }
     
 }
