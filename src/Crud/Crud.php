@@ -24,6 +24,12 @@ abstract class Crud {
         return $this->repo;
     }
 
+
+    public function makeModel(){
+        $this->repo->makeModel();
+        return $this;
+    }
+
     public function find($id){
 
         $model = $this->repo->find($id);
