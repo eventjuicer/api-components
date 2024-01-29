@@ -29,9 +29,9 @@ class GetParticipantsByFieldValue extends Crud  {
         return $this;
     }
     
-    public function get($with=["participant"]){
+    public function get(array $with=[]){
 
-        $this->repo->with($with);
+        $this->repo->with( array_merge(["participant"], $with) );
         return $this->repo->all()->pluck("participant");
         
     }

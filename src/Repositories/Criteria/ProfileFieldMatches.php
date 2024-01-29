@@ -14,10 +14,10 @@ class ProfileFieldMatches extends Criteria {
     private $conditions;
     private $and_or_or;
 
-    function __construct($conditions = [], $and_or_or = "")
+    function __construct($conditions = [], $and_or_or = "AND")
     {
         $this->conditions   = $conditions;
-        $this->and_or_or  = $and_or_or;
+        $this->and_or_or  = strtoupper($and_or_or);
 
     }
 
@@ -37,7 +37,7 @@ class ProfileFieldMatches extends Criteria {
 
             }
 
-            if($i > 0 && strtoupper($this->and_or_or) === "OR"){
+            if($i > 0 && $this->and_or_or === "OR"){
                 $model->orwhere(function($query) use ($field_id, $field_value) {
                     $query->where("field_id", $field_id);
                     $query->where("field_value", "like", $field_value);
