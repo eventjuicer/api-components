@@ -123,10 +123,12 @@ class PublicCompanyResource extends Resource
             "profile"   =>  $this->when(!self::$skipProfile, $profile),
 
             "instances" =>  !self::$skipPurchases && $this->hasTicketPivot() ? 
-                $this->participants->pluck("ticketpivot")->collapse()->values() : []
+
+            PublicCompanyTicketPivotResource::collection(
+                    $this->participants->pluck("ticketpivot")->collapse()->values()
+                ): []
             
         ];
-
         
         return $data;
     }
