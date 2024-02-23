@@ -17,19 +17,24 @@ class OnlyExhibitorRoleTransform {
 
     public function transform(Company $item){
 
+        foreach($item->participants AS $participant){
 
-        $item->participants->transform(function($participant){
-
-            $has_allowed_roles = $participant->ticketpivot->filter(function($ticketpivot){
-
+            $participant->ticketpivot = $participant->ticketpivot->filter(function($ticketpivot){
+    
                 return in_array( $ticketpivot->ticket->role, $this->allowedRoles);
     
             });
 
-            return $has_allowed_roles->count()? $participant : null;
-            
-        });
-        
+            if(!$participant->ticketpivot->count()){
+                $item->participants->forget($participant->id); 
+            }
+
+
+        }
+
+
+
+
         return $item;
         
     }
