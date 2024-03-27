@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use Eventjuicer\Repositories\ParticipantRepository;
 use Eventjuicer\Repositories\CompanyDataRepository;
 use Eventjuicer\Repositories\Criteria\ColumnMatches;
-use Eventjuicer\Repositories\Criteria\ColumnMatchesArray;
 use Eventjuicer\Repositories\Criteria\ColumnGreaterThanZero;
 use Eventjuicer\Repositories\Criteria\RelHasNonZeroValue;
 use Eventjuicer\Repositories\Criteria\BelongsToCompany;

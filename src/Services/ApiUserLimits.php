@@ -6,7 +6,7 @@ use Eventjuicer\Services\PartnerPerformanceLocal;
 use Eventjuicer\Repositories\CompanyRepository;
 use Eventjuicer\Repositories\Criteria\BelongsToCompany;
 use Eventjuicer\Repositories\Criteria\BelongsToEvent;
-use Eventjuicer\Repositories\Criteria\ColumnGreaterThan;
+use Eventjuicer\Repositories\Criteria\VipCodeIsUsable;
 use Eventjuicer\Repositories\Criteria\FlagEquals;
 use Eventjuicer\Services\Company\GetActiveEventId;
 use Eventjuicer\Services\Company\GetCompanyDataValue;
@@ -114,13 +114,12 @@ class ApiUserLimits {
 		}
 
 		if($name === "vip"){
-			$repo->pushCriteria(
-				new ColumnGreaterThan("participant_id", 0)
-			);
+			$repo->pushCriteria(new VipCodeIsUsable());
 		}
 
 
 		$used = $repo->all()->count();
+
 
 		switch($name){
 

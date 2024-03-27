@@ -62,6 +62,8 @@ class Fetch extends Crud  {
 
         $missing =  $this->getTargetCount(); //10
 
+        // dd($missing);
+
         if($missing > 0){
 
             foreach(range(1, $missing) as $i){ 
