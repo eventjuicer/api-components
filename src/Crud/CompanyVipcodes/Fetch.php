@@ -78,7 +78,7 @@ class Fetch extends Crud  {
     protected function expireExpired($company_id=0){
 
         foreach($this->_get($company_id) as $item){
-            if( trim($item->email) && !$item->participant_id && $item->updated_at->addDays(1)->isPast() ){
+            if( trim($item->email) && !$item->participant_id && $item->updated_at->addDays(5)->isPast() ){
                 $item->expired =  1;
                 //do not update updated_at
                 $item->timestamps = false;
