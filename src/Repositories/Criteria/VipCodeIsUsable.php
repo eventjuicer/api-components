@@ -17,7 +17,7 @@ class VipCodeIsUsable extends Criteria {
     public function apply($model, Repository $repository)
     {
 
-        $model->where("participant_id", ">", 0)->orwhere("expired", 0);
+        $model->where("participant_id", 0)->orwhere("expired", 0);
 
         return $model;
 
