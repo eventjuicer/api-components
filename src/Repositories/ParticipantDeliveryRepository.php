@@ -20,7 +20,7 @@ class ParticipantDeliveryRepository extends Repository
         return ParticipantDelivery::class;
     }
 
-    public function updateAfterSend(string $email, int $eventId)
+    public function updateAfterSend(string $email, int $eventId, string $context = "p")
     {
 
         $event = Event::find($eventId);
@@ -32,7 +32,8 @@ class ParticipantDeliveryRepository extends Repository
     	$model->event_id = $eventId;
         $model->group_id = $event->group_id;
         $model->organizer_id = $event->organizer_id;
-
+        $model->context = $context;
+        
     	$model->save();
 
         return $model->id;
