@@ -91,6 +91,19 @@ trait UseRequestInfo {
         $this->data[$key] = $value;
     }
 
+    public function getIds($var = "ids", $sep = ","){
+
+        $ids = array_filter(
+            array_map("trim", 
+                explode($sep, $this->getParam($var))
+            ),
+            "is_numeric"
+        );
+
+        return $ids;
+    }
+
+
     public function getParam($key, $replacement=null){
 
         $this->setData();
