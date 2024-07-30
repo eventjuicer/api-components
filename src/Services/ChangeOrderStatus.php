@@ -53,7 +53,7 @@ class ChangeOrderStatus {
 		return $this->purchase($id, "cancelled");
 	}
 
-	public function purchase(int $id, string $newStatus){
+	public function purchase(int $id, string $newStatus, string $status_source = "manual"){
 
 
 		$purchase = Purchase::find($id);
@@ -75,7 +75,7 @@ class ChangeOrderStatus {
 
 		$purchase->paid = (int) ($newStatus === "ok");
 
-		$purchase->status_source = "manual";
+		$purchase->status_source = $status_source;
 
 		$purchase->updatedon = (string) Carbon::now();
 
