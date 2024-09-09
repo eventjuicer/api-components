@@ -36,7 +36,7 @@ class SendSlackNotificationListener {
         });
 
 
-        $webhooks->each(function($webhook) use($participant, $profile) {
+        $webhooks->filter()->unique()->each(function($webhook) use($participant, $profile) {
 
             dispatch( new SendSlackNotificationJob( 
 
