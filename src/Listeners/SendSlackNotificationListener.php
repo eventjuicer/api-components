@@ -40,7 +40,7 @@ class SendSlackNotificationListener {
 
             dispatch( new SendSlackNotificationJob( 
 
-                $participant->email . " " . $profile->translate("[[fname]] [[lname]] [[cname2]]"),
+                $participant->email . " " . $profile->translate("[[fname]] [[lname]] [[cname]] [[cname2]]"),
                 $participant->organizer_id,
                 $webhook
     
