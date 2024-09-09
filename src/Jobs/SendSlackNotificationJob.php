@@ -22,7 +22,7 @@ class SendSlackNotificationJob extends Job implements ShouldQueue {
 
     public function handle(){
 
-        if(empty($this->webhook)){
+        if(empty($this->webhook) || $this->webhook === "default"){
             /**
              * TODO
              * we shoud get default webhook from organizer_db
