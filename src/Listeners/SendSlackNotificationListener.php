@@ -28,7 +28,7 @@ class SendSlackNotificationListener {
         $ticketgroups = $_ticketgroups->getGroups();
 
         $tickets->each(function($ticket) use ($webhooks){
-            $webhooks->push($ticket->json);
+            $webhooks->push( trim($ticket->json) );
         });
 
         $ticketgroups->each(function($ticketgroup) use ($webhooks){
@@ -36,7 +36,7 @@ class SendSlackNotificationListener {
              * WARNING! ticket group may be not assigned!
              */
             if($ticketgroup){
-                $webhooks->push($ticketgroup->json);
+                $webhooks->push( trim($ticketgroup->json) );
             }
         });
 
