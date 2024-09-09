@@ -34,6 +34,7 @@ class Ticket extends Model{
 
     protected $table = "bob_tickets";
     public $timestamps = false;
+    public $visible = ["json"];
 
     protected $casts = [
 
