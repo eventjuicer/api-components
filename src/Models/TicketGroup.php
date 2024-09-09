@@ -14,12 +14,13 @@ class TicketGroup extends Model
 
     protected $table = "bob_ticket_groups";
     public $timestamps = false;
+    public $visible = ["json"];
 
     protected $casts = [
 
         'descriptions' => 'array',
         'booth' => 'array',
-        "json" => "array"
+        // "json" => "array"
     ];
     
     public function tickets()

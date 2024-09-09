@@ -12,20 +12,29 @@ class SendSlackNotificationJob extends Job implements ShouldQueue {
 
     public $message;
     public $organizer_id;
+    public $webhook;
 
-    public function __construct($message = "", $organizer_id=0){
+    public function __construct($message = "", $organizer_id=0, $webhook=""){
         $this->message = $message;
-        $this->organizer_id = $organizer_id;
+        $this->organizer_id = intval($organizer_id);
+        $this->webhook = trim($webhook);
     }
 
     public function handle(){
 
-        $env_name = "SLACK_HOOK_ORG_" . $this->organizer_id;
+        if(empty($this->webhook)){
+            /**
+             * TODO
+             * we shoud get default webhook from organizer_db
+             */
+            $env_name = "SLACK_HOOK_ORG_" . $this->organizer_id;
+            $url = env( $env_name );
+        }else{
+            $url = $this->webhook;
+        }
 
-        $url = env( $env_name );
-
-        if(empty($url)){
-            throw new Exception("env $env_name missing");
+        if(empty($url) || stripos($url, "https")===false){
+            throw new Exception("Webhook URL missing or invalid");
         }
 
         try {

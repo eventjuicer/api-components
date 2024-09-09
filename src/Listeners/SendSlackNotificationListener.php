@@ -4,7 +4,10 @@ namespace Eventjuicer\Listeners;
 
 use Eventjuicer\Jobs\SendSlackNotificationJob;
 use Eventjuicer\Events\NewItemPurchased;
-use Eventjuicer\Crud\Participants\ParticipantRoles;
+// use Eventjuicer\Crud\Participants\ParticipantRoles;
+use Eventjuicer\Crud\Participants\ParticipantTicketGroups;
+use Eventjuicer\Services\Personalizer;
+
 
 class SendSlackNotificationListener {
 
@@ -13,46 +16,40 @@ class SendSlackNotificationListener {
 
     public function handle(NewItemPurchased $event){    
 
+
+        $webhooks = collect([]);
         $participant = $event->data;
-        $roles = new ParticipantRoles($event->data);
+        //$formdata = $event->config; (tickets, fields...)
+        // $roles = new ParticipantRoles($event->data);
+        $profile = new Personalizer($participant);
+        $_ticketgroups = new ParticipantTicketGroups($participant);
 
-        //check ticket role!
+        $tickets = $_ticketgroups->getTickets();
+        $ticketgroups = $_ticketgroups->getGroups();
 
-        if( $roles->hasRole("visitor") ){
-            return;
-        }
+        $tickets->each(function($ticket) use ($webhooks){
+            $webhooks->push($ticket->json);
+        });
 
-        if( $roles->hasRole("presenter") ){
-            return;
-        }
-
-        if( $roles->hasRole("juror") ){
-            return;
-        }
+        $ticketgroups->each(function($ticketgroup) use ($webhooks){
+            $webhooks->push($ticketgroup->json);
+        });
 
 
-        if( $roles->hasRole("party") ){
-            return;
-        }
+        $webhooks->each(function($webhook) use($participant, $profile) {
 
-        if( $roles->hasRole("contestant*") ){
-            return;
-        }
+            dispatch( new SendSlackNotificationJob( 
 
-        if( $roles->hasRole("representative") ){
-            return;
-        }
+                $participant->email . " " . $profile->translate("[[fname]] [[lname]] [[cname2]]"),
+                $participant->organizer_id,
+                $webhook
+    
+            ) );
 
-        // if($participant->organizer_id > 1){
-        //     return;
-        // }
+        });
 
-        dispatch( new SendSlackNotificationJob( 
 
-            $participant->email . " " . strval($roles),
-            $participant->organizer_id
-
-        ) );
+      
     }
 
 
