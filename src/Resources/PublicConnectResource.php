@@ -11,13 +11,15 @@ class PublicConnectResource extends Resource {
     
         $data = [];
 
+        $tickets =$this->purchases->pluck("tickets")->collapse();
+
         $data["id"] = $this->id;
         $data["event_id"] = (int) $this->event_id;
         $data["company_id"] = (int) $this->company_id;
         $data["important"] = (int) $this->important;
         $data["lang"] = (string) $this->lang;
-
-        $data["tickets"] = PublicConnectTicketResource::collection($this->purchases->pluck("tickets")->collapse());
+        $data["roles"] = $tickets->pluck("role")->unique();
+        $data["tickets"] = PublicConnectTicketResource::collection($tickets );
         
         //$this->purchases->pluck("tickets")->collapse();
         // $data["direction"] = (string) $this->direction;
