@@ -205,7 +205,7 @@ class Creatives {
 
             $lang = trim(strval(array_get($cd, "lang"))) ? array_get($cd, "lang") : "pl";
 
-            $logotype = $logotype_cdn->wrapped("template_teh25_exhibitor_" . $lang);
+            $logotype = $logotype_cdn->wrapped("template_teh26_exhibitor_" . $lang);
 
 
             return [
