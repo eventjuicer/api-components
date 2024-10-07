@@ -17,7 +17,7 @@ class GetVisitorsForPeriod extends Crud {
     protected $repository;
     protected $organizerId, $groupId, $eventId;
     protected $startDate;
-    protected $endDate = "2024-04-10 23:59:59";
+    protected $endDate = "2024-10-24 23:59:59";
 
     function __construct(VisitorRepository $repository)
     {
