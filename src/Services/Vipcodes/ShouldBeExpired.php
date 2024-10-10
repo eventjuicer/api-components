@@ -18,6 +18,6 @@ class ShouldBeExpired {
     }
 
     public function blockedTill(){
-        return $this->vipcode->updated_at->addDay();
+        return $this->vipcode->updated_at->addDays(5);
     }
 }
