@@ -4,6 +4,9 @@ namespace Eventjuicer\Services;
 
 use Illuminate\Http\Request;
 use Eventjuicer\Repositories\ParticipantRepository;
+use Eventjuicer\Models\Group;
+
+
 
 class ApiTokenUser {
 
@@ -55,6 +58,20 @@ class ApiTokenUser {
 
 		return preg_match(self::$tokenRegExp, $token);
 	}
+
+    public function userEventisActive(){
+        $user = $this->getUser();
+        if(!$user){
+            return false;
+        }
+        $group = Group::findOrFail($user->group_id);
+
+        if($group->active_event_id != $user->event_id){
+            return false;
+        }
+
+        return true;
+    }
 
     public function getToken(){
 		return $this->token;
