@@ -39,6 +39,10 @@ class ApiUserResource extends Resource
 
             $data["id"] = (int) $this->id;
 
+            $data["event_id"] = $this->event_id;
+
+            $data["archive"] = $this->event_id != $active_event_id;
+
             $profile = $this->remapFields($this->fields);
 
             if($this->parent_id)
@@ -78,6 +82,7 @@ class ApiUserResource extends Resource
 
             $data["domain"] = (new EmailAddress($this->email))->domain();
 
+            $data["active_event_id"] = $active_event_id;
             $data["active_event"] = new ApiUserCompanyEventResource($active_event);
 
            return $data;
