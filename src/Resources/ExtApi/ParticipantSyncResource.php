@@ -13,7 +13,7 @@ class ParticipantSyncResource extends Resource
 
         $data = [];
         $data["id"] = (int) $this->id;
-        $data["updated_at"] = (string) $this->createdon;
+        $data["ts"] = (string) $this->createdon;
 
         return $data;
 
