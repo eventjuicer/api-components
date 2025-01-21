@@ -1,6 +1,6 @@
 <?php
 
-namespace Eventjuicer\Resources\Extapi;
+namespace Eventjuicer\Resources\ExtApi;
 
 use Illuminate\Http\Resources\Json\Resource;
 use Eventjuicer\Services\Hashids;
