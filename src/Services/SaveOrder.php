@@ -480,6 +480,11 @@ class SaveOrder {
 
 		}
 
+		if(isset($this->fields["unsubscribed"])){
+			$this->participant->unsubscribed = intval($this->fields["unsubscribed"]);
+			$this->participant->save();
+		}
+
 		$this->participant = $this->participant->fresh();
 
 	}
