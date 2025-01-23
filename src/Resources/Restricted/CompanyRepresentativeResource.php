@@ -23,6 +23,7 @@ class CompanyRepresentativeResource extends Resource
 
       $data["profile"] = ( new Personalizer($this->resource) )->getProfile();
       $data["profile"]["email"] = $this->email;
+      $data["profile"]["unsubscribed"] = (int) $this->unsubscribed;
 
       $data["mobileappcode"] = $codeId . "@" . $token;
 

@@ -300,6 +300,11 @@ class SaveOrder {
 			$participant->important = intval($this->fields["important"]);
 		}
 
+		if( isset($this->fields["unsubscribed"]) ){
+			$participant->unsubscribed = intval($this->fields["unsubscribed"]);
+			unset($this->fields["unsubscribed"]);
+		}
+
 		$participant->save();
 
 		$this->setParticipant($participant);
