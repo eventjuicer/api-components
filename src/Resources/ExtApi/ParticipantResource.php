@@ -36,7 +36,7 @@ class ParticipantResource extends Resource
             return $item->status != "cancelled" ;
         })->pluck("tickets")->collapse()->pluck("role")->all();
 
-        $data["important"] = $this->important || !empty($data["fields"]["important"]);
+        $data["important"] = intval($this->important || !empty($data["fields"]["important"]) );
     
         $data["code"] = (new Hashids())->encode( $this->id );
 
