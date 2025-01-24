@@ -19,7 +19,8 @@ class ParticipantTicketResource extends Resource
             $data["participant_id"] = $this->participant_id;
             $data["ticket_id"] = $this->ticket_id;
             $data["purchase_id"] = $this->purchase_id;
-
+            
+            $data["company_id"] = !empty($this->participant) ? $this->participant->company_id: 0;
 
             // $data["company"] = new PublicCompanyResource($this->participant->company);
             
