@@ -32,8 +32,11 @@ class HandleLTDConfirm extends Job //implements ShouldQueue
      */
     public function handle(SaveOrder $order, SparkPost $mail, CompanyData $cd){
 
-        $order->setParticipant( $this->meetup->participant );
-        $order->makeVip( "C" . $this->meetup->company_id );
+        //DO NOT MAKE VIP on EBE
+        if(intval($this->meetup->organizer_id)===1){
+            $order->setParticipant( $this->meetup->participant );
+            $order->makeVip( "C" . $this->meetup->company_id );
+        }
 
         $presenter = new Personalizer( $this->meetup->presenter );
         $participant = new Personalizer( $this->meetup->participant );
@@ -46,6 +49,10 @@ class HandleLTDConfirm extends Job //implements ShouldQueue
         $substitution_data["presentation_title"] = $presenter->presentation_title;
         $substitution_data["presentation_venue"] = $presenter->presentation_venue;
         $substitution_data["presentation_time"] = $presenter->presentation_time;
+        $substitution_data["presentation_day"] = $presenter->presentation_day;
+        $substitution_data["tm_visitday"] = $presenter->tm_visitday || $presenter->presentation_day;
+
+        
 
 
         $mail->send([
