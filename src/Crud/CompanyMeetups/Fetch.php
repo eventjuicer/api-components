@@ -67,15 +67,29 @@ class Fetch extends Crud  {
 
         $rel_participant_id = (int) $this->getParam("rel_participant_id", 0);
 
+        //PRESENTER
         $presentationTimes = Participant::find($rel_participant_id)->fields->where("name","presentation_time")->first();
 
+        $presentationDays = Participant::find($rel_participant_id)->fields->where("name","presentation_day")->first();
+
         $presentationTime = $presentationTimes? $presentationTimes->pivot->field_value: "";
+        $presentationDay = $presentationDays? $presentationDays->pivot->field_value: "";
+        $presentationToBeChecked = $presentationDay.$presentationTime;
 
+        //PARTICIPANTS is participant with multiple identities, huh!
         $openOrAccepted = $this->getAllForParticipantsInPipelineOrAccepted($participants);
+        $openOrAcceptedFields = $openOrAccepted->pluck("presenter.fields")->collapse();
 
-        $openOrAcceptedHrs = $openOrAccepted->pluck("presenter.fields")->collapse()->where("name", "presentation_time")->pluck("pivot.field_value")->all();
+        $openOrAcceptedPresentationsByDayTime = $openOrAcceptedFields->map(function($fields) {
+            $presentation_day = $fields->where("name", "presentation_day")->pluck("pivot.field_value")->first();
+            $presentation_time = $fields->where("name", "presentation_time")->pluck("pivot.field_value")->first();
+            return $presentation_day . $presentation_time;
+        })->all();
 
-        return in_array($presentationTime, $openOrAcceptedHrs);
+        /**$toBeChecked = $openOrAcceptedFields->where("name", "presentation_time")->pluck("pivot.field_value")->all();
+        */
+
+        return in_array($presentationToBeChecked, $openOrAcceptedPresentationsByDayTime);
 
     }
 
