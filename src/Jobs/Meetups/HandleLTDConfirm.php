@@ -50,7 +50,7 @@ class HandleLTDConfirm extends Job //implements ShouldQueue
         $substitution_data["presentation_venue"] = $presenter->presentation_venue;
         $substitution_data["presentation_time"] = $presenter->presentation_time;
         $substitution_data["presentation_day"] = $presenter->presentation_day;
-        $substitution_data["tm_visitday"] = $presenter->tm_visitday || $presenter->presentation_day;
+        $substitution_data["tm_visitday"] = $presenter->tm_visitday? $presenter->tm_visitday: $presenter->presentation_day;
 
         
 
