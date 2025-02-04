@@ -78,16 +78,23 @@ class Fetch extends Crud  {
 
         //PARTICIPANTS is participant with multiple identities, huh!
         $openOrAccepted = $this->getAllForParticipantsInPipelineOrAccepted($participants);
-        $openOrAcceptedFields = $openOrAccepted->pluck("presenter.fields")->collapse();
+    
+        $openOrAcceptedPresentationsByDayTime = $openOrAccepted->map(function($meetup) {
+        // Get the fields for the presenter; here $fields is a Collection.
+        $fields = $meetup->presenter->fields;
 
-        $openOrAcceptedPresentationsByDayTime = $openOrAcceptedFields->map(function($fields) {
-            $presentation_day = $fields->where("name", "presentation_day")->pluck("pivot.field_value")->first();
-            $presentation_time = $fields->where("name", "presentation_time")->pluck("pivot.field_value")->first();
-            return $presentation_day . $presentation_time;
+        $presentation_day = $fields
+            ->where("name", "presentation_day")
+            ->pluck("pivot.field_value")
+            ->first();
+
+        $presentation_time = $fields
+            ->where("name", "presentation_time")
+            ->pluck("pivot.field_value")
+            ->first();
+
+        return $presentation_day . $presentation_time;
         })->all();
-
-        /**$toBeChecked = $openOrAcceptedFields->where("name", "presentation_time")->pluck("pivot.field_value")->all();
-        */
 
         return in_array($presentationToBeChecked, $openOrAcceptedPresentationsByDayTime);
 
