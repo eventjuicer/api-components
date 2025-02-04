@@ -37,7 +37,7 @@ class ParticipantResource extends Resource
         })->pluck("tickets")->collapse()->pluck("role")->all();
 
         $data["important"] = intval($this->important || !empty($data["fields"]["important"]) );
-    
+        $data["lang"] = $this->lang;
         $data["code"] = (new Hashids())->encode( $this->id );
 
         return $data;
