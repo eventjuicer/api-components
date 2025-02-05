@@ -86,5 +86,16 @@ class ApiTokenUser {
 	}
 	
 
+    public function getActiveEventIdFromUser(){
+        $user = $this->getUser();
+        if(!$user){
+            return false;
+        }
+        $group = Group::findOrFail($user->group_id);
+
+        return $group->active_event_id;
+
+    }
+
 
 }
