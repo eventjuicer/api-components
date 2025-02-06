@@ -10,7 +10,7 @@ use Eventjuicer\Repositories\Criteria\BelongsToOrganizer;
 use Eventjuicer\Repositories\Criteria\BelongsToGroup;
 use Eventjuicer\Repositories\Criteria\BelongsToEvent;
 use Eventjuicer\Repositories\Criteria\SortByDesc;
-use Eventjuicer\Re1positories\Criteria\GroupBy;
+use Eventjuicer\Repositories\Criteria\GroupBy;
 	
 class GetVisitorsForPeriod extends Crud {
 
