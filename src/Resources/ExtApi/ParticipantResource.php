@@ -34,7 +34,7 @@ class ParticipantResource extends Resource
 
         $data["roles"] = $this->purchases->filter(function($item){
             return $item->status != "cancelled" ;
-        })->pluck("tickets")->collapse()->pluck("role")->all();
+        })->pluck("tickets")->collapse()->pluck("role")->unique()->values()->all();
 
         $data["important"] = intval($this->important || !empty($data["fields"]["important"]) );
         $data["code"] = (new Hashids())->encode( $this->id );

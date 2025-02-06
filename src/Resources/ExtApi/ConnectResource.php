@@ -20,7 +20,7 @@ class ConnectResource extends Resource {
         $data["parent_id"] = (int) $this->parent_id;
         $data["important"] = (int) $this->important;
         $data["lang"] = (string) $this->lang;
-        $data["roles"] = $tickets->pluck("role")->unique()->all();
+        $data["roles"] = $tickets->pluck("role")->unique()->values()->all();
         $data["tickets"] = ConnectTicketResource::collection($tickets );
         $data["code"] = (new Hashids())->encode( $this->id );
 
