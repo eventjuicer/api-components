@@ -10,14 +10,14 @@ use Eventjuicer\Repositories\Criteria\BelongsToOrganizer;
 use Eventjuicer\Repositories\Criteria\BelongsToGroup;
 use Eventjuicer\Repositories\Criteria\BelongsToEvent;
 use Eventjuicer\Repositories\Criteria\SortByDesc;
-use Eventjuicer\Repositories\Criteria\GroupBy;
+use Eventjuicer\Re1positories\Criteria\GroupBy;
 	
 class GetVisitorsForPeriod extends Crud {
 
     protected $repository;
     protected $organizerId, $groupId, $eventId;
     protected $startDate;
-    protected $endDate = "2024-10-24 23:59:59";
+    protected $endDate = "2025-02-18 23:59:59";
 
     function __construct(VisitorRepository $repository)
     {
