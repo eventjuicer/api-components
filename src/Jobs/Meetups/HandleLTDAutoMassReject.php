@@ -43,7 +43,7 @@ class HandleLTDAutoMassReject extends Job //implements ShouldQueue
         //     "allAgreed" => $allAgreed->count()
         // ]);
 
-        if($allAgreed->count() >= 3){
+        if($allAgreed->count() >= 6){
 
             $getAllForParticipantsInPipeline = $companymeetups->getAllForParticipantsInPipeline(
                 collect([ $this->participant ])
