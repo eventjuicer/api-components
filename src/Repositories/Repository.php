@@ -165,6 +165,12 @@ class Repository extends BaseRepository
     }
 
 
+    public function allDistinct($columns = array('*'))
+    {
+        $this->applyCriteria();
+        return $this->model->distinct()->get($columns);
+    }
+
 
 
 
