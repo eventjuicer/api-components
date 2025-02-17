@@ -24,7 +24,7 @@ class SendOrderConfirmationEmailJob extends Job implements ShouldQueue {
         $profile = $personalizer->getProfile(true);
 
         if($this->participant->group_id > 1){
-            $domain = "ecommerceberlin.com";
+            $domain = "ecomm.berlin";
 
         }else{
             $domain = "targiehandlu.pl";
