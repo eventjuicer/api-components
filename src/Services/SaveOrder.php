@@ -266,7 +266,7 @@ class SaveOrder {
 			}
 		}
 
-		
+		dispatch( new RunSyncWithSecondaryDatabaseJob( $participant->id ) );
 
 	}
 
