@@ -26,7 +26,7 @@ use Illuminate\Database\Eloquent\Model;
 use Eventjuicer\Contracts\CountsSoldTickets;
 use Eventjuicer\Crud\CompanyMeetups\CreateByParticipant as CreateMeetupWithCompany;
 use Eventjuicer\Services\Vipcodes\VipFromVisitorRegistration;
-
+use Eventjuicer\Jobs\RunSyncWithSecondaryDatabaseJob;
 
 
 use Uuid;
@@ -325,6 +325,8 @@ class SaveOrder {
 			"important" => 1,
 			"referral" => $referral
 		));
+
+		dispatch( new RunSyncWithSecondaryDatabaseJob( $participant->id ) );
 	}
 
 	protected function countTotalAmount(){
