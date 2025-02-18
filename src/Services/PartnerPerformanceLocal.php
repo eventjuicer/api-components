@@ -12,7 +12,7 @@ use Eventjuicer\Models\Event;
 use Eventjuicer\Models\PromoPrize;
 use Eventjuicer\Crud\Visitors\GetVisitorsForPeriod;
 use Eventjuicer\Services\ApiUser;
-
+use DateTime;
 
 class PartnerPerformanceLocal {
 	

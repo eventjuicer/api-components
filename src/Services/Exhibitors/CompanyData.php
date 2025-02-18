@@ -222,6 +222,13 @@ class CompanyData {
 		return collect([]);
 	}
 
+	public function getVips(){
+		if($this->hasCompany()){
+			return $this->getCompany()->meetups;
+		}
+		return collect([]);
+	}
+
 	public function getLang($defaultLang){
 
 		$lang = array_get($this->companyData(), "lang", "");
