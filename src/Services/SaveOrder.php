@@ -266,7 +266,7 @@ class SaveOrder {
 			}
 		}
 
-		dispatch( new RunSyncWithSecondaryDatabaseJob( $this->participant->id ) );
+		dispatch( new RunSyncWithSecondaryDatabaseJob( $this->participant->id, $this->participant->organizer_id ) );
 
 	}
 
@@ -326,7 +326,7 @@ class SaveOrder {
 			"referral" => $referral
 		));
 
-		dispatch( new RunSyncWithSecondaryDatabaseJob( $this->participant->id ) );
+		dispatch( new RunSyncWithSecondaryDatabaseJob( $this->participant->id, $this->participant->organizer_id ) );
 	}
 
 	protected function countTotalAmount(){

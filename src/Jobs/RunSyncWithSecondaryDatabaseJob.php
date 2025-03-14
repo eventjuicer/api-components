@@ -11,16 +11,20 @@ use Log;
 class RunSyncWithSecondaryDatabaseJob extends Job implements ShouldQueue {
 
     public $participant_id;
-    protected $URL = "https://ecomm.berlin/api/sync";
+    public $organizer_id;
 
-    public function __construct($participant_id=0){
+    public function __construct($participant_id = 0, $organizer_id = 0){
         $this->participant_id = $participant_id;
+        $this->organizer_id = $organizer_id;
+        
     }
 
     public function handle(){
 
+        $URL = $this->organizer_id > 1? "https://ecomm.berlin/api/sync": "https://ecwe.pl/api/sync";
+
         try {
-            $response = (new Guzzle(["verify"=>false]))->request("GET", $this->URL."/".$this->participant_id);
+            $response = (new Guzzle(["verify"=>false]))->request("GET", $URL."/".$this->participant_id);
         }
         catch (ClientException $e) {
 
