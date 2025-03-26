@@ -31,13 +31,13 @@ class AllExhibitorsReps {
 		self::$eventId = $eventId;
 	}
 
-	public function getSendable($role = "representatve"){
+	public function getSendable($role = "representatve", $enhanced = true){
 
 		if(empty(self::$eventId)){
 			throw new \Exception("no EventId set up!");
 		}
 
-        $filtered = $this->sendable->filter($this->get($role),  self::$eventId );
+        $filtered = $this->sendable->filter($this->get($role, $enhanced),  self::$eventId );
 
         return $filtered;
 
