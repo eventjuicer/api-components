@@ -239,13 +239,16 @@ class SaveOrder {
 		if(! $this->participant ){
 
 			//create new participant!
-			$this->registerParticipant();			
+			$this->registerParticipant();	
+			$this->saveFields();		
 			//event(new UserWasRegistered());
+		}else{
+			$this->updateFields();
 		}
 		
 		$this->saveTickets();
 			
-		$this->saveFields();
+		
 
 		if($company_id && !$vipcode){
 			$this->meetupHandler->setData($this->fields);
