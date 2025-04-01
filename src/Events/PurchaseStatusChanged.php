@@ -6,11 +6,11 @@ use Eventjuicer\Models\Purchase;
 
 class PurchaseStatusChanged extends Event
 {
-    public $model, $status;
+    public $purchase, $status;
 
-    public function __construct(Purchase $model, string $status)
+    public function __construct(Purchase $purchase, string $status)
     {
-        $this->model = $model;
+        $this->purchase = $purchase;
         $this->status = $status;
     }
     
