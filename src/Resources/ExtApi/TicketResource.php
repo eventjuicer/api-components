@@ -23,14 +23,13 @@ class TicketResource extends Resource
         "translation_asset_id" => (string) $this->translation_asset_id,
         "internal_name" => (string) $this->internal_name,
         "baseprice" => (int) $this->baseprice,
-        "_price"  => $this->price,
         "price_currency" => (string) $this->price_currency,
-        "_name"  => (string) array_get($this->names, "pl"),
+        "_prices"  => $this->price,
+        "_names"  => (string) array_get($this->names, "pl"),
         "role" => $this->role,
-        "start" => (string) $this->start,
-        "end" => (string) $this->end,
-        "limit" => $this->limit,
-
+        "formdata" => $this->pivot->formdata,
+        "quantity" => (int) $this->pivot->quantity,
+        "sold" => (int) $this->pivot->sold,
         ];  
     }
 }

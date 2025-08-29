@@ -37,7 +37,7 @@ class Purchase extends Model{
 
     public function tickets(){
 
-        return $this->belongsToMany(Ticket::class, 'bob_participant_ticket', 'purchase_id', 'ticket_id')->withPivot("sold");
+        return $this->belongsToMany(Ticket::class, 'bob_participant_ticket', 'purchase_id', 'ticket_id')->withPivot("sold", "formdata", "quantity");
     }
 
 
