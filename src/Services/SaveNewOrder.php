@@ -4,18 +4,11 @@ namespace Eventjuicer\Services;
 
 use Illuminate\Http\Request;
 
-//use Laravel\Lumen\Routing\ProvidesConvenienceMethods;
-
-use Eventjuicer\Repositories\ParticipantRepository;
-use Eventjuicer\Repositories\PurchaseRepository;
-use Eventjuicer\Repositories\TicketRepository;
-use Eventjuicer\Repositories\InputRepository;
+ 
 
 use Events\UserWasRegistered;
 use Validator;
 use Eventjuicer\Models\Participant;
-use Eventjuicer\Models\Organizer;
-use Eventjuicer\Models\Group;
 use Eventjuicer\Models\Event;
 use Eventjuicer\Models\ParticipantTicket;
 use Eventjuicer\Models\ParticipantFields;
@@ -118,35 +111,7 @@ class SaveNewOrder {
 		}
 	}
 
-	public function clone(){
-		
-		/*
-		
-		$fields = (new Personalizer($user))->getProfile();
-			
-		$fields["email"] = $user->email;
-
-
-        // $lookup = $this->tickets->getTicketsWithRole("visitor", $this->ActiveEventId() );
-
-        // if($lookup->count() > 1)
-        // {
-        //     return $this->jsonError("Could not automagically determine ticket!", 500);
-
-        // }
-
-        //SKIP VALIDATION...we will only have fields we got earlier
-
-        $this->order->setEventId(83);
-        $this->order->setTickets([1355 => 1]);
-        $this->order->setFields($fields);
-        $this->order->make();
-
-        return $this->order->getParticipant();
-
-        */
-	}
-
+ 
 	public function setParticipant(Model $model){
 		
 		$this->participant = $model;

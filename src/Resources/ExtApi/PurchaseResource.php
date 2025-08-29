@@ -3,7 +3,7 @@
 namespace Eventjuicer\Resources\ExtApi;
 
 use Illuminate\Http\Resources\Json\Resource;
-
+use Eventjuicer\Resources\PublicTicketResource;
 use Carbon\Carbon;
 
 
@@ -27,8 +27,7 @@ class PurchaseResource extends Resource
         "status_source" => $this->status_source,
         "created_at" => (string) Carbon::createFromTimestamp($this->createdon),
         "updated_at" => $this->updatedon,
-
-        //    "tickets" =>  TicketResource::collection($this->whenLoaded("tickets")) 
+        "tickets" => TicketPivotResource::collection($this->ticketpivot)
         ];  
     }
 }
