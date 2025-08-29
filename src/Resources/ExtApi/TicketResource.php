@@ -21,11 +21,11 @@ class TicketResource extends Resource
         "id"    => (int) $this->id,
         "ticket_group_id"    => (int) $this->ticket_group_id,
         "translation_asset_id" => (string) $this->translation_asset_id,
-        "internal_name" => (string) $this->internal_name,
+     
         "baseprice" => (int) $this->baseprice,
         "price_currency" => (string) $this->price_currency,
         "_prices"  => $this->price,
-        "_names"  => (string) array_get($this->names, "pl"),
+
         "role" => $this->role,
         "formdata" => json_decode($this->pivot->formdata, true),
         "quantity" => (int) $this->pivot->quantity,
