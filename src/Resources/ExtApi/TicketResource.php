@@ -27,7 +27,7 @@ class TicketResource extends Resource
         "_prices"  => $this->price,
         "_names"  => (string) array_get($this->names, "pl"),
         "role" => $this->role,
-        "formdata" => $this->pivot->formdata,
+        "formdata" => json_decode($this->pivot->formdata, true),
         "quantity" => (int) $this->pivot->quantity,
         "sold" => (int) $this->pivot->sold,
         ];  
