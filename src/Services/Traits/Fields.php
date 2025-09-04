@@ -270,8 +270,14 @@ trait Fields {
     "273"=> "limited",
     "274"=> "company_role", //old 86
     "275"=> "participant_type", //old 24
-    "276"=> "party_participant_type"
-
+    "276"=> "party_participant_type",
+    "277"=> "custom_jury_customers_experience",
+    "278"=> "custom_jury_fulfillment_optimization",
+    "279"=> "business_model",
+    "280"=> "objective",
+    "281"=> "revenue",
+    "282"=> "presenter_fname",
+    "283"=> "presenter_lname"
   );
 
 

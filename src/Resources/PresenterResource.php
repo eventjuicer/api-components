@@ -21,6 +21,8 @@ class PresenterResource extends Resource{
         "fname",
         "lname",
         "presenter",
+        "presenter_fname",
+        "presenter_lname",
         "cname2",
         "position",
         "presentation_title",
