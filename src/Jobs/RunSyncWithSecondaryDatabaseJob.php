@@ -21,7 +21,7 @@ class RunSyncWithSecondaryDatabaseJob extends Job implements ShouldQueue {
 
     public function handle(){
 
-        $URL = $this->organizer_id > 1? "https://ecomm.berlin/api/sync": "https://ecwe.pl/api/sync";
+        $URL = $this->organizer_id > 1? "https://ecomm.berlin/api/sync": "https://app.ecommercewarsaw.com/api/sync";
 
         try {
             $response = (new Guzzle(["verify"=>false]))->request("GET", $URL."/".$this->participant_id);
