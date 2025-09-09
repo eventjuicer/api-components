@@ -35,7 +35,8 @@ class SparkPost implements Templated {
 		$this->sparky = new SparkPostLib($httpClient, [
 			'key'=> env("SPARKPOST_SECRET"), 
 			'debug' => true,
-			'async' => true
+			'async' => true,
+			'host' => env("SPARKPOST_HOST", "api.sparkpost.com")
 		]);
 	}
 
