@@ -236,6 +236,10 @@ class SaveOrder {
 			throw new \Exception(implode(",", $this->errors));
 		}
 
+		
+		$this->saveTickets();
+			
+		
 		if(! $this->participant ){
 
 			//create new participant!
@@ -245,10 +249,6 @@ class SaveOrder {
 		}else{
 			$this->updateFields();
 		}
-		
-		$this->saveTickets();
-			
-		
 
 		if($company_id && !$vipcode){
 			$this->meetupHandler->setData($this->fields);
@@ -269,7 +269,8 @@ class SaveOrder {
 			}
 		}
 
-		dispatch( new RunSyncWithSecondaryDatabaseJob( $this->participant->id, $this->participant->organizer_id ) );
+		//we will handle that in saveFields and updateFields methods!
+		//dispatch( new RunSyncWithSecondaryDatabaseJob( $this->participant->id, $this->participant->organizer_id ) );
 
 	}
 
@@ -328,7 +329,6 @@ class SaveOrder {
 			"important" => 1,
 			"referral" => $referral
 		));
-
 		
 	}
 
@@ -439,6 +439,9 @@ class SaveOrder {
 			unset( $this->fields[$field_name] );
 			
 		}
+
+		dispatch( new RunSyncWithSecondaryDatabaseJob( $this->participant_id, $this->organizer_id ) );
+
 	}
 
 
