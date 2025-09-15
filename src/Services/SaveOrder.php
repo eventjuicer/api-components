@@ -237,9 +237,7 @@ class SaveOrder {
 		}
 
 		
-		$this->saveTickets();
-			
-		
+
 		if(! $this->participant ){
 
 			//create new participant!
@@ -249,6 +247,9 @@ class SaveOrder {
 		}else{
 			$this->updateFields();
 		}
+
+		$this->saveTickets();
+
 
 		if($company_id && !$vipcode){
 			$this->meetupHandler->setData($this->fields);
