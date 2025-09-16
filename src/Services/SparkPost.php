@@ -36,7 +36,7 @@ class SparkPost implements Templated {
 			'key'=> env("SPARKPOST_SECRET"), 
 			'debug' => true,
 			'async' => true,
-			'host' => env("SPARKPOST_HOST", "api.sparkpost.com")
+			'host' => env("SPARKPOST_HOST", "api.eu.sparkpost.com")
 		]);
 	}
 
