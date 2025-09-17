@@ -277,7 +277,13 @@ trait Fields {
     "280"=> "objective",
     "281"=> "revenue",
     "282"=> "presenter_fname",
-    "283"=> "presenter_lname"
+    "283"=> "presenter_lname",
+    "284"=> "invoice_street",
+    "285"=> "invoice_postcode",
+    "286"=> "invoice_city",
+    "287"=> "invoice_country"
+
+
   );
 
 
