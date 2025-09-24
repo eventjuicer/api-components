@@ -20,6 +20,10 @@ class PurchaseResource extends Resource
        return [
         
         "id"    => (int) $this->id,
+        "participant_id" => (int) $this->participant_id,
+        "event_id" => (int) $this->event_id,
+        "group_id" => (int) $this->group_id,
+        "organizer_id" => (int) $this->organizer_id,
         "amount" => $this->amount * 100,
         "currency" => "PLN",
         "paid" => $this->paid,
