@@ -6,7 +6,7 @@ use Bosnadev\Repositories\Criteria\Criteria;
 use Bosnadev\Repositories\Contracts\RepositoryInterface as Repository;
 
 
-class FlagEquals extends Criteria {
+class FlagNotEquals extends Criteria {
 
     private $column_name;
     private $value;
@@ -33,7 +33,7 @@ class FlagEquals extends Criteria {
             }
         }
 
-        $model = $model->where($this->column_name, (string) $this->value);
+        $model = $model->where($this->column_name, "!=", (string) $this->value);
 
         return $model;
     }
