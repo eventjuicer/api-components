@@ -31,7 +31,10 @@ class PurchaseResource extends Resource
         "status_source" => $this->status_source,
         "created_at" => (string) Carbon::createFromTimestamp($this->createdon),
         "updated_at" => $this->updatedon,
-        "tickets" => TicketResource::collection($this->tickets)
+        "tickets" => TicketResource::collection($this->tickets),
+        "email" => $this->whenLoaded("participant", function() {
+            return $this->participant->email;
+        })
         ];  
     }
 }
