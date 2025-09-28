@@ -6,7 +6,7 @@ use Eventjuicer\Crud\Crud;
 use Eventjuicer\Repositories\ParticipantRepository;
 use Eventjuicer\Repositories\Criteria\BelongsToEvent;
 use Eventjuicer\Repositories\Criteria\ColumnMatches;
-// use Eventjuicer\Repositories\Criteria\SortBy;
+use Eventjuicer\Repositories\Criteria\SortBy;
 // use Eventjuicer\Repositories\Criteria\WhereHas;
 
 class GetAllRolesByEmail extends Crud  {
@@ -29,6 +29,7 @@ class GetAllRolesByEmail extends Crud  {
 
         $this->repo->pushCriteria(new BelongsToEvent(  $event_id ));
         $this->repo->pushCriteria(new ColumnMatches("email", $email));
+        $this->repo->pushCriteria(new SortBy("id", "desc"));
         $this->repo->with(["purchases.tickets"]);
         $res = $this->repo->all();
 
