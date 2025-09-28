@@ -12,8 +12,9 @@ class ConnectPurchaseResource extends Resource {
     
         $data = [];
         $data["id"] = $this->id;
-        $data["amount"] = $this->amount;
-        $data["status"] = $this->status;
+        $data["amount"] = (int) $this->amount;
+        $data["paid"] = (int) $this->paid;
+        $data["payable"] = $this->status !== "cancelled" && !$this->paid && $this->amount > 0;
         $data["created_at"] = (string) Carbon::createFromTimestamp($this->createdon);
         $data["tickets"] = ConnectTicketResource::collection($this->tickets);
         return $data;
