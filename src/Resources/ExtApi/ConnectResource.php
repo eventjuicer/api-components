@@ -21,6 +21,7 @@ class ConnectResource extends Resource {
         $data["important"] = (int) $this->important;
         $data["lang"] = (string) $this->lang;
         $data["roles"] = $tickets->pluck("role")->unique()->values()->all();
+        $data["purchases"] = ConnectPurchaseResource::collection($this->purchases);
         $data["tickets"] = ConnectTicketResource::collection($tickets );
         $data["code"] = (new Hashids())->encode( $this->id );
 
