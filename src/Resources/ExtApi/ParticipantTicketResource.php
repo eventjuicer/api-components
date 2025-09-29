@@ -13,13 +13,13 @@ class ParticipantTicketResource extends Resource
 
 
         $data = [];
-        $data["formdata"] = $this->formdata;
+        $data["formdata"] = isset($this->formdata["exhibitor"]) ? $this->formdata["exhibitor"] : [];
         $data["quantity"] = (int) $this->quantity;
         $data["ticket_id"] = (int) $this->ticket_id;
  		$data["created_at"] = (string) Carbon::createFromTimestamp($this->purchase->createdon);
         $data["amount"] = (int) $this->purchase->amount;
-        $data["online"] = (int) $this->purchase->status_source == "payment";
-        $data["settled"] = (int) $this->purchase->status == "ok";
+        $data["online"] = intval( $this->purchase->status_source === "payment");
+        $data["settled"] = intval( $this->purchase->status === "ok");
 
         return $data;
     }
