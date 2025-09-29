@@ -13,7 +13,7 @@ class ParticipantTicketResource extends Resource
 
 
         $data = [];
-        $data["formdata"] = isset($this->formdata["exhibitor"]) ? $this->formdata["exhibitor"] : [];
+        $data["brand"] = isset($this->formdata["exhibitor"]) ? $this->formdata["exhibitor"] : [];
         $data["quantity"] = (int) $this->quantity;
         $data["ticket_id"] = (int) $this->ticket_id;
  		$data["created_at"] = (string) Carbon::createFromTimestamp($this->purchase->createdon);
