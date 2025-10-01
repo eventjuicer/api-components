@@ -35,9 +35,16 @@ class PurchaseResource extends Resource
         "email" => $this->whenLoaded("participant", function() {
             return $this->participant->email;
         }),
-        "participant" => $this->whenLoaded("participant", function() {
-            return $this->participant;
-        })
+        "company_id" => $this->whenLoaded("participant", function() {
+            return $this->participant->company_id;
+        }),
+        "token" => $this->whenLoaded("participant", function() {
+            return $this->participant->token;
+        }),
+        "parent_id" => $this->whenLoaded("participant", function() {
+            return $this->participant->parent_id;
+        }),
+      
         ];  
     }
 }
