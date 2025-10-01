@@ -34,6 +34,9 @@ class PurchaseResource extends Resource
         "tickets" => TicketResource::collection($this->tickets),
         "email" => $this->whenLoaded("participant", function() {
             return $this->participant->email;
+        }),
+        "participant" => $this->whenLoaded("participant", function() {
+            return $this->participant;
         })
         ];  
     }
