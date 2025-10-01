@@ -281,7 +281,8 @@ trait Fields {
     "284"=> "invoice_street",
     "285"=> "invoice_postcode",
     "286"=> "invoice_city",
-    "287"=> "invoice_country"
+    "287"=> "invoice_country",
+    "288"=> "url_local"
 
 
   );
