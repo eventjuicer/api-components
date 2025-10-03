@@ -52,7 +52,7 @@ class GetPurchasesByEvent extends Crud  {
 
         $repo  = clone $this->query($event_id);
         
-        $repo->with(["participant"]);
+        $repo->with(["tickets", "participant"]);
         $repo->pushCriteria(
             new Limit($take, $this->getParam("_start", 0)
         ));
@@ -63,6 +63,7 @@ class GetPurchasesByEvent extends Crud  {
 
     public function getAll($event_id){
         $repo  = clone $this->query($event_id);
+        $repo->with(["tickets", "participant"]);
         return $repo->all();
     }
 
