@@ -25,24 +25,27 @@ class GetPurchasesByEvent extends Crud  {
 
     public function query($event_id){
 
+
+        $repo = clone $this->repo;
+
         $this->setData();
 
         $includeFree = $this->getParam("free", 0);
         $status = $this->getParam("status", "all");
       
-        $this->repo->pushCriteria(new BelongsToEvent($event_id));
+        $repo->pushCriteria(new BelongsToEvent($event_id));
        
-        $this->repo->pushCriteria(
+        $repo->pushCriteria(
             new SortBy($this->getParam("_sort", "id"), $this->getParam("_order", "DESC")));
        
         if(!$includeFree){
-            $this->repo->pushCriteria(new FlagNotEquals("amount", 0));
+            $repo->pushCriteria(new FlagNotEquals("amount", 0));
         }
         if($status != "all"){
-            $this->repo->pushCriteria(new FlagEquals("status", $status));
+            $repo->pushCriteria(new FlagEquals("status", $status));
         }
 
-        return $this->repo;
+        return $repo;
 
     }
 
@@ -50,23 +53,27 @@ class GetPurchasesByEvent extends Crud  {
 
         $take = $this->getParam("_end", 25) - $this->getParam("_start", 0);
 
-        $repo  = clone $this->query($event_id);
+        $repo  = $this->query($event_id);
         
         $repo->with(["tickets", "participant"]);
         $repo->pushCriteria(
-            new Limit($take, $this->getParam("_start", 0)
-        ));
+            new Limit($take, $this->getParam("_start", 0))
+        );
 
         return $repo->all();
     }
 
 
     public function getAll($event_id){
-        $repo  = clone $this->query($event_id);
+        $repo  =$this->query($event_id);
         $repo->with(["tickets", "participant"]);
         return $repo->all();
     }
 
+    public function getCount($event_id){
+        $repo  = $this->query($event_id); 
+        return $repo->all()->count();
+    }
 
     
 
