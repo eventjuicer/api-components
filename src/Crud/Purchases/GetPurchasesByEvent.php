@@ -66,7 +66,7 @@ class GetPurchasesByEvent extends Crud  {
 
     public function getAll($event_id){
         $repo  =$this->query($event_id);
-        $repo->with(["tickets", "participant"]);
+        $repo->with(["tickets"]);
         return $repo->all();
     }
 
