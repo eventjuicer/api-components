@@ -23,19 +23,18 @@ class GetPurchasesByEvent extends Crud  {
         $this->repo = $repo;
     }
 
-    public function get($event_id){
+    public function query($event_id){
 
         $this->setData();
+
         $includeFree = $this->getParam("free", 0);
         $status = $this->getParam("status", "all");
-        $take = $this->getParam("_end", 25) - $this->getParam("_start", 0);
-
-
-        
+      
         $this->repo->pushCriteria(new BelongsToEvent($event_id));
-        $this->repo->with(["participant"]);
-        $this->repo->pushCriteria(new SortBy($this->getParam("_sort", "id"), $this->getParam("_order", "DESC")));
-        $this->repo->pushCriteria(new Limit($take, $this->getParam("_start", 0)));
+       
+        $this->repo->pushCriteria(
+            new SortBy($this->getParam("_sort", "id"), $this->getParam("_order", "DESC")));
+       
         if(!$includeFree){
             $this->repo->pushCriteria(new FlagNotEquals("amount", 0));
         }
@@ -43,21 +42,29 @@ class GetPurchasesByEvent extends Crud  {
             $this->repo->pushCriteria(new FlagEquals("status", $status));
         }
 
-
-
-
-        // $this->pivot->with([
-        //     "purchase.ticketpivot.ticket", 
-        //     "purchase.participant", 
-        //     "purchase.event"
-        // ]);
-       
-        return $this->repo->all();
+        return $this->repo;
 
     }
 
+    public function getPaginated($event_id){
 
-  
+        $take = $this->getParam("_end", 25) - $this->getParam("_start", 0);
+
+        $repo  = clone $this->query($event_id);
+        
+        $repo->with(["participant"]);
+        $repo->pushCriteria(
+            new Limit($take, $this->getParam("_start", 0)
+        ));
+
+        return $repo->all();
+    }
+
+
+    public function getAll($event_id){
+        $repo  = clone $this->query($event_id);
+        return $repo->all();
+    }
 
 
     
