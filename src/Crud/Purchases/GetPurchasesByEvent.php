@@ -11,9 +11,9 @@ use Eventjuicer\Repositories\Criteria\Limit;
 use Eventjuicer\Repositories\Criteria\FlagNotEquals;
 use Eventjuicer\Repositories\Criteria\FlagEquals;
 use Eventjuicer\Repositories\Criteria\WhereIn;
-use Eventjuicer\Repositories\Criteria\OlderThanDateTime;
+use Eventjuicer\Repositories\Criteria\ColumnLessThan;
 // use Eventjuicer\Repositories\Criteria\WhereIn;
-
+use Carbon\Carbon;
 
 class GetPurchasesByEvent extends Crud  {
 
@@ -38,7 +38,7 @@ class GetPurchasesByEvent extends Crud  {
 
         $created_at_lt = $this->getParam("created_at_lt", "");
         if(!empty($created_at_lt)){
-            $repo->pushCriteria(new OlderThanDateTime("created_at", $created_at_lt));
+            $repo->pushCriteria(new ColumnLessThan("createdon", Carbon::parse($created_at_lt)->timestamp));
         }
 
         $repo->pushCriteria(new BelongsToEvent($event_id));
