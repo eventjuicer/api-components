@@ -10,6 +10,7 @@ use Eventjuicer\Repositories\Criteria\SortBy;
 use Eventjuicer\Repositories\Criteria\Limit;
 use Eventjuicer\Repositories\Criteria\FlagNotEquals;
 use Eventjuicer\Repositories\Criteria\FlagEquals;
+use Eventjuicer\Repositories\Criteria\WhereIn;
 
 // use Eventjuicer\Repositories\Criteria\WhereIn;
 
@@ -32,8 +33,13 @@ class GetPurchasesByEvent extends Crud  {
 
         $includeFree = $this->getParam("free", 0);
         $status = $this->getParam("status", "all");
-      
+        $ids = explode(",", $this->getParam("ids", ""));
+
         $repo->pushCriteria(new BelongsToEvent($event_id));
+
+        if(!empty($ids)){
+            $repo->pushCriteria(new WhereIn("id", $ids));
+        }
        
         $repo->pushCriteria(
             new SortBy($this->getParam("_sort", "id"), $this->getParam("_order", "DESC")));
