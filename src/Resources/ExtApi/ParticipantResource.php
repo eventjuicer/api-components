@@ -17,6 +17,12 @@ class ParticipantResource extends Resource
     public function toArray($request)
     {
 
+        $notCancelledPurchases = $this->purchases->filter(function($item){
+            return $item->status != "cancelled" ;
+        });
+
+        $notCancelledTickets = $notCancelledPurchases->pluck("tickets")->collapse();
+
         $data = parent::toArray($request);
 
         $data["fields"] = $this->fields->mapWithKeys(function($item)
@@ -29,12 +35,15 @@ class ParticipantResource extends Resource
         }): [];
 
         if($this->company && $this->company->id){
-            $data["fields"]["company"]["promo"] = $this->company->promo;
+            $data["fields"]["company"]["promoted"] = (int)$this->company->promo;
+            $data["fields"]["company"]["featured"] = (int) $this->company->featured;
+            $data["fields"]["company"]["premium"] = (int)$this->company->premium;
         }
 
-        $data["roles"] = $this->purchases->filter(function($item){
-            return $item->status != "cancelled" ;
-        })->pluck("tickets")->collapse()->pluck("role")->unique()->values()->all();
+
+        $data["roles"] = $notCancelledTickets->pluck("role")->unique()->values()->all();
+        $data["ticket_ids"] = $notCancelledTickets->pluck("id")->unique()->values()->all();
+        $data["purchase_ids"] = $this->purchases->pluck("id")->unique()->values()->all();
 
         $data["important"] = intval($this->important || !empty($data["fields"]["important"]) );
         $data["code"] = (new Hashids())->encode( $this->id );
