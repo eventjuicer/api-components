@@ -26,22 +26,23 @@ class GetPurchasesByEvent extends Crud  {
 
     public function query($event_id){
 
-
         $repo = clone $this->repo;
 
         $this->setData();
 
         $includeFree = $this->getParam("free", 0);
         $status = $this->getParam("status", "all");
-        $ids = explode(",", $this->getParam("ids", ""));
-        $statuses = explode(",", $this->getParam("statuses", ""));
-
+        $ids = array_filter(explode(",", $this->getParam("ids", "")));
+        $statuses = array_filter(explode(",", $this->getParam("statuses", "")));
         $created_at_lt = $this->getParam("created_at_lt", "");
-        if(!empty($created_at_lt)){
-            $repo->pushCriteria(new ColumnLessThan("createdon", Carbon::parse($created_at_lt)->timestamp));
-        }
 
         $repo->pushCriteria(new BelongsToEvent($event_id));
+
+        if(!empty($created_at_lt)){
+            $repo->pushCriteria(new ColumnLessThan("createdon", 
+                Carbon::parse($created_at_lt)->timestamp)
+            );
+        }
 
         if(!empty($ids)){
             $repo->pushCriteria(new WhereIn("id", $ids));
@@ -50,7 +51,6 @@ class GetPurchasesByEvent extends Crud  {
         if(!empty($statuses)){
             $repo->pushCriteria(new WhereIn("status", $statuses));
         }
-
        
         $repo->pushCriteria(
             new SortBy($this->getParam("_sort", "id"), $this->getParam("_order", "DESC")));
