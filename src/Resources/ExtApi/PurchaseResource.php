@@ -26,6 +26,7 @@ class PurchaseResource extends Resource
         "amount" => $this->amount * 100,
         "currency" => "PLN",
         "paid" => $this->paid,
+        "invoiced" => $this->invoiced,
         "status" => $this->status,
         "status_source" => $this->status_source,
         "created_at" => (string) Carbon::createFromTimestamp($this->createdon),

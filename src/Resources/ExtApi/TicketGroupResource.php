@@ -18,7 +18,7 @@ class TicketGroupResource extends Resource
        return [
             "id"    => (int) $this->id,
             "name" => $this->name,
-            "tags" =>  [],
+            "tags" =>  LegacyTagResource::collection($this->oldtags),
             "booth" => $this->booth,
             "limit" => $this->limit
         ];
