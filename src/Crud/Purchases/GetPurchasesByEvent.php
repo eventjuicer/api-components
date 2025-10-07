@@ -12,6 +12,7 @@ use Eventjuicer\Repositories\Criteria\FlagNotEquals;
 use Eventjuicer\Repositories\Criteria\FlagEquals;
 use Eventjuicer\Repositories\Criteria\WhereIn;
 use Eventjuicer\Repositories\Criteria\ColumnLessThan;
+use Eventjuicer\Repositories\Criteria\ColumnGreaterThan;
 // use Eventjuicer\Repositories\Criteria\WhereIn;
 use Carbon\Carbon;
 
@@ -30,11 +31,13 @@ class GetPurchasesByEvent extends Crud  {
 
         $this->setData();
 
-        $includeFree = $this->getParam("free", 0);
+        $paidOnly = $this->getParam("free", 0);
         $status = $this->getParam("status", "all");
         $ids = array_filter(explode(",", $this->getParam("ids", "")));
         $statuses = array_filter(explode(",", $this->getParam("statuses", "")));
         $created_at_lt = $this->getParam("created_at_lt", "");
+        $preinvoiced = $this->getParam("preinvoiced");
+        $invoiced = $this->getParam("invoiced");
 
         $repo->pushCriteria(new BelongsToEvent($event_id));
 
@@ -42,6 +45,22 @@ class GetPurchasesByEvent extends Crud  {
             $repo->pushCriteria(new ColumnLessThan("createdon", 
                 Carbon::parse($created_at_lt)->timestamp)
             );
+        }
+
+        if($preinvoiced!==null){
+            if($preinvoiced){
+                $repo->pushCriteria(new ColumnGreaterThan("preinvoice_id", 0));
+            }else{
+                $repo->pushCriteria(new ColumnLessThan("preinvoice_id", 1));
+            }
+        }
+
+        if($invoiced!==null){
+            if($invoiced){
+                $repo->pushCriteria(new ColumnGreaterThan("invoice_id", 0));
+            }else{
+                $repo->pushCriteria(new ColumnLessThan("invoice_id", 1));
+            }
         }
 
         if(!empty($ids)){
@@ -55,7 +74,7 @@ class GetPurchasesByEvent extends Crud  {
         $repo->pushCriteria(
             new SortBy($this->getParam("_sort", "id"), $this->getParam("_order", "DESC")));
        
-        if(!$includeFree){
+        if(!$paidOnly){
             $repo->pushCriteria(new FlagNotEquals("amount", 0));
         }
         if($status != "all"){
