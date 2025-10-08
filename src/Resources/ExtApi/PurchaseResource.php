@@ -28,6 +28,8 @@ class PurchaseResource extends Resource
         "paid" => $this->paid,
         "invoice_id" => $this->invoice_id,
         "preinvoice_id" => $this->preinvoice_id,
+        "invoice_sent_at" => $this->invoice_sent_at,
+        "preinvoice_sent_at" => $this->preinvoice_sent_at,
         "status" => $this->status,
         "status_source" => $this->status_source,
         "created_at" => (string) Carbon::createFromTimestamp($this->createdon),
