@@ -14,6 +14,7 @@ use Eventjuicer\Repositories\Criteria\WhereIn;
 use Eventjuicer\Repositories\Criteria\ColumnLessThan;
 use Eventjuicer\Repositories\Criteria\ColumnGreaterThan;
 // use Eventjuicer\Repositories\Criteria\WhereIn;
+use Eventjuicer\Repositories\Criteria\WhereIdInSeparatedIds;
 use Carbon\Carbon;
 
 class GetPurchasesByEvent extends Crud  {
@@ -33,7 +34,7 @@ class GetPurchasesByEvent extends Crud  {
 
         $paidOnly = $this->getParam("free", 0);
         $status = $this->getParam("status", "all");
-        $ids = array_filter(explode(",", $this->getParam("ids", "")));
+        $ids = $this->getParam("ids");
         $statuses = array_filter(explode(",", $this->getParam("statuses", "")));
         $created_at_lt = $this->getParam("created_at_lt", "");
         $preinvoiced = $this->getParam("preinvoiced");
@@ -64,7 +65,7 @@ class GetPurchasesByEvent extends Crud  {
         }
 
         if(!empty($ids)){
-            $repo->pushCriteria(new WhereIn("id", $ids));
+            $repo->pushCriteria(new WhereIdInSeparatedIds($ids));
         }
 
         if(!empty($statuses)){
