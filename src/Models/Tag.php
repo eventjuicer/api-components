@@ -127,4 +127,16 @@ class Tag extends Model
             ->unique();
     }
 
+    public static function participantIdsByTagNames($tagNames, $eventId)
+    {
+        // Convert tag names to tag IDs, then call participantIdsByTags
+        $tagIds = static::whereIn('name', $tagNames)->pluck('id')->toArray();
+        
+        if (empty($tagIds)) {
+            return collect();
+        }
+        
+        return static::participantIdsByTags($tagIds, $eventId);
+    }
+
 }
