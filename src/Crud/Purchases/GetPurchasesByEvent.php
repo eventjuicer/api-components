@@ -19,7 +19,7 @@ use Eventjuicer\Repositories\Criteria\WhereIdInSeparatedIds;
 use Eventjuicer\Repositories\Criteria\WhereColumnInSeparatedValues;
 use Carbon\Carbon;
 use Eventjuicer\Crud\Participants\GetAllParticipantPurchaseIdsByEmail;
-
+use Eventjuicer\Models\Participant;
 
 class GetPurchasesByEvent extends Crud  {
 
@@ -38,6 +38,7 @@ class GetPurchasesByEvent extends Crud  {
 
         $participantId = $this->getParam("participant_id", 0);
         $participantEmail = $this->getParam("participant_email", "");
+        $extended = $this->getParam("extended", 0);
 
         $paidOnly = $this->getParam("free", 0);
         $status = $this->getParam("status", "all");
@@ -50,7 +51,14 @@ class GetPurchasesByEvent extends Crud  {
         $repo->pushCriteria(new BelongsToEvent($event_id));
 
         if($participantId > 0){
-            $repo->pushCriteria(new BelongsToParticipant($participantId));
+            if($extended){
+                $email = Participant::find($participantId)->email;
+                $purchaseIds = app(GetAllParticipantPurchaseIdsByEmail::class)->get($email, $event_id);
+                $repo->pushCriteria(new WhereIn("id", $purchaseIds["valid"]));
+            }else{
+                $repo->pushCriteria(new BelongsToParticipant($participantId));
+            }
+           
         }else if(!empty($participantEmail)){
             $purchaseIds = app(GetAllParticipantPurchaseIdsByEmail::class)->get($participantEmail, $event_id);
         
