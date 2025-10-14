@@ -6,6 +6,7 @@ use Eventjuicer\Crud\Crud;
 use Eventjuicer\Repositories\PurchaseRepository;
 // use Eventjuicer\Repositories\ParticipantTicketRepository;
 use Eventjuicer\Repositories\Criteria\BelongsToEvent;
+use Eventjuicer\Repositories\Criteria\BelongsToParticipant;
 use Eventjuicer\Repositories\Criteria\SortBy;
 use Eventjuicer\Repositories\Criteria\Limit;
 use Eventjuicer\Repositories\Criteria\FlagNotEquals;
@@ -33,6 +34,7 @@ class GetPurchasesByEvent extends Crud  {
 
         $this->setData();
 
+        $participantId = $this->getParam("participant_id", 0);
         $paidOnly = $this->getParam("free", 0);
         $status = $this->getParam("status", "all");
         $ids = $this->getParam("ids", "");
@@ -42,6 +44,10 @@ class GetPurchasesByEvent extends Crud  {
         $invoiced = $this->getParam("invoiced");
 
         $repo->pushCriteria(new BelongsToEvent($event_id));
+
+        if($participantId > 0){
+            $repo->pushCriteria(new BelongsToParticipant($participantId));
+        }
 
         if(!empty($created_at_lt)){
             $repo->pushCriteria(new ColumnLessThan("createdon", 
