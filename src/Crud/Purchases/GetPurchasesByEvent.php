@@ -18,6 +18,8 @@ use Eventjuicer\Repositories\Criteria\ColumnGreaterThan;
 use Eventjuicer\Repositories\Criteria\WhereIdInSeparatedIds;
 use Eventjuicer\Repositories\Criteria\WhereColumnInSeparatedValues;
 use Carbon\Carbon;
+use Eventjuicer\Crud\Participants\GetAllParticipantPurchaseIdsByEmail;
+
 
 class GetPurchasesByEvent extends Crud  {
 
@@ -35,6 +37,8 @@ class GetPurchasesByEvent extends Crud  {
         $this->setData();
 
         $participantId = $this->getParam("participant_id", 0);
+        $participantEmail = $this->getParam("participant_email", "");
+
         $paidOnly = $this->getParam("free", 0);
         $status = $this->getParam("status", "all");
         $ids = $this->getParam("ids", "");
@@ -47,7 +51,14 @@ class GetPurchasesByEvent extends Crud  {
 
         if($participantId > 0){
             $repo->pushCriteria(new BelongsToParticipant($participantId));
+        }else if(!empty($participantEmail)){
+            $purchaseIds = app(GetAllParticipantPurchaseIdsByEmail::class)->get($participantEmail, $event_id);
+        
+            $repo->pushCriteria(new WhereIn("id", $purchaseIds["valid"]));
+        }else if(!empty($ids)){
+            $repo->pushCriteria(new WhereIdInSeparatedIds($ids));
         }
+        
 
         if(!empty($created_at_lt)){
             $repo->pushCriteria(new ColumnLessThan("createdon", 
@@ -71,16 +82,15 @@ class GetPurchasesByEvent extends Crud  {
             }
         }
 
-        if(!empty($ids)){
-            $repo->pushCriteria(new WhereIdInSeparatedIds($ids));
-        }
+      
 
         if(!empty($statuses)){
             $repo->pushCriteria(new WhereColumnInSeparatedValues("status", $statuses));
         }
        
         $repo->pushCriteria(
-            new SortBy($this->getParam("_sort", "id"), $this->getParam("_order", "DESC")));
+            new SortBy($this->getParam("_sort", "id"), $this->getParam("_order", "DESC"))
+        );
        
         if(!$paidOnly){
             $repo->pushCriteria(new FlagNotEquals("amount", 0));
