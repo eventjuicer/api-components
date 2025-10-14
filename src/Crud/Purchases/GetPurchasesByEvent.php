@@ -48,13 +48,16 @@ class GetPurchasesByEvent extends Crud  {
         $preinvoiced = $this->getParam("preinvoiced");
         $invoiced = $this->getParam("invoiced");
 
+
+        $shouldFetchShitty = $status==="cancelled" || strstr($statuses, "cancelled")!==false;
+
         $repo->pushCriteria(new BelongsToEvent($event_id));
 
         if($participantId > 0){
             if($extended){
                 $email = Participant::find($participantId)->email;
                 $purchaseIds = app(GetAllParticipantPurchaseIdsByEmail::class)->get($email, $event_id);
-                $repo->pushCriteria(new WhereIn("id", $purchaseIds["valid"]));
+                $repo->pushCriteria(new WhereIn("id", $shouldFetchShitty? $purchaseIds["all"] : $purchaseIds["valid"]));
             }else{
                 $repo->pushCriteria(new BelongsToParticipant($participantId));
             }
@@ -62,7 +65,7 @@ class GetPurchasesByEvent extends Crud  {
         }else if(!empty($participantEmail)){
             $purchaseIds = app(GetAllParticipantPurchaseIdsByEmail::class)->get($participantEmail, $event_id);
         
-            $repo->pushCriteria(new WhereIn("id", $purchaseIds["valid"]));
+            $repo->pushCriteria(new WhereIn("id", $shouldFetchShitty? $purchaseIds["all"] : $purchaseIds["valid"]));
         }else if(!empty($ids)){
             $repo->pushCriteria(new WhereIdInSeparatedIds($ids));
         }
