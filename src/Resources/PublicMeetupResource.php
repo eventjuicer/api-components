@@ -12,8 +12,8 @@ class PublicMeetupResource extends Resource {
         $data = [];
 
         $data["id"] = $this->id;
-        $data["direction"] = (string) $this->direction;
-        $data["company_id"] = $this->company_id;
+        // $data["direction"] = (string) $this->direction;
+        // $data["company_id"] = $this->company_id;
         $data["participant_id"] = $this->participant_id;
         $data["rel_participant_id"] = $this->rel_participant_id;
         $data["agreed"] =  (int) $this->agreed;
