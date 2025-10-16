@@ -7,7 +7,7 @@ use Eventjuicer\Models\Meetup;
 use Eventjuicer\Services\SparkPost;
 use Eventjuicer\Services\Personalizer;
 use Eventjuicer\Services\Company\GetCompanyDataValue;
-
+use GuzzleHttp\Client as Guzzle;
 
 class HandleLTDReject extends Job //implements ShouldQueue
 {
@@ -51,17 +51,32 @@ class HandleLTDReject extends Job //implements ShouldQueue
         $substitution_data["additional_message"] = $ltd_reject_template;
 
         
-        $mail->send([
-            "template_id" => $this->meetup->organizer_id>1 ? "ebe-ltd-rejected": "pl-ltd-meetup-rejected",
-            // "cc" => !empty($data["cc"]) ? $data["cc"] : false,
-            // "bcc" => !empty($data["bcc"]) ? $data["bcc"] : false,
-            "recipient" => [
-                "name"  => $participant->translate("[[fname]] [[lname]]"),
-                "email" => $participant->email
-            ],
-            "substitution_data" => $substitution_data,             
-            "locale" => "pl"//$locale
-        ]);
+        try {
+            $response = (new Guzzle(["verify"=>false]))->request("POST", "https://ecommercewarsaw.com/api/email", [
+                "json" => [
+                    "token" => env("EXTAPI_TOKEN"),
+                    "substitution_data" => $substitution_data,
+                    "reason" => "reject",
+                    "recipient_id" => $participant->id   
+                ]
+            ]);
+        }catch(\Exception $e){
+
+        }
+
+
+
+        // $mail->send([
+        //     "template_id" => $this->meetup->organizer_id>1 ? "ebe-ltd-rejected": "pl-ltd-meetup-rejected",
+        //     // "cc" => !empty($data["cc"]) ? $data["cc"] : false,
+        //     // "bcc" => !empty($data["bcc"]) ? $data["bcc"] : false,
+        //     "recipient" => [
+        //         "name"  => $participant->translate("[[fname]] [[lname]]"),
+        //         "email" => $participant->email
+        //     ],
+        //     "substitution_data" => $substitution_data,             
+        //     "locale" => "pl"//$locale
+        // ]);
 
         
 

@@ -8,6 +8,7 @@ use Eventjuicer\Services\SaveOrder;
 use Eventjuicer\Services\SparkPost;
 use Eventjuicer\Services\Personalizer;
 use Eventjuicer\Crud\CompanyData\Fetch as CompanyData;
+use GuzzleHttp\Client as Guzzle;
 
 
 class HandleLTDConfirm extends Job //implements ShouldQueue
@@ -52,20 +53,31 @@ class HandleLTDConfirm extends Job //implements ShouldQueue
         $substitution_data["presentation_day"] = $presenter->presentation_day;
         $substitution_data["tm_visitday"] = $presenter->tm_visitday? $presenter->tm_visitday: $presenter->presentation_day;
 
-        
+        try {
+            $response = (new Guzzle(["verify"=>false]))->request("POST", "https://ecommercewarsaw.com/api/email", [
+                "json" => [
+                    "token" => env("EXTAPI_TOKEN"),
+                    "substitution_data" => $substitution_data,
+                    "reason" => "confirm",
+                    "recipient_id" => $participant->id   
+                ]
+            ]);
+        }catch(\Exception $e){
+
+        }
 
 
-        $mail->send([
-            "template_id" => $this->meetup->organizer_id>1 ? "ebe-ltd-confirmed": "pl-ltd-meetup-confirmed",
-            // "cc" => "workshops@targiehandlu.pl",
-            // "bcc" => !empty($data["bcc"]) ? $data["bcc"] : false,
-            "recipient" => [
-                "name"  => $participant->translate("[[fname]] [[lname]]"),
-                "email" => $participant->email
-            ],
-            "substitution_data" => $substitution_data,             
-            "locale" => "pl"//$locale
-        ]);
+        // $mail->send([
+        //     "template_id" => $this->meetup->organizer_id>1 ? "ebe-ltd-confirmed": "pl-ltd-meetup-confirmed",
+        //     // "cc" => "workshops@targiehandlu.pl",
+        //     // "bcc" => !empty($data["bcc"]) ? $data["bcc"] : false,
+        //     "recipient" => [
+        //         "name"  => $participant->translate("[[fname]] [[lname]]"),
+        //         "email" => $participant->email
+        //     ],
+        //     "substitution_data" => $substitution_data,             
+        //     "locale" => "pl"//$locale
+        // ]);
 
 
 

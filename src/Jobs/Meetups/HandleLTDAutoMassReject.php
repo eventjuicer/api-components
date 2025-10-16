@@ -8,7 +8,8 @@ use Eventjuicer\Services\SparkPost;
 use Eventjuicer\Services\Personalizer;
 use Eventjuicer\Crud\CompanyMeetups\Fetch as CompanyMeetupsFetch;
 use Carbon\Carbon;
-use Log;
+use GuzzleHttp\Client as Guzzle;
+
 
 class HandleLTDAutoMassReject extends Job //implements ShouldQueue
 {
@@ -71,18 +72,31 @@ class HandleLTDAutoMassReject extends Job //implements ShouldQueue
             $substitution_data = [];
             $substitution_data["fname"] = $this->participant->fname;
     
-            
-            $mail->send([
-                "template_id" => $this->participant->organizer_id>1 ? "ebe-ltd-meetup-autorejected": "pl-ltd-meetup-autorejected",
-                // "cc" => "workshops@targiehandlu.pl",
-                // "bcc" => !empty($data["bcc"]) ? $data["bcc"] : false,
-                "recipient" => [
-                    "name"  => $participant->translate("[[fname]] [[lname]]"),
-                    "email" => $participant->email
-                ],
-                "substitution_data" => $substitution_data,             
-                "locale" => "pl"//$locale
-            ]);
+            try {
+                $response = (new Guzzle(["verify"=>false]))->request("POST", "https://ecommercewarsaw.com/api/email", [
+                    "json" => [
+                        "token" => env("EXTAPI_TOKEN"),
+                        "substitution_data" => $substitution_data,
+                        "reason" => "reject",
+                        "recipient_id" => $participant->id   
+                    ]
+                ]);
+            }catch(\Exception $e){
+    
+            }
+
+
+            // $mail->send([
+            //     "template_id" => $this->participant->organizer_id>1 ? "ebe-ltd-meetup-autorejected": "pl-ltd-meetup-autorejected",
+            //     // "cc" => "workshops@targiehandlu.pl",
+            //     // "bcc" => !empty($data["bcc"]) ? $data["bcc"] : false,
+            //     "recipient" => [
+            //         "name"  => $participant->translate("[[fname]] [[lname]]"),
+            //         "email" => $participant->email
+            //     ],
+            //     "substitution_data" => $substitution_data,             
+            //     "locale" => "pl"//$locale
+            // ]);
 
             
         }
