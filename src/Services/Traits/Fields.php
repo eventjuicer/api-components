@@ -283,7 +283,8 @@ trait Fields {
     "286"=> "invoice_city",
     "287"=> "invoice_country",
     "288"=> "url_local",
-    "289"=> "parent_uuid"
+    "289"=> "parent_uuid",
+    "290"=> "ticket_internal_id"
 
   );
 
