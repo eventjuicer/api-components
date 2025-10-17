@@ -282,8 +282,8 @@ trait Fields {
     "285"=> "invoice_postcode",
     "286"=> "invoice_city",
     "287"=> "invoice_country",
-    "288"=> "url_local"
-
+    "288"=> "url_local",
+    "289"=> "parent_uuid"
 
   );
 
