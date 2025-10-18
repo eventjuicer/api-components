@@ -271,12 +271,8 @@ class SaveNewOrder {
 		return $this->amount;
 	}
 
+	public function savePurchase(){
 
-	protected function saveCartItems(){
-
-		$this->countTotalAmount();
-
-		//save Purchase
 
 		$purchase = new Purchase();
 		
@@ -296,6 +292,19 @@ class SaveNewOrder {
 		$purchase->save();
 
 		$this->setPurchase( $purchase );
+	}
+
+	protected function saveCartItems(){
+
+		$this->countTotalAmount();
+
+		//save Purchase
+
+		$this->savePurchase();
+		
+		if(!$this->purchase->id){
+			throw new \Exception("Purchase not saved!");
+		}
 
 		foreach($this->cartItems as $index => $cartItem){
 
@@ -307,7 +316,7 @@ class SaveNewOrder {
 			$t 					= new ParticipantTicket;
 			$t->ticket_id 		= $ticket_id;
 			$t->participant_id 	= $this->participant_id;
-			$t->purchase_id 	= $purchase->id;
+			$t->purchase_id 	= $this->purchase->id;
 			$t->event_id 		= $this->event_id;
 			$t->formdata		= isset($cartItem["metadata"])? $cartItem["metadata"]: "";
 			$t->quantity 		= $quantity;
