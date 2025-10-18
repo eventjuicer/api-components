@@ -271,8 +271,13 @@ class SaveNewOrder {
 		return $this->amount;
 	}
 
-	public function savePurchase(){
+	public function savePurchase($free = false){
 
+		$this->countTotalAmount();
+
+		if(empty($this->event_id) || empty($this->group_id) || empty($this->organizer_id) || empty($this->participant_id)){
+			throw new \Exception("Not enough data to save purchase!");
+		}
 
 		$purchase = new Purchase();
 		
@@ -282,11 +287,11 @@ class SaveNewOrder {
 		$purchase->participant_id 	= $this->participant_id;
 		$purchase->amount 			= $this->amount;
 		$purchase->locale 			= $this->locale;
-		$purchase->discount 		= 0;
+		$purchase->discount 		= $free? $this->amount : 0;
 		$purchase->discount_code_id = 0;
-		$purchase->paid 			= $this->amount === 0 ? 1 : 0;
-		$purchase->status 			= $this->amount === 0 ? "ok" : "new";
-		$purchase->status_source 	= $this->amount === 0 ? "auto" : "manual";
+		$purchase->paid 			= $free || $this->amount === 0 ? 1 : 0;
+		$purchase->status 			= $free || $this->amount === 0 ? "ok" : "new";
+		$purchase->status_source 	= $free || $this->amount === 0 ? "auto" : "manual";
 		$purchase->createdon		= time();
 		$purchase->updatedon		= Carbon::now();
 		$purchase->save();
@@ -294,40 +299,52 @@ class SaveNewOrder {
 		$this->setPurchase( $purchase );
 	}
 
+	public function saveTicket(array $cartItem){
+
+		if(empty($this->purchase) || empty($this->purchase->id) || empty($this->participant_id)){
+			throw new \Exception("Purchase not saved!");
+		}
+
+		$quantity = !empty($cartItem["quantity"]) ? $cartItem["quantity"] : 1;
+		$ticket_id = $cartItem["id"];
+
+		$t 					= new ParticipantTicket;
+		$t->ticket_id 		= $ticket_id;
+		$t->participant_id 	= $this->participant_id;
+		$t->purchase_id 	= $this->purchase->id;
+		$t->event_id 		= $this->event_id;
+		$t->formdata		= isset($cartItem["metadata"])? $cartItem["metadata"]: "";
+		$t->quantity 		= $quantity;
+		$t->sold 			= 1;
+		$t->save();
+
+		return $t;
+
+	}
+
 	protected function saveCartItems(){
 
-		$this->countTotalAmount();
+		
 
 		//save Purchase
 
 		$this->savePurchase();
-		
-		if(!$this->purchase->id){
-			throw new \Exception("Purchase not saved!");
-		}
 
 		foreach($this->cartItems as $index => $cartItem){
 
-
-            $quantity = !empty($cartItem["quantity"]) ? $cartItem["quantity"] : 1;
-			$ticket_id = $cartItem["id"];
-
-
-			$t 					= new ParticipantTicket;
-			$t->ticket_id 		= $ticket_id;
-			$t->participant_id 	= $this->participant_id;
-			$t->purchase_id 	= $this->purchase->id;
-			$t->event_id 		= $this->event_id;
-			$t->formdata		= isset($cartItem["metadata"])? $cartItem["metadata"]: "";
-			$t->quantity 		= $quantity;
-			$t->sold 			= 1;
-			$t->save();
-
-			unset( $this->cartItems[$index] );
+			$ticket = $this->saveTicket($cartItem);
+     
+			if($ticket->id){
+				unset( $this->cartItems[$index] );
+			}
 		}
 	}
 
-	protected function saveFields(){
+	public function saveFields(){
+
+		if(empty($this->participant_id) || empty($this->event_id) || empty($this->group_id) || empty($this->organizer_id)){
+			throw new \Exception("Not enough data to save fields!");
+		}
 
 		foreach($this->fields as $field_name => $field_value)
 		{
