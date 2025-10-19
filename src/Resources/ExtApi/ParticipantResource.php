@@ -11,7 +11,7 @@ use Eventjuicer\Services\Hashids;
 class ParticipantResource extends Resource
 {
 
-    public static $companyFields = ["name", "keywords", "logotype_cdn", "lang", "website", "facebook", "twitter", "linkedin", "xing"];
+    public static $companyFields = ["name", "about","keywords", "logotype_cdn", "lang", "website", "facebook", "twitter", "linkedin", "xing"];
 
 
     public function toArray($request)
