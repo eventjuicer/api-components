@@ -7,6 +7,7 @@ use Eventjuicer\Repositories\PurchaseRepository;
 // use Eventjuicer\Repositories\ParticipantTicketRepository;
 use Eventjuicer\Repositories\Criteria\BelongsToEvent;
 use Eventjuicer\Repositories\Criteria\BelongsToParticipant;
+use Eventjuicer\Repositories\Criteria\ColumnMatches;
 use Eventjuicer\Repositories\Criteria\SortBy;
 use Eventjuicer\Repositories\Criteria\Limit;
 use Eventjuicer\Repositories\Criteria\FlagNotEquals;
@@ -44,6 +45,7 @@ class GetPurchasesByEvent extends Crud  {
         $status = $this->getParam("status", "all");
         $ids = $this->getParam("ids", "");
         $statuses = $this->getParam("statuses", "");
+        $status_source = $this->getParam("status_source", "");
         $created_at_lt = $this->getParam("created_at_lt", "");
         $preinvoiced = $this->getParam("preinvoiced");
         $invoiced = $this->getParam("invoiced");
@@ -108,6 +110,10 @@ class GetPurchasesByEvent extends Crud  {
         }
         if($status != "all"){
             $repo->pushCriteria(new FlagEquals("status", $status));
+        }
+        
+        if(!empty($status_source)){
+            $repo->pushCriteria(new ColumnMatches("status_source", $status_source));
         }
 
         return $repo;
