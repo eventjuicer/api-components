@@ -15,10 +15,8 @@ class EcommerceTicketGroupResource extends Resource
 
             "id"                => $this->id,        
             "name"              => $this->name,
-            "descriptions"      => $this->descriptions,
             "map"               => $this->booth,
             "limit"             => $this->limit,
-
             "agg" => isset($this->agg) ? $this->agg  : [],
             
             "tickets"           => EcommerceTicketResource::collection($this->tickets),
