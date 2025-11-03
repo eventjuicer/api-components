@@ -17,7 +17,8 @@ class EventResource extends Resource {
        return [
 
             "id"        => (int) $this->id,
-            "group_id" => $this->group_id,
+            "group_id" => (int) $this->group_id,
+            "organizer_id" => (int) $this->organizer_id,
             "name"      => $this->names,
             "loc"       => $this->location,
             "starts"    => $this->starts,

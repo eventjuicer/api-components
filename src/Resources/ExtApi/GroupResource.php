@@ -12,6 +12,7 @@ class GroupResource extends Resource {
        return [
 
             "id"        => (int) $this->id,
+            "organizer_id" => (int) $this->organizer_id,
             "name" => $this->name,
             "active_event_id"      => (int) $this->active_event_id,
             "events" => EventResource::collection( $this->whenLoaded("latestEvents")),
