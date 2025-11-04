@@ -5,6 +5,7 @@ namespace Eventjuicer\Services;
 use Eventjuicer\Contracts\SavesPaidOrder;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use Uuid;
 use Carbon\Carbon;
 use Eventjuicer\Models\PreBooking;
@@ -90,26 +91,33 @@ class SavePaidOrder implements SavesPaidOrder {
 
 	public function create(){
 
-
 		/**
-		 * purge outdated locks
-		 * otherwise we could not set up new lock for next owners
+		 * CRITICAL FIX: Wrap in transaction for atomicity
+		 * Either all locks succeed or none (prevents partial lock states)
 		 */
-		$this->removeOldLocks();
-		
-		foreach($this->tickets as $ticket_id => $data){
+		DB::transaction(function(){
 
-			if(empty($data["formdata"]) || empty($data["formdata"]["id"])){
-				continue;
+			/**
+			 * purge outdated locks
+			 * otherwise we could not set up new lock for next owners
+			 */
+			$this->removeOldLocks();
+
+			foreach($this->tickets as $ticket_id => $data){
+
+				if(empty($data["formdata"]) || empty($data["formdata"]["id"])){
+					continue;
+				}
+
+				$item_uid = $data["formdata"]["id"];
+
+				if(! $this->setLock($ticket_id, $item_uid, $data["formdata"]) ){
+					$this->locksFailed[$ticket_id] = $item_uid;
+				}
+
 			}
 
-			$item_uid = $data["formdata"]["id"];
-
-			if(! $this->setLock($ticket_id, $item_uid, $data["formdata"]) ){
-				$this->locksFailed[$ticket_id] = $item_uid;
-			}
-
-		}
+		});
 
 	}
 
@@ -157,12 +165,17 @@ class SavePaidOrder implements SavesPaidOrder {
 
 	/**
 	 * we don't care about the owner here...
+	 * CRITICAL FIX: Only check item_uid since unique constraint is (event_id, item_uid)
+	 * A booth can only have ONE lock regardless of ticket_id (pool sales)
 	 * */
 	protected function checkLock($ticket_id, $item_uid){
 
 		//{quantity: 1, formdata: {ti: "G10", id: "booth-0-918"}}}
 
-		return PreBooking::where("ticket_id", $ticket_id)->where("item_uid", $item_uid)->first();
+		return PreBooking::where("event_id", $this->event_id)
+			->where("item_uid", $item_uid)
+			->lockForUpdate()  // Pessimistic locking to prevent race conditions
+			->first();
 	}
 
 	protected function setLock($ticket_id, $item_uid, $ticketdata){
@@ -205,27 +218,41 @@ class SavePaidOrder implements SavesPaidOrder {
 			return false;
 		}
 
-		$lock = new PreBooking;
-    	$lock->sessid = $this->uuid;
-    	$lock->ticket_id = $ticket_id;
-    	$lock->item_uid = $item_uid;
-    	/**
-    	 * compat
-    	 */
-    	$lock->ticketdata = $ticketdata;
-    	/**
-    	 * compat
-    	 */
-    	$lock->event_id = $this->event_id;
-    	$lock->blockedon = time();
-    	$lock->ip = $this->request->ip();
-    	$lock->save();
+		try {
+			$lock = new PreBooking;
+	    	$lock->sessid = $this->uuid;
+	    	$lock->ticket_id = $ticket_id;
+	    	$lock->item_uid = $item_uid;
+	    	/**
+	    	 * compat
+	    	 */
+	    	$lock->ticketdata = $ticketdata;
+	    	/**
+	    	 * compat
+	    	 */
+	    	$lock->event_id = $this->event_id;
+	    	$lock->blockedon = time();
+	    	$lock->ip = $this->request->ip();
+	    	$lock->save();
 
-    	if($lock->id){
-    		$this->newLocksCreated[] = $lock;
-    	}
- 
-    	return $lock;
+	    	if($lock->id){
+	    		$this->newLocksCreated[] = $lock;
+	    	}
+
+	    	return $lock;
+
+		} catch (\Illuminate\Database\QueryException $e) {
+			/**
+			 * CRITICAL FIX: Handle duplicate key exception from unique constraint
+			 * Error 1062 = Duplicate entry (MySQL)
+			 * This happens when another user locked the booth between our checkLock() and save()
+			 */
+			if($e->errorInfo[1] == 1062){
+				return false;  // Lock failed - booth already locked
+			}
+			// Other database errors should bubble up
+			throw $e;
+		}
 	}
 
 
