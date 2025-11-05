@@ -523,12 +523,12 @@ class SaveOrder {
 
         	$ticket = $tickets[$ticketID];
 
-        	if(!$ticket->bookable){
-        		$this->setTicketError($ticketID, 
-        			"api.errors.ticket_not_bookable|errors: ". implode(",", $ticket->errors)
-        		);
-        		continue;
-        	}
+        	// if(!$ticket->bookable){
+        	// 	$this->setTicketError($ticketID, 
+        	// 		"api.errors.ticket_not_bookable|errors: ". implode(",", $ticket->errors)
+        	// 	);
+        	// 	continue;
+        	// }
 
         	if(isset($ticketData["formdata"]) && isset($ticketData["formdata"]["id"])){
         		
