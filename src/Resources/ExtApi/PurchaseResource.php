@@ -16,6 +16,10 @@ class PurchaseResource extends Resource
      */
     public function toArray($request)
     {
+
+
+       $currency = $this->locale==="pl"? "PLN" : "EUR";
+
        return [
         
         "id"    => (int) $this->id,
@@ -24,7 +28,7 @@ class PurchaseResource extends Resource
         "group_id" => (int) $this->group_id,
         "organizer_id" => (int) $this->organizer_id,
         "amount" => $this->amount * 100,
-        "currency" => "PLN",
+        "currency" => $currency,
         "paid" => $this->paid,
         "invoice_id" => $this->invoice_id,
         "preinvoice_id" => $this->preinvoice_id,
