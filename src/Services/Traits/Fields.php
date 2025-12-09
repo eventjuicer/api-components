@@ -284,7 +284,8 @@ trait Fields {
     "287"=> "invoice_country",
     "288"=> "url_local",
     "289"=> "parent_uuid",
-    "290"=> "ticket_internal_id"
+    "290"=> "ticket_internal_id",
+    "291"=> "adoption_metrics",
 
   );
 
