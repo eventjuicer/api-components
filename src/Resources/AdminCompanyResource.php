@@ -54,7 +54,10 @@ class AdminCompanyResource extends Resource {
         
         $data = [
 
-            "id" => $this->id,        
+            "id" => $this->id,     
+            
+            "group_id" =>(int) $this->group_id,
+            "organizer_id" => (int) $this->organizer_id,
             
             "slug" => $this->slug,
 
