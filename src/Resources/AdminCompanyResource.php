@@ -58,7 +58,9 @@ class AdminCompanyResource extends Resource {
             
             "group_id" =>(int) $this->group_id,
             "organizer_id" => (int) $this->organizer_id,
-            
+            "created_at" => (string) $this->created_at,
+            "updated_at" => (string) $this->updated_at,
+
             "slug" => $this->slug,
 
             "featured" => $this->featured,
