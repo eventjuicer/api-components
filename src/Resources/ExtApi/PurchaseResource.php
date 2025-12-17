@@ -28,6 +28,7 @@ class PurchaseResource extends Resource
         "group_id" => (int) $this->group_id,
         "organizer_id" => (int) $this->organizer_id,
         "amount" => $this->amount * 100,
+        "discount" => $this->discount * 100,
         "currency" => $currency,
         "paid" => $this->paid,
         "invoice_id" => $this->invoice_id,
