@@ -26,6 +26,18 @@ class CompanyResource extends Resource {
             );
         });
 
+        $purchasesGrouped = $this->participants
+        ->flatMap(function($participant) {
+            return $participant->purchases->where('status', '!=', 'cancelled');
+        })
+        ->groupBy('event_id')
+        ->map(function($eventPurchases) {
+            return [
+                'total_amount' => $eventPurchases->sum('amount'),
+                'total_discount' => $eventPurchases->sum('discount')
+            ];
+        });
+
         $groupedPurchases = $purchases->groupBy("event_id");
 
         $profile = $this->data->mapWithKeys(function($item){     
@@ -54,6 +66,8 @@ class CompanyResource extends Resource {
           	"instances" => $groupedPurchases,
 
             "people" => $this->whenLoaded("people") ? $this->people: [],
+
+            "purchases" => $purchasesGrouped,
             
         ];
     
