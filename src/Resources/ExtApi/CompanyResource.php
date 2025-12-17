@@ -2,7 +2,7 @@
 
 namespace Eventjuicer\Resources\ExtApi;
 use Illuminate\Http\Resources\Json\Resource; 
-use Eventjuicer\ValueObjects\CloudinaryImage;
+
 
 class CompanyResource extends Resource {
 
@@ -43,7 +43,9 @@ class CompanyResource extends Resource {
 
             "event_ids" => $purchases->pluck("event_id")->unique()->values(),
 
-          	"instances" =>$groupedPurchases
+          	"instances" => $groupedPurchases,
+
+            "people" => $this->whenLoaded("people") ? $this->people: [],
             
         ];
     
