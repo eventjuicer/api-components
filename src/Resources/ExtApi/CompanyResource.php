@@ -16,7 +16,15 @@ class CompanyResource extends Resource {
 
     public function toArray($request){   
 
-        $purchases = $this->participants->pluck("ticketpivot")->collapse()->where("sold", 1);
+        $purchases = $this->participants->pluck("ticketpivot")->collapse()->where("sold", 1)->map(function($purchase) {
+            $purchase->setHidden(['ticket']);
+            return array_merge(
+                $purchase->toArray(),
+                $purchase->relationLoaded('ticket') && $purchase->ticket 
+                    ? ['role' => $purchase->ticket->role ?? null]
+                    : []
+            );
+        });
 
         $groupedPurchases = $purchases->groupBy("event_id");
 
