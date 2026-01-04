@@ -8,6 +8,12 @@ class Field extends Model
 {
     protected $table = "bob_fields";
 
+    protected $casts = array(
+
+    	"options" => "array"
+    );
+
+
     public function participants(){
         
         return $this->belongsToMany(Participant::class, 'bob_participant_fields', 'field_id', 'participant_id');
