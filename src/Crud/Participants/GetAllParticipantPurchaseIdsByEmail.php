@@ -18,19 +18,17 @@ class GetAllParticipantPurchaseIdsByEmail extends Crud  {
     }
 
  
-    public function get($email = "", $event_id = 0){
+    public function get($data = []){
 
-        $email = strtolower( trim($email) );
-        $event_id = (int) $event_id;
 
-        if(!$email){
-            throw new \Exception("email missing...");
-        }
+       if(!isset($data["email"]) || !isset($data["event_id"])){
+        return [];
+       }
 
-        if($event_id){
-            $this->repo->pushCriteria(new BelongsToEvent(  $event_id ));
-        }
+        $email = strtolower( trim($data["email"]) );
+        $event_id = (int) $data["event_id"];
 
+        $this->repo->pushCriteria(new BelongsToEvent(  $event_id ));
         $this->repo->pushCriteria(new ColumnMatches("email", $email));
         $this->repo->pushCriteria(new SortBy("id", "desc"));
         $this->repo->with(["purchases"]);

@@ -15,11 +15,11 @@ class GetPurchasesByEvent extends Crud  {
         $this->repo = $repo;
     }
 
-    public function byEmail($event_id = 0, $participantEmail = ""){
+    public function byEmail($data = []){
 
         $repo = clone $this->repo;
 
-        $purchaseIds = app(GetAllParticipantPurchaseIdsByEmail::class)->get(strtolower(trim($participantEmail)), (int) $event_id);       
+        $purchaseIds = app(GetAllParticipantPurchaseIdsByEmail::class)->get($data);       
         $repo->pushCriteria(new WhereIn("id", $purchaseIds));
         $repo->with(["tickets", "participant"]);
         return $repo->all();
