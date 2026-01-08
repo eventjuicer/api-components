@@ -18,7 +18,7 @@ class PurchaseResource extends Resource
     {
 
 
-       $currency = $this->locale==="pl"? "PLN" : "EUR";
+       $currency = $this->locale==="pl" && intval($this->organizer_id) === 1? "PLN" : "EUR";
 
        return [
         

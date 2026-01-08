@@ -39,17 +39,7 @@ class GetAllParticipantPurchaseIdsByEmail extends Crud  {
         // Gather all purchases in one iteration
         $allPurchases = $res->pluck("purchases")->collapse();
         
-        // Partition into valid and cancelled in single pass
-        [$validPurchases, $cancelledPurchases] = $allPurchases->partition(function($purchase) {
-            return $purchase->status !== "cancelled";
-        });
-
-        // Return all purchase IDs categorized
-        return [
-            "all" => $allPurchases->pluck("id")->all(),
-            "valid" => $validPurchases->pluck("id")->all(), 
-            "cancelled" => $cancelledPurchases->pluck("id")->all()
-        ];
+       return $allPurchases->pluck("id")->all();
     }
 
 
