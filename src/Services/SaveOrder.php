@@ -376,7 +376,7 @@ class SaveOrder {
 		$purchase->organizer_id 	= $this->organizer_id;
 		$purchase->participant_id 	= $this->participant_id;
 		$purchase->amount 			= $this->amount;
-		$purchase->locale 			= $this->locale;
+		$purchase->locale 			= intval($this->organizer_id) === 5 ? "en" : $this->locale;
 		$purchase->discount 		= 0;
 		$purchase->discount_code_id = 0;
 		$purchase->paid 			= $this->amount === 0 ? 1 : 0;
