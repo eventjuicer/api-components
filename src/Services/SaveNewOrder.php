@@ -107,7 +107,11 @@ class SaveNewOrder {
 	public function setParticipantByToken(string $token){
 
 		if($token){
-			$this->setParticipant( Participant::where("token", $token)->first() );
+			$participant = Participant::where("token", $token)->first();
+			if(!$participant){
+				throw new \Exception("Participant with token {$token} not found!");
+			}
+			$this->setParticipant( $participant );
 		}
 	}
 
