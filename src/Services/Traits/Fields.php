@@ -286,6 +286,7 @@ trait Fields {
     "289"=> "parent_uuid",
     "290"=> "ticket_internal_id",
     "291"=> "adoption_metrics",
+    "292"=> "contestant_company_profile_summary"
 
   );
 
