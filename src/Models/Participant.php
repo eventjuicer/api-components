@@ -20,9 +20,6 @@ class Participant extends Model
    // use Elasticsearch;
    // use Searchable;
 
-    const CREATED_AT = 'createdon';
-    const UPDATED_AT = 'updated_at';
-    //    public $timestamps = false;
 
     protected $table = "bob_participants";
 
@@ -31,7 +28,7 @@ class Participant extends Model
     protected $guarded = ["event_id", "group_id", "organizer_id"];
 
 
-   
+    public $timestamps = false;
 
 
     public function searchableIndexes() {

@@ -9,11 +9,7 @@ class Purchase extends Model{
 	
    	protected $table = "bob_purchases";
 
-    // protected $touches = ['participant'];
-
-    const CREATED_AT = null;
-    const UPDATED_AT = 'updatedon';
-    // public $timestamps = false;
+    public $timestamps = false;
 
 	public function organizer(){
         return $this->belongsTo(Organizer::class);

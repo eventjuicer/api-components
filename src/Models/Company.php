@@ -15,7 +15,6 @@ class Company extends Model
     
     protected $dates = ['assigned_at', 'stats_updated_at'];
 
-    // protected $touches = ['participants'];
 
     public function assignedBy()
     {
