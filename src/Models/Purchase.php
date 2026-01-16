@@ -9,7 +9,7 @@ class Purchase extends Model{
 	
    	protected $table = "bob_purchases";
 
-    protected $touches = ['participant'];
+    // protected $touches = ['participant'];
 
     const CREATED_AT = null;
     const UPDATED_AT = 'updatedon';
