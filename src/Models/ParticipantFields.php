@@ -16,7 +16,11 @@ class ParticipantFields extends Model
 
  	protected $hidden = ['organizer_id', 'group_id', "event_id"];
 
-    public $timestamps = false;
+    const CREATED_AT = null;
+    const UPDATED_AT = "updatedon";
+    // public $timestamps = false;
+
+    protected $touches = ['participant'];
 
     protected $guarded = array();
 
