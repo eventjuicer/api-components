@@ -21,7 +21,7 @@ class ParticipantTicket extends Model
 
     public $timestamps = false;
 
-    protected $touches = ['purchase','participant'];
+    // protected $touches = ['purchase','participant'];
 
     // public function purchasesNotCancelled()
     // {
