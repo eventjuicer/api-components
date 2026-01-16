@@ -7,7 +7,7 @@ use Eventjuicer\Repositories\PurchaseRepository;
 use Eventjuicer\Repositories\ParticipantRepository;
 use Eventjuicer\Repositories\Criteria\WhereIn;
 use Eventjuicer\Repositories\Criteria\BelongsToEvent;
-use Eventjuicer\Repositories\Criteria\ColumnMatches;
+use Eventjuicer\Repositories\Criteria\FlagEquals;
 use Eventjuicer\Repositories\Criteria\SortBy;
 
 class GetPurchasesByEvent extends Crud  {
@@ -34,12 +34,12 @@ class GetPurchasesByEvent extends Crud  {
         $participantRepo = app(ParticipantRepository::class);
         $purchaseRepo = app(PurchaseRepository::class);
 
-        if(!$this->email || !$this->event_id){
-            return [];
+        if(!$this->email && !$this->event_id){
+            throw new \Exception("email and event_id are required");
         }
 
         $participantRepo->pushCriteria(new BelongsToEvent(  $this->event_id ));
-        $participantRepo->pushCriteria(new ColumnMatches("email", $this->email));
+        $participantRepo->pushCriteria(new FlagEquals("email", $this->email));
         $participantRepo->pushCriteria(new SortBy("id", "desc"));
         $participantRepo->with(["purchases"]);
         $allPurchasesIds = $participantRepo->all()->pluck("purchases")->collapse()->pluck("id")->all();
