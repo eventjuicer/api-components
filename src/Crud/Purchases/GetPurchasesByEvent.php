@@ -42,7 +42,7 @@ class GetPurchasesByEvent extends Crud  {
         $participantRepo->pushCriteria(new ColumnMatches("email", $this->email));
         $participantRepo->pushCriteria(new SortBy("id", "desc"));
         $participantRepo->with(["purchases"]);
-        $allPurchasesIds = $participantRepo->repo->all()->pluck("purchases")->collapse()->pluck("id")->all();
+        $allPurchasesIds = $participantRepo->all()->pluck("purchases")->collapse()->pluck("id")->all();
 
         $purchaseRepo->pushCriteria(new WhereIn("id", $allPurchasesIds));
         $purchaseRepo->with(["tickets", "participant"]);
