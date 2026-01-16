@@ -19,8 +19,6 @@ class ParticipantTicket extends Model
     ];
 
 
-    protected $dates = ["updatedon"];
-
     public $timestamps = false;
 
     protected $touches = ['purchase','participant'];
