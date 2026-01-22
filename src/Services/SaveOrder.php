@@ -270,8 +270,6 @@ class SaveOrder {
 			}
 		}
 
-		//we will handle that in saveFields and updateFields methods!
-		//dispatch( new RunSyncWithSecondaryDatabaseJob( $this->participant->id, $this->participant->organizer_id ) );
 
 	}
 
