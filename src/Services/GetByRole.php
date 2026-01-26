@@ -103,7 +103,8 @@ class GetByRole {
 
          //GET PARTICIPANTS FILTERED BY ABOVE TICKETS AND PAID STATUS
         $this->participantTicketRepo->pushCriteria( new WhereIn("ticket_id", $ticketIds ));
-        $this->participantTicketRepo->pushCriteria( new FlagEquals("sold", 1 ));
+        //get cancelled as well
+        // $this->participantTicketRepo->pushCriteria( new FlagEquals("sold", 1 ));
         return $this->participantTicketRepo->all()->pluck("participant_id")->all();
 
     }
