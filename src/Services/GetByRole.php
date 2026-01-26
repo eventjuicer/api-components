@@ -95,7 +95,7 @@ class GetByRole {
         return $this->fieldsRepo->all()->pluck("participant_id")->all();
     }
 
-    public function getPurchasesFromTickets(array $ticketIds){
+    public function getPurchasesFromTickets(array $ticketIds, $onlySold = true){
 
         if(empty($ticketIds)){
             return [];
@@ -104,7 +104,9 @@ class GetByRole {
          //GET PARTICIPANTS FILTERED BY ABOVE TICKETS AND PAID STATUS
         $this->participantTicketRepo->pushCriteria( new WhereIn("ticket_id", $ticketIds ));
         //get cancelled as well
-        // $this->participantTicketRepo->pushCriteria( new FlagEquals("sold", 1 ));
+        if($onlySold){
+            $this->participantTicketRepo->pushCriteria( new FlagEquals("sold", 1 ));
+        }
         return $this->participantTicketRepo->all()->pluck("participant_id")->all();
 
     }
