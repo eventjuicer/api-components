@@ -71,7 +71,10 @@ class CompanyResource extends Resource {
             
         ];
     
-
+        if(empty($data["profile"]["name"]))
+        {
+            $data["profile"]["name"] = $this->slug;
+        }
      
 
 
