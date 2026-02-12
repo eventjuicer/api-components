@@ -80,9 +80,12 @@ class Create extends Crud  {
             $baseprice = 0;
         }
 
-        // Validate: limit must be > 0
+        // Validate: limit must be > 0 and <= 65535 (smallint unsigned)
         if ($limit <= 0) {
             $limit = 100;
+        }
+        if ($limit > 65535) {
+            $limit = 65535;
         }
 
         // Validate: max must be >= 0 and <= 255 (tinyint unsigned)
