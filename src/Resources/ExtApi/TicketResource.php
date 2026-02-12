@@ -45,6 +45,7 @@ class TicketResource extends Resource
             "start" => (string) $this->start,
             "end" => (string) $this->end,
             "limit" => $this->limit,
+            "max" => (int) $this->max,
             "agg" =>  $this->agg,
             "remaining" => $this->remaining,
 
