@@ -70,13 +70,33 @@ class Create extends Crud  {
         $translation_asset_id = trim($this->getParam("translation_asset_id", ""));
         $internal_name = trim($this->getParam("internal_name", ""));
         $baseprice = intval($this->getParam("baseprice", 0));
- 
+        $limit = intval($this->getParam("limit", 100));
+        $max = intval($this->getParam("max", 0));
+        $role = trim($this->getParam("role", ""));
+        $ticket_group_id = intval($this->getParam("ticket_group_id", 0));
+
+        // Validate: baseprice must be >= 0
+        if ($baseprice < 0) {
+            $baseprice = 0;
+        }
+
+        // Validate: limit must be > 0
+        if ($limit <= 0) {
+            $limit = 100;
+        }
+
+        // Validate: max must be >= 0
+        if ($max < 0) {
+            $max = 0;
+        }
+
         //merge with new data
-        $ticket->ticket_group_id = intval($this->getParam("ticket_group_id", 0));
-        $ticket->role = $this->getParam("role", "");
-        
+        $ticket->ticket_group_id = $ticket_group_id;
+        $ticket->role = $role;
+
         $ticket->translation_asset_id = $translation_asset_id;
-        $ticket->internal_name = $internal_name? $internal_name : $translation_asset_id;
+        // Allow internal_name to be empty - transformer will handle fallback to _name
+        $ticket->internal_name = $internal_name;
 
         $ticket->baseprice = $baseprice;
         $ticket->price_currency = strtoupper($this->getParam("price_currency", ""));
@@ -85,19 +105,19 @@ class Create extends Crud  {
             "en" => $baseprice,
             "de" => $baseprice,
             "pl" => $baseprice,
-        ];     
+        ];
 
         $ticket->start = Carbon::parse($this->getParam("start", ""))->format("Y-m-d H:i:s");
         $ticket->end = Carbon::parse($this->getParam("end", ""))->format("Y-m-d H:i:s");
-        $ticket->limit = intval($this->getParam("limit", 100));
-        $ticket->max = intval($this->getParam("max", 0));
-       
+        $ticket->limit = $limit;
+        $ticket->max = $max;
+
         $ticket->ns = "";
         $ticket->additional_recipients = "";
         $ticket->additional_message = "";
 
         $ticket->save();
-         
+
         return $ticket->fresh();
     }
 
