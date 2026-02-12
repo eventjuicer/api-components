@@ -76,7 +76,7 @@ class Create extends Crud  {
         $ticket->role = $this->getParam("role", "");
         
         $ticket->translation_asset_id = $translation_asset_id;
-        $ticket->internal_name = $internal_name || $translation_asset_id;
+        $ticket->internal_name = $internal_name? $internal_name : $translation_asset_id;
 
         $ticket->baseprice = $baseprice;
         $ticket->price_currency = strtoupper($this->getParam("price_currency", ""));
@@ -92,6 +92,10 @@ class Create extends Crud  {
         $ticket->limit = intval($this->getParam("limit", 100));
         $ticket->max = intval($this->getParam("max", 0));
        
+        $ticket->ns = "";
+        $ticket->additional_recipients = "";
+        $ticket->additional_message = "";
+
         $ticket->save();
          
         return $ticket->fresh();
