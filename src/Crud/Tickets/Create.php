@@ -85,9 +85,12 @@ class Create extends Crud  {
             $limit = 100;
         }
 
-        // Validate: max must be >= 0
+        // Validate: max must be >= 0 and <= 255 (tinyint unsigned)
         if ($max < 0) {
             $max = 0;
+        }
+        if ($max > 255) {
+            $max = 255;
         }
 
         //merge with new data
@@ -111,7 +114,8 @@ class Create extends Crud  {
         $ticket->end = Carbon::parse($this->getParam("end", ""))->format("Y-m-d H:i:s");
         $ticket->limit = $limit;
         $ticket->max = $max;
-
+        $ticket->paid = $baseprice > 0 ? 1 : 0;
+        
         $ticket->ns = "";
         $ticket->additional_recipients = "";
         $ticket->additional_message = "";
