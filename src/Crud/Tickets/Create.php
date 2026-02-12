@@ -11,7 +11,7 @@ use Carbon\Carbon;
 
 class Create extends Crud  {
 
-    protected $repo;
+    public $repo;
     
     function __construct(EloquentTicketRepository $repo){
         $this->repo = $repo;
@@ -118,7 +118,7 @@ class Create extends Crud  {
         $ticket->limit = $limit;
         $ticket->max = $max;
         $ticket->paid = $baseprice > 0 ? 1 : 0;
-        
+
         $ticket->ns = "";
         $ticket->additional_recipients = "";
         $ticket->additional_message = "";
