@@ -6,6 +6,7 @@ use Eventjuicer\Crud\Crud;
 use Eventjuicer\Models\Ticket;
 use Eventjuicer\Repositories\EloquentTicketRepository;
 use Illuminate\Validation\Rule;
+use Carbon\Carbon;
 
 
 class Create extends Crud  {
@@ -41,14 +42,59 @@ class Create extends Crud  {
     }
 
 
+/**
+     
+    {
+    "internal_name": "asdasdasdad",
+    "translation_asset_id": "organizer",
+    "baseprice": 0,
+    "price_currency": "PLN",
+    "start": "2025-09-06 00:00:00",
+    "end": "2025-10-25 00:00:00",
+    "limit": 10000,
+    "max": 0,
+    "role": "",
+    "ticket_group_id": 0
+}
+
+*/
+
     public function update($id){
 
-        // if(!$this->validates()){
-        //     return null;
-        // }
+        $ticket = Ticket::find($id);
+        if(!$ticket){
+            return null;
+        }
+        //inherit organizer, group, event from ticket!
 
-        // $this->repo->update($this->getData(), $id);
-        // return $this->find($id);
+        $translation_asset_id = trim($this->getParam("translation_asset_id", ""));
+        $internal_name = trim($this->getParam("internal_name", ""));
+        $baseprice = intval($this->getParam("baseprice", 0));
+ 
+        //merge with new data
+        $ticket->ticket_group_id = intval($this->getParam("ticket_group_id", 0));
+        $ticket->role = $this->getParam("role", "");
+        
+        $ticket->translation_asset_id = $translation_asset_id;
+        $ticket->internal_name = $internal_name || $translation_asset_id;
+
+        $ticket->baseprice = $baseprice;
+        $ticket->price_currency = strtoupper($this->getParam("price_currency", ""));
+
+        $ticket->price = [
+            "en" => $baseprice,
+            "de" => $baseprice,
+            "pl" => $baseprice,
+        ];     
+
+        $ticket->start = Carbon::parse($this->getParam("start", ""))->format("Y-m-d H:i:s");
+        $ticket->end = Carbon::parse($this->getParam("end", ""))->format("Y-m-d H:i:s");
+        $ticket->limit = intval($this->getParam("limit", 100));
+        $ticket->max = intval($this->getParam("max", 0));
+       
+        $ticket->save();
+         
+        return $ticket->fresh();
     }
 
     public function delete($id){
