@@ -81,11 +81,11 @@ class Create extends Crud  {
             "pl" => $baseprice,
         ];
 
-        $ticket->names = [  
-            "en" => $internal_name,
-            "de" => $internal_name,
-            "pl" => $internal_name,
-        ];
+        // $ticket->names = [  
+        //     "en" => $internal_name,
+        //     "de" => $internal_name,
+        //     "pl" => $internal_name,
+        // ];
 
         $ticket->start = Carbon::parse($this->getParam("start", ""))->format("Y-m-d H:i:s");
         $ticket->end = Carbon::parse($this->getParam("end", ""))->format("Y-m-d H:i:s");
