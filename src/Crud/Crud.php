@@ -19,7 +19,7 @@ abstract class Crud {
     protected $filters = [];
     protected $transforms = [];
     protected $aggregates = [];
-    public $repo;
+
 
     public function getRepo(){
         return $this->repo;

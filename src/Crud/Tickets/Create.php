@@ -27,38 +27,6 @@ class Create extends Crud  {
 
     }
 
-    public function create(){
-
-        if(!$this->validates()){
-            return null;
-        }
-
-        $data = $this->getData("Cloned - ");
-
-
-        $this->repo->saveModel($data);
-
-        return $this->find( $this->repo->getId() );
-    }
-
-
-/**
-     
-    {
-    "internal_name": "asdasdasdad",
-    "translation_asset_id": "organizer",
-    "baseprice": 0,
-    "price_currency": "PLN",
-    "start": "2025-09-06 00:00:00",
-    "end": "2025-10-25 00:00:00",
-    "limit": 10000,
-    "max": 0,
-    "role": "",
-    "ticket_group_id": 0
-}
-
-*/
-
     public function update($id){
 
         $ticket = Ticket::find($id);
@@ -141,83 +109,8 @@ class Create extends Crud  {
     }
 
 
-    protected function getData($prefix =""){
+    protected function getData(){
         
-        $legacy_name =  (string) $prefix . $this->getParam("_name", "New Ticket");
-      
-        $ticket_group_id = (int) $this->getParam("ticket_group_id", 0);
-        $event_id = (int) $this->getParam("event_id", 0);
-        $group_id = (int) $this->getParam("group_id", 0);
-        $organizer_id = (int) $this->getParam("organizer_id", 0);
-
-        $delayed = (int) $this->getParam("delayed", 0);
-        $featured = (int) $this->getParam("featured", 0);
-        $internal = (int) $this->getParam("internal", 0);
-        
-        $limit = (int) $this->getParam("limit", 0);
-        $max = (int) $this->getParam("max", 0);
-
-        $names = [
-            "en" => $legacy_name,
-            "pl" => $legacy_name,
-            "de" => $legacy_name,
-        ];
-        $descriptions = $this->getParam("descriptions", []);
-        $price = $this->getParam("price",  $this->getParam("_price", [
-            "en"=>0,
-            "de"=>0,
-            "pl"=>0
-        ]));
-      
-        $internal_name = $this->getParam("internal_name",  $legacy_name);
-        $translation_asset_id = $this->getParam("translation_asset_id",  $legacy_name);
-        $image = $this->getParam("image", "");
-        $thumbnail = $this->getParam("thumbnail", "");
-        $start = $this->getParam("start", "");
-        $end = $this->getParam("end", "");
-        $role = $this->getParam("role", "");
-        $details_url = $this->getParam("details_url", "");
-        $ns = $this->getParam("ns", "");
-        $additional_recipients = $this->getParam("additional_recipients", "");
-        $additional_message = $this->getParam("additional_message", "");
-
-        
-
-        $baseprice = (int) $this->getParam("baseprice", 0);
-        $price_currency = $this->getParam("price_currency", "");
-
-        return compact(
-            "ticket_group_id",
-            "event_id",
-            "group_id",
-            "organizer_id",
-
-            "delayed",
-            "featured",
-            "internal",
-            
-            "limit",
-            "max",
-            
-            "names",
-            "descriptions",
-            "price",
-
-            "internal_name",
-            "translation_asset_id",
-            "image",
-            "thumbnail",
-            "start",
-            "end",
-            "role",
-            "details_url",
-            "ns",
-            "additional_recipients",
-            "additional_message",
-
-            "baseprice",
-            "price_currency"
-        );
     }
 
 
