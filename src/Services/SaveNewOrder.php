@@ -186,6 +186,9 @@ class SaveNewOrder {
 			throw new \Exception("Either event or participant must be resolved!");
 		}
 
+		if($this->validateTickets){
+			$this->handleCartValidation();
+		}
 	
 		if(!empty($this->errors)){
 			throw new \Exception(implode(",", $this->errors));
@@ -312,18 +315,111 @@ class SaveNewOrder {
 		$quantity = !empty($cartItem["quantity"]) ? $cartItem["quantity"] : 1;
 		$ticket_id = $cartItem["id"];
 
+		$metadata = isset($cartItem["metadata"]) ? $this->normalizeFormdata($cartItem["metadata"]) : "";
+
 		$t 					= new ParticipantTicket;
 		$t->ticket_id 		= $ticket_id;
 		$t->participant_id 	= $this->participant_id;
 		$t->purchase_id 	= $this->purchase->id;
 		$t->event_id 		= $this->event_id;
-		$t->formdata		= isset($cartItem["metadata"])? $cartItem["metadata"]: "";
+		$t->formdata		= $metadata;
 		$t->quantity 		= $quantity;
 		$t->sold 			= 1;
 		$t->save();
 
 		return $t;
 
+	}
+
+	protected function normalizeFormdata($metadata){
+
+		if(!is_array($metadata)){
+			return $metadata;
+		}
+
+		if(!isset($metadata["booth"]) || !is_array($metadata["booth"])){
+			return $metadata;
+		}
+
+		$normalized = $metadata;
+		$boothId = null;
+		$boothTi = null;
+
+		$booth = $normalized["booth"];
+
+		$boothId = array_get($booth, "id");
+		$boothTi = array_get($booth, "ti") ?: array_get($booth, "name");
+
+		if($boothId && !isset($normalized["id"])){
+			$normalized["id"] = $boothId;
+		}
+
+		if($boothTi && !isset($normalized["ti"])){
+			$normalized["ti"] = $boothTi;
+		}
+
+		return $normalized;
+	}
+
+	protected function handleCartValidation(){
+
+		if(empty($this->cartItems)){
+			$this->errors[] = "api.errors.cart_empty";
+			return;
+		}
+
+		$this->ticketssold->setEventId($this->event_id);
+
+		$ticketIds = [];
+
+		foreach($this->cartItems as $cartItem){
+			$ticketId = array_get($cartItem, "id");
+			if(is_numeric($ticketId)){
+				$ticketIds[] = (int) $ticketId;
+			}
+		}
+
+		if(!empty($ticketIds)){
+			$this->ticketssold->setTicketIds($ticketIds);
+		}
+
+		$tickets = $this->ticketssold->all()->keyBy("id");
+
+		$formdata = $tickets->pluck("ticketpivot")
+			->collapse()
+			->filter(function($item){
+				return $item->formdata && isset($item->formdata["id"]);
+			})
+			->pluck("formdata.id")
+			->all();
+
+		foreach($this->cartItems as $index => $cartItem){
+
+			$ticketId = array_get($cartItem, "id");
+
+			if(!is_numeric($ticketId) || !isset($tickets[$ticketId])){
+				$this->setCartItemError($index, $ticketId, "api.errors.bad_ticket_id");
+				continue;
+			}
+
+			$isBoothItem = is_array(array_get($cartItem, "metadata")) && is_array(array_get($cartItem, "metadata.booth"));
+
+			if(!$isBoothItem){
+				continue;
+			}
+
+			$normalized = $this->normalizeFormdata(array_get($cartItem, "metadata", []));
+			$formdataId = is_array($normalized) ? array_get($normalized, "id") : null;
+
+			if($formdataId && in_array($formdataId, $formdata)){
+				$this->setCartItemError($index, $ticketId, "api.errors.formdata_conflict|id: ". $formdataId);
+			}
+		}
+	}
+
+	protected function setCartItemError($index, $ticketId, $errorMsg = ""){
+		$this->errors[] = $errorMsg . "|ticket id: " . $ticketId;
+		unset($this->cartItems[$index]);
 	}
 
 	protected function saveCartItems(){
