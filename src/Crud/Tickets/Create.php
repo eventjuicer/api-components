@@ -97,6 +97,13 @@ class Create extends Crud  {
         $ticket->additional_recipients = "";
         $ticket->additional_message = "";
 
+        $ticket->json = [
+            "feature_sets"=> $this->getParam("feature_sets", []),
+            "pathname"=> $this->getParam("pathname", ""),
+            "description_asset_id"=> $this->getParam("description_asset_id", ""),
+            "custom"=> $this->getParam("custom", "")
+        ];
+
         $ticket->save();
 
         return $ticket->fresh();

@@ -56,7 +56,9 @@ class TicketResource extends Resource
             "in_dates" => $this->in_dates,
             "bookable" => $this->bookable,
             "errors" => $this->errors,
-            "status" => $this->status
+            "status" => $this->status,
+
+            "metadata" => $this->json ?? ["feature_sets" => [], "pathname" => "", "description_asset_id" => "", "custom" => ""],
 
         ];
     }
