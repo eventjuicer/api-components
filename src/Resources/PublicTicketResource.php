@@ -39,6 +39,10 @@ class PublicTicketResource extends Resource{
         $data["translation_asset_id"] = (string) $this->translation_asset_id;
         $data["details_url"] = (string) $this->details_url;
 
+        //ecom 2.0
+        $data["baseprice"] = (int) $this->baseprice;
+        $data["price_currency"] = (string) $this->price_currency;
+
         /** 
          * moved to TicketsSold 
          *  //"customers" => $this->customers, //$this->ticketpivot->count(),
