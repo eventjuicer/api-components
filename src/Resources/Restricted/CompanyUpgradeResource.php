@@ -27,6 +27,10 @@ class CompanyUpgradeResource extends Resource
         $data["featured"]	= (int) $this->featured;
        
         $data["price"] = $this->price;
+
+        //ecom 2.0
+        $data["baseprice"] = (int) $this->baseprice;
+        $data["price_currency"] = (string) $this->price_currency;
         
         //these are bare ticket info so we do not actually need it!
         // $data["limit"] = $this->limit;
