@@ -331,6 +331,23 @@ class SaveOrder {
 		
 	}
 
+	protected function fetchEurRate(){
+
+		$response = @file_get_contents("https://api.frankfurter.dev/v1/latest?base=PLN&symbols=EUR");
+
+		if(!$response){
+			throw new \Exception("Currency conversion service unavailable");
+		}
+
+		$data = json_decode($response, true);
+
+		if(empty($data["rates"]["EUR"])){
+			throw new \Exception("EUR rate not found in conversion response");
+		}
+
+		return (float) $data["rates"]["EUR"];
+	}
+
 	protected function countTotalAmount(){
 
 		//count AMOUNT!
@@ -348,13 +365,22 @@ class SaveOrder {
 				throw new \Exception("no ticket found!");
 			}
 
-			$localPrice = array_get( $ticket->price, $this->locale);
+			$basePrice = is_numeric($ticket->baseprice) ? $ticket->baseprice : array_get($ticket->price, $this->locale);
 
-			if(! is_numeric( $localPrice )) {
+			if(! is_numeric( $basePrice )) {
 				throw new \Exception("no price for this locale!");
 			}
 
-			$this->amount += intval($localPrice) * intval($quantity);
+			$needsEurConversion = intval($this->organizer_id) === 1
+				&& $this->locale === "en"
+				&& strtoupper($ticket->price_currency ?? "") === "PLN";
+
+			if($needsEurConversion){
+				$rate = $this->fetchEurRate();
+				$basePrice = ceil($basePrice * $rate * 1.05 / 5) * 5;
+			}
+
+			$this->amount += intval($basePrice) * intval($quantity);
 		}
 
 		return $this->amount;
