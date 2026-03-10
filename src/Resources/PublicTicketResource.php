@@ -23,6 +23,8 @@ class PublicTicketResource extends Resource{
     	$data = [];
  		$data["id"] 		= $this->id;
  		$data["group_id"] 	= $this->ticket_group_id;
+        $data["event_id"] 	= $this->event_id;
+
 
         $data["delayed"] 	= $this->delayed;
         $data["featured"] 	= $this->featured;
