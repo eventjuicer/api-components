@@ -20,7 +20,15 @@ class TicketGroupResource extends Resource
             "name" => $this->name,
             "tags" =>  LegacyTagResource::collection($this->oldtags),
             "booth" => $this->booth,
-            "limit" => $this->limit
+            "limit" => $this->limit,
+            "metadata" => $this->json ?? [
+                "feature_sets"=> [], 
+                "description_asset_id"=> "", 
+                "custom"=> "",
+                "booth_fill_color"=> "",
+                "translation_asset_id"=> "",
+                "internal_name"=> ""
+            ]
         ];
     }
 }
