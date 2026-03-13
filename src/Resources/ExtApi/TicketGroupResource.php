@@ -21,7 +21,7 @@ class TicketGroupResource extends Resource
             "tags" =>  LegacyTagResource::collection($this->oldtags),
             "booth" => $this->booth,
             "limit" => $this->limit,
-            "metadata" => $this->json ?? [
+            "metadata" => $this->json && is_array($this->json)? $this->json: [
                 "feature_sets"=> [], 
                 "description_asset_id"=> "", 
                 "custom"=> "",
