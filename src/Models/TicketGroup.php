@@ -20,7 +20,7 @@ class TicketGroup extends Model
 
         'descriptions' => 'array',
         'booth' => 'array',
-        // "json" => "array"
+        "json" => "array"
     ];
     
     public function tickets()
