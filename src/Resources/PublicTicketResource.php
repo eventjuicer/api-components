@@ -93,7 +93,7 @@ class PublicTicketResource extends Resource{
 
         $data["errors"] = $this->errors;
 
-        $data["metadata"] = $this->json ?? ["feature_sets" => [], "pathname" => "", "description_asset_id" => "", "custom" => ""];
+        $data["metadata"] = $this->json ?? ["feature_sets" => [], "pathname" => "", "description_asset_id" => "", "custom" => "", "is_payable_online" => false];
 
         return $data;
     }

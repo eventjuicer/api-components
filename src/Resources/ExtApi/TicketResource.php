@@ -58,7 +58,7 @@ class TicketResource extends Resource
             "errors" => $this->errors,
             "status" => $this->status,
 
-            "metadata" => $this->json ?? ["feature_sets" => [], "pathname" => "", "description_asset_id" => "", "custom" => ""],
+            "metadata" => $this->json ?? ["feature_sets" => [], "pathname" => "", "description_asset_id" => "", "custom" => "", "is_payable_online" => false],
 
         ];
     }

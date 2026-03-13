@@ -101,7 +101,8 @@ class Create extends Crud  {
             "feature_sets" => [], 
             "pathname" => "", 
             "description_asset_id" => "", 
-            "custom" => ""
+            "custom" => "",
+            "is_payable_online" => false
         ]);
 
         $ticket->save();
